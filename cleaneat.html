@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clean Eat — 나에게 맞는 하루 식단</title>
+<meta name="description" content="성별·나이·키·몸무게와 목표, 요리 수준, 예산을 입력하면 통곡물·신선식품 중심의 하루 식단과 장보기 목록을 계산해 보여줍니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbfaf6;--fg:#26352d;--mut:#7d857e;--g:#416b4c;--gd:#304e38;--gt:#fffdf6;--card:#fffefa;--soft:#eef0e8;--line:#e9e8df;--warn:#8a3b2a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161c18;--fg:#e8eee9;--mut:#a9b8ad;--g:#8fbf96;--gt:#10200f;--card:#1e2620;--soft:#232c25;--line:#34403a;--warn:#e8a08f}}
+:root[data-theme="dark"]{--bg:#161c18;--fg:#e8eee9;--mut:#a9b8ad;--g:#8fbf96;--gt:#10200f;--card:#1e2620;--soft:#232c25;--line:#34403a;--warn:#e8a08f}
+html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:17px}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Inter","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+.w{max-width:1040px;margin:0 auto;padding:0 24px}
+header{border-bottom:1px solid var(--line)}
+header .w{display:flex;justify-content:space-between;align-items:center;height:68px}
+.logo{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;color:var(--fg);font-family:inherit;font-weight:650;font-size:19px;line-height:1;letter-spacing:-.075em;cursor:pointer}.logo b{color:var(--g);font-weight:450}
+.nv{display:flex;gap:24px}.nv button{background:none;border:0;padding:6px 0;font:inherit;font-size:.95rem;color:var(--mut);cursor:pointer}.nv button:hover{color:var(--fg)}
+h1,h2,h3{line-height:1.3;letter-spacing:-.06em;margin:0}
+h1{font-size:clamp(43px,5vw,68px);font-weight:490;letter-spacing:-.075em;line-height:1.18}
+h2{font-size:clamp(1.5rem,3vw,2.1rem);font-weight:490;letter-spacing:-.065em}
+em{font-style:normal;color:var(--g);font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.055em}
+.lab{font-size:.8rem;font-weight:700;letter-spacing:.16em;color:#74816f;margin:0 0 12px}
+p{margin:0}.mut{color:var(--mut)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:15px;border:1px solid transparent;border-radius:4px;background:var(--g);color:var(--gt);font:inherit;font-weight:620;letter-spacing:-.015em;padding:15px 24px;cursor:pointer;box-shadow:0 6px 18px rgba(55,82,61,.12);transition:transform .2s,background .2s,box-shadow .2s}.btn:hover:not(:disabled){transform:translateY(-1px);background:var(--gd,var(--g));box-shadow:0 8px 20px rgba(55,82,61,.16)}
+.btn.o{background:none;color:var(--gd,var(--fg));border:1px solid #d9e1d5;border-radius:5px;padding:9px 18px;font-size:.9rem;font-weight:600;box-shadow:none}.btn.o:hover:not(:disabled){background:var(--soft);transform:none;box-shadow:none}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--g);outline-offset:2px}
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center;padding:88px 0}
+.hero p.lead{margin:18px 0 30px;color:#778078;letter-spacing:-.025em;line-height:1.95;max-width:34em}
+.himg{aspect-ratio:4/5;border-radius:14px;overflow:hidden;background:var(--soft)}.himg .ph{height:100%}.himg img{width:100%;height:100%;object-fit:cover;display:block}
+.eb{display:flex;align-items:center;gap:10px;font-size:.8rem;font-weight:700;letter-spacing:.16em;color:#74816f;margin:0 0 29px}.eb:before{content:"";width:23px;height:1px;background:#93a287}
+[id]{scroll-margin-top:24px}
+
+
+.sec{padding:72px 0;border-top:1px solid var(--line)}
+.rows{margin-top:32px}
+.row{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:20px 0;border-top:1px solid var(--line)}
+.row .k{color:#98a18f;font-family:Georgia,serif;font-style:italic;font-weight:400}.row h3{font-size:1.1rem;margin-bottom:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:32px}
+.two ul{margin:8px 0 0;padding-left:1.2em;color:var(--mut)}
+details{border-top:1px solid var(--line);padding:16px 0}details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:500}details p{margin-top:8px;color:var(--mut)}
+.cta{background:var(--soft);border-radius:12px;padding:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin:8px 0 72px}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:.88rem;color:var(--mut)}
+#quiz,#res{padding:48px 24px 72px}#res{max-width:760px}
+.top{display:flex;justify-content:space-between;align-items:baseline}.top .lab{margin:0;letter-spacing:.02em;font-weight:400;color:#9a9f94;font-size:.85rem}.cnt{font-weight:650;color:var(--g);font-size:.95rem;letter-spacing:.02em}
+.qg{display:grid;grid-template-columns:200px 1fr;gap:56px}.qm{max-width:620px}
+.jn{position:relative;list-style:none;margin:0;padding:0}.jn:before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:1px;background:#e6e8df}.jn li{position:relative;display:flex;align-items:center;gap:12px;height:39px;color:#a2a79f;font-size:.8rem;transition:color .2s}
+.jn b{position:relative;z-index:1;display:grid;place-items:center;width:27px;height:27px;border:1px solid #e2e5dc;border-radius:50%;background:var(--bg);color:#a2a79f;font-size:.62rem;font-weight:650}
+
+.jn li.on{color:var(--gd,var(--fg));font-weight:650}.jn li.on b{background:var(--g);border-color:var(--g);color:#fff}.jn li.dn b{border-color:#dce6d9;background:#e5ede2;color:var(--g)}
+.bar{height:2px;background:#e7e9e0;margin:14px 0 36px}.bar i{display:block;height:100%;background:#64805b;transition:width .32s ease}
+.q h2{margin-bottom:8px}.q .mut{margin-bottom:24px}
+.opt{display:block;width:100%;text-align:left;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin-bottom:10px;cursor:pointer}
+.opt small{display:block;color:var(--mut);font-size:.88rem}
+.opt[aria-pressed=true]{border-color:var(--g);box-shadow:inset 0 0 0 1px var(--g);background:var(--soft)}
+label.f{display:block;font-weight:500;margin:16px 0 6px}
+input[type=number],select{width:100%;font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:8px 0;color:var(--mut);font-size:.95rem}.chk input{margin-top:.45em}
+.nav{display:flex;justify-content:space-between;margin-top:28px}
+.err{color:var(--warn);margin-top:14px;font-weight:500}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:24px 0}
+.sum div{background:var(--soft);border-radius:8px;padding:14px 16px}.sum b{display:block;font-size:1.35rem;color:var(--g)}.sum span{font-size:.88rem;color:var(--mut)}
+.meal{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:14px;overflow:hidden}
+.ph{background:var(--soft);color:var(--mut);font-size:.88rem;display:flex;align-items:center;justify-content:center;height:120px}
+.meal img{width:100%;max-height:220px;object-fit:cover;display:block}
+.mb{padding:16px 20px}.mb .s{font-size:.88rem;color:var(--g);font-weight:700}.mb h3{font-size:1.15rem;margin:2px 0 6px}
+.tags span{display:inline-block;background:var(--soft);border-radius:6px;padding:2px 9px;font-size:.82rem;margin:0 6px 6px 0}
+.note{font-size:.92rem;color:var(--mut);margin:12px 0}
+.safe{border-left:3px solid var(--g);padding:10px 16px;background:var(--soft);font-size:.95rem;margin:24px 0}
+[hidden]{display:none!important}
+h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50% 50% 50% 12px;background:var(--g);color:#f8f8ec;transform:rotate(-8deg)}.mk svg{transform:rotate(8deg)}
+@media(max-width:760px){.db{display:none}.himg{aspect-ratio:4/3}.nv{gap:16px}.nv button{font-size:.88rem}.qg{grid-template-columns:1fr;gap:24px}.jn{display:flex;justify-content:space-between}.jn li{height:auto}.jn li span{display:none}.jn:before{display:none}#quiz,#res{padding-top:32px}}
+@media(max-width:760px){.hero{grid-template-columns:1fr;gap:36px;padding:48px 0}.two{grid-template-columns:1fr}.sec{padding:48px 0}.cta{padding:28px}.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="w"><button class="logo" id="logo" aria-label="처음 화면으로"><i class="mk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></i><span>clean<b>eat</b></span></button><nav class="nv"><button data-to="rules">식단 기준</button><button data-to="faq">자주 묻는 질문</button></nav></div></header>
+
+<main>
+<div id="home">
+<div class="w">
+ <section class="hero">
+  <div>
+   <p class="eb">FOOD, IN ITS BEST FORM</p><h1>잘 먹는 하루를,<br><em>나답게</em> 설계해요.</h1>
+   <p class="lead">복잡한 기준보다, 나에게 맞는 좋은 재료 한 끼.<br class="db"> 일곱 가지 질문으로 매일 이어갈 식단을 제안해요.</p>
+   <button class="btn" data-go>내 식단 시작하기 <span aria-hidden="true">→</span></button>
+   <p class="note">가입 없음. 입력한 값은 이 페이지 안에서만 계산합니다.</p>
+  </div>
+  <div class="himg" id="himg"></div>
+ </section>
+
+ <section class="sec">
+  <p class="lab">HOW IT WORKS</p>
+  <h2>입력부터 식단까지 <em>세 단계</em></h2>
+  <div class="rows">
+   <div class="row"><span class="k">01</span><div><h3>질문에 답합니다</h3><p class="mut">모두 선택형이고, 숫자 입력은 기본 정보 한 화면뿐입니다.</p></div></div>
+   <div class="row"><span class="k">02</span><div><h3>목표 열량과 단백질을 계산합니다</h3><p class="mut">Mifflin-St Jeor 공식으로 기초대사량을 구하고 활동량과 목표를 반영합니다.</p></div></div>
+   <div class="row"><span class="k">03</span><div><h3>식단과 장보기 목록을 확인합니다</h3><p class="mut">메뉴별 재료·분량·열량·단백질·예상 비용과, 재료를 합산한 목록이 나옵니다.</p></div></div>
+  </div>
+ </section>
+
+ <section class="sec">
+  <p class="lab" id="rules">OUR RULES</p>
+  <h2>식단은 이 기준으로 <em>고릅니다</em></h2>
+  <div class="two">
+   <div><h3>재료 기준</h3><ul><li>통곡물, 채소, 과일, 달걀·두부·닭가슴살·생선 같은 단백질 위주</li><li>가공을 줄이고, 포장 제품은 성분표가 짧은 것</li></ul></div>
+   <div><h3>계산 기준</h3><ul><li>영양과 가격은 재료 단위로 계산해 메뉴에 합산</li><li>못 먹는 음식은 재료에서 찾아 자동으로 제외</li></ul></div>
+  </div>
+ </section>
+
+ <section class="sec">
+  <p class="lab">GOOD TO KNOW</p>
+  <h2>이런 경우에는 <em>맞지 않아요</em></h2>
+  <div class="two">
+   <div><h3>이 도구를 쓰지 마세요</h3><ul><li>만 18세 미만</li><li>임신·수유 중</li><li>식이 제한이 필요한 질환이 있는 경우</li><li>섭식장애 병력이 있는 경우</li></ul><p class="note">해당하면 의사나 영양사와 상담해 주세요.</p></div>
+   <div><h3>대상이 아닌 식사</h3><ul><li>구내식당·외식·급식 위주로 먹는 경우</li></ul><p class="note">직접 챙겨 먹으려는데 무엇을 먹을지 막막한 사람을 위한 도구입니다.</p></div>
+  </div>
+  <div id="faq" style="margin-top:32px">
+   <details><summary>입력한 정보는 저장되나요?</summary><p>이 페이지 안에서만 계산하고 서버로 보내지 않습니다. 새로고침하면 사라집니다.</p></details>
+   <details><summary>영양 수치는 어디서 가져오나요?</summary><p>현재는 시험 버전이라 임시 수치를 씁니다. 공식 영양성분 DB로 교체한 뒤 출처를 표기할 예정입니다.</p></details>
+   <details><summary>의학적 조언인가요?</summary><p>아닙니다. 일반적인 식사 구성 예시이며 진단이나 치료를 대신하지 않습니다.</p></details>
+  </div>
+ </section>
+
+ 
+</div>
+</div>
+
+<div class="w" id="quiz" hidden></div>
+<div class="w" id="res" hidden></div>
+</main>
+<footer><div class="w">© Clean Eat · 일반적인 식사 정보이며 의료·영양 상담을 대신하지 않습니다.</div></footer>
+
+<script>
+/* ============ 1. 설정값 (안전·계산 기준) — 공신력 있는 출처로 확인 후 수정 ============ */
+const CONFIG={
+ minAge:18, bmiMin:18.5,
+ kcalFloor:{m:1500,f:1200},            // 하루 최소 열량 (임시값, 출처 확인 필요)
+ goalMul:{lose:.85,gain:1.1,keep:1,perf:1.05},   // 목표별 열량 배수
+ protPerKg:{lose:1.6,gain:1.8,keep:1.2,perf:1.6}, // 목표별 단백질 g/kg
+ activity:[1.2,1.375,1.55,1.725],
+ split:{2:[.5,.5],3:[.25,.375,.375],4:[.22,.33,.33,.12],5:[.2,.3,.3,.1,.1]}, // 끼니별 열량 비율
+ slots:{2:['m','m'],3:['a','m','m'],4:['a','m','m','s'],5:['a','m','m','s','s']},
+ slotName:{a:'아침',m:'식사',s:'간식'}
+};
+const HERO_IMG='';  /* 홈 화면 사진 주소 (비우면 자리 표시) */
+/* ============ 2. 질문 (기본 정보 다음 단계) — 여기를 고치면 질문이 바뀝니다 (l = 왼쪽 단계 표시 이름) ============ */
+const QUESTIONS=[
+ {id:'goal',l:'나의 목표',t:'목표가 무엇인가요?',h:'목표에 따라 열량과 단백질 기준이 달라집니다.',o:[['lose','체지방 감량'],['gain','근육 증가'],['keep','체중 유지·건강'],['perf','운동 퍼포먼스']]},
+ {id:'prep',l:'준비 방식',t:'평소 어느 정도까지 요리할 수 있나요?',h:'가장 가까운 항목 하나를 선택해 주세요.',o:[[1,'조리 없이 바로 먹는 음식','완제품이나 간편식 위주'],[2,'전자레인지로 간단히 조리','데우거나 간단하게 익히기'],[3,'10~15분 간단한 요리','달걀, 볶음밥 등'],[4,'30분 정도 일반적인 요리','여러 재료 활용'],[5,'요리를 즐겨요','새로운 레시피도 괜찮아요']]},
+ {id:'budget',l:'하루 예산',t:'하루 식비는 어느 정도인가요?',h:'식재료 기준입니다. 대략적인 금액을 골라 주세요.',o:[[15000,'1만~1.5만 원'],[25000,'1.5만~2.5만 원'],[1e9,'2.5만 원 이상'],[1e9,'제한 없음']]},
+ {id:'act',l:'주간 활동',t:'일주일에 운동은 얼마나 하나요?',h:'평소 활동량 기준입니다.',o:[[0,'거의 안 해요'],[1,'주 1~2회'],[2,'주 3~4회'],[3,'주 5회 이상']]},
+ {id:'meals',l:'식사 횟수',t:'하루에 몇 끼를 먹나요?',h:'간식은 제외하고, 평소 식사 패턴에 가장 가까운 항목을 골라 주세요.',o:[[2,'하루 2끼','예: 점심, 저녁'],[3,'하루 3끼','아침, 점심, 저녁'],[4,'하루 3끼 + 간식 1회'],[5,'하루 3끼 + 간식 2회'],[3,'정해진 횟수 없이 유동적','3끼로 계산합니다']]},
+ {id:'excl',l:'제한 식품',multi:1,t:'못 먹거나 안 먹는 음식이 있나요?',h:'해당하는 항목을 모두 선택해 주세요. 없으면 ‘없음’을 선택합니다.',o:[['유제품','유제품'],['견과류','견과류'],['해산물','해산물'],['달걀','달걀'],['육류','육류(채식)'],['none','없음']]}
+];
+/* ============ 3. 재료 (100g당) — 임시 수치! 공식 영양성분 DB와 실제 가격으로 교체 ============ */
+const ING={
+ chicken:{n:'닭가슴살',k:109,p:23,c:1300,ex:['육류']},brice:{n:'현미(생)',k:360,p:7.5,c:500,ex:[]},
+ broc:{n:'브로콜리',k:34,p:2.8,c:900,ex:[]},oat:{n:'오트밀',k:380,p:13,c:700,ex:[]},
+ banana:{n:'바나나',k:89,p:1.1,c:500,ex:[]},egg:{n:'달걀',k:143,p:12.6,c:500,ex:['달걀']},
+ avo:{n:'아보카도',k:160,p:2,c:2500,ex:[]},bread:{n:'통밀빵',k:250,p:10,c:800,ex:[]},
+ tofu:{n:'두부',k:84,p:8,c:400,ex:[]},spin:{n:'시금치',k:23,p:2.9,c:700,ex:[]},
+ oil:{n:'올리브유',k:884,p:0,c:2000,ex:[]},salmon:{n:'연어',k:208,p:20,c:4500,ex:['해산물']},
+ sweet:{n:'고구마',k:86,p:1.6,c:500,ex:[]},lentil:{n:'렌틸콩(생)',k:353,p:25,c:800,ex:[]},
+ yog:{n:'그릭요거트',k:97,p:9,c:1200,ex:['유제품']},almond:{n:'아몬드',k:579,p:21,c:3000,ex:['견과류']},
+ apple:{n:'사과',k:52,p:.3,c:800,ex:[]}
+};
+/* ============ 4. 메뉴 — slot: a 아침 / m 식사 / s 간식, lvl: 조리 난이도 1~5, img: 사진 주소(비우면 자리 표시) ============ */
+const MENUS=[
+ {id:'a1',name:'바나나 오트밀',slot:'a',lvl:2,img:'',items:[['oat',50],['banana',100]]},
+ {id:'a2',name:'두부 시금치 스크램블',slot:'a',lvl:3,img:'',items:[['tofu',150],['spin',60],['oil',5]]},
+ {id:'a3',name:'아보카도 달걀 토스트',slot:'a',lvl:3,img:'',items:[['bread',70],['egg',100],['avo',60]]},
+ {id:'m1',name:'닭가슴살 현미 브로콜리',slot:'m',lvl:3,img:'',items:[['chicken',150],['brice',80],['broc',100],['oil',5]]},
+ {id:'m2',name:'구운 연어 고구마',slot:'m',lvl:4,img:'',items:[['salmon',130],['sweet',200],['broc',80]]},
+ {id:'m3',name:'렌틸 시금치 수프',slot:'m',lvl:4,img:'',items:[['lentil',70],['spin',80],['oil',8]]},
+ {id:'s1',name:'삶은 달걀과 고구마',slot:'s',lvl:2,img:'',items:[['egg',100],['sweet',150]]},
+ {id:'s2',name:'사과와 아몬드',slot:'s',lvl:1,img:'',items:[['apple',150],['almond',25]]},
+ {id:'s3',name:'그릭요거트와 바나나',slot:'s',lvl:1,img:'',items:[['yog',150],['banana',80]]}
+];
+
+/* ============ 5. 로직 ============ */
+const $=s=>document.querySelector(s),won=n=>Math.round(n/100)*100;
+const num=n=>Math.round(n).toLocaleString('ko-KR');
+let step=0,off=0,A={basic:{},goal:null,prep:null,budget:null,act:null,meals:null,excl:[]};
+const TOTAL=QUESTIONS.length+1,LABELS=['기본 정보',...QUESTIONS.map(q=>q.l)];
+function show(v){['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);window.scrollTo(0,0)}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{step=0;show('quiz');draw()});
+function goHome(id){show('home');const e=id&&document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})}
+$('#logo').onclick=()=>goHome();
+document.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>goHome(b.dataset.to));
+$('#himg').innerHTML=HERO_IMG?`<img src="${HERO_IMG}" alt="식단 사진">`:'<div class="ph">예시 이미지입니다</div>';
+function wrap(inner){return `<div class="top"><span class="lab">나에게 맞는 식단 만들기</span><span class="cnt">${String(step+1).padStart(2,'0')} / ${String(TOTAL).padStart(2,'0')}</span></div><div class="bar"><i style="width:${(step+1)/TOTAL*100}%"></i></div><div class="qg"><ol class="jn" aria-label="진행 단계">${LABELS.map((l,i)=>`<li class="${i===step?'on':i<step?'dn':''}"${i===step?' aria-current="step"':''}><b>${i<step?'✓':String(i+1).padStart(2,'0')}</b><span>${l}</span></li>`).join('')}</ol><div class="qm">${inner}</div></div>`}
+function draw(){
+ const q=$('#quiz');
+ if(step===0){const b=A.basic;
+  q.innerHTML=wrap(`<div class="q"><h2>먼저, 기본 정보를 알려주세요</h2><p class="mut">입력한 값은 이 페이지 안에서만 계산에 쓰입니다.</p>
+  <label class="f" for="sx">성별</label><select id="sx"><option value="">선택해 주세요</option><option value="m">남성</option><option value="f">여성</option></select>
+  <div class="g2"><div><label class="f" for="ag">나이 (세)</label><input id="ag" type="number" inputmode="numeric" placeholder="예: 25"></div><div><label class="f" for="ht">키 (cm)</label><input id="ht" type="number" inputmode="decimal" placeholder="예: 170"></div></div>
+  <label class="f" for="wt">몸무게 (kg)</label><input id="wt" type="number" inputmode="decimal" placeholder="예: 65">
+  <p class="f" style="margin-top:20px;font-weight:500">해당하는 항목이 있으면 체크해 주세요</p>
+  <label class="chk"><input type="checkbox" id="c1">임신 중이거나 수유 중입니다</label>
+  <label class="chk"><input type="checkbox" id="c2">식이 제한이 필요한 질환이 있습니다 (당뇨, 신장질환 등)</label>
+  <label class="chk"><input type="checkbox" id="c3">섭식장애 병력이 있습니다</label>
+  <p class="err" id="err" role="alert"></p><div class="nav"><span></span><button class="btn" id="nx">다음</button></div></div>`);
+  $('#sx').value=b.sx||'';['ag','ht','wt'].forEach(k=>$('#'+k).value=b[k]||'');$('#c1').checked=!!b.c1;$('#c2').checked=!!b.c2;$('#c3').checked=!!b.c3;
+  $('#nx').onclick=checkBasic;return}
+ const Q=QUESTIONS[step-1],cur=A[Q.id];
+ q.innerHTML=wrap(`<div class="q"><h2>${Q.t}</h2><p class="mut">${Q.h}</p><div id="os"></div><div class="nav"><button class="btn o" id="bk">이전</button><button class="btn" id="nx">${step===TOTAL-1?'식단 보기':'다음'}</button></div></div>`);
+ const os=$('#os');
+ Q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='opt';b.type='button';b.innerHTML=o[1]+(o[2]?`<small>${o[2]}</small>`:'');
+  const on=()=>Q.multi?A.excl.includes(o[0]):A['_i'+Q.id]===i;
+  b.setAttribute('aria-pressed',on());
+  b.onclick=()=>{if(Q.multi){let e=A.excl;if(o[0]==='none')e=['none'];else{e=e.filter(x=>x!=='none');e=e.includes(o[0])?e.filter(x=>x!==o[0]):[...e,o[0]]}A.excl=e}else{A[Q.id]=o[0];A['_i'+Q.id]=i}
+   [...os.children].forEach((c,j)=>c.setAttribute('aria-pressed',Q.multi?A.excl.includes(Q.o[j][0]):A['_i'+Q.id]===j));$('#nx').disabled=!ready(Q)};
+  os.appendChild(b)});
+ $('#nx').disabled=!ready(Q);
+ $('#bk').onclick=()=>{step--;draw()};
+ $('#nx').onclick=()=>{if(step===TOTAL-1){off=0;result();show('res')}else{step++;draw()}};
+}
+function ready(Q){return Q.multi?A.excl.length>0:A['_i'+Q.id]!==undefined}
+function checkBasic(){
+ const g=k=>$('#'+k).value,b=A.basic={sx:g('sx'),ag:+g('ag'),ht:+g('ht'),wt:+g('wt'),c1:$('#c1').checked,c2:$('#c2').checked,c3:$('#c3').checked},e=$('#err');
+ if(!b.sx||!b.ag||!b.ht||!b.wt){e.textContent='성별, 나이, 키, 몸무게를 모두 입력해 주세요.';return}
+ if(b.ag<10||b.ag>100||b.ht<120||b.ht>220||b.wt<30||b.wt>250){e.textContent='입력값이 현실적인 범위를 벗어났어요. 나이는 10~100, 키는 120~220cm, 몸무게는 30~250kg 범위로 입력해 주세요.';return}
+ if(b.ag<CONFIG.minAge){e.textContent='만 18세 미만은 열량 기준 식단을 만들지 않습니다. 성장기에는 보호자, 의사, 영양사와 상담해 주세요.';return}
+ if(b.c1||b.c2||b.c3){e.textContent='선택하신 항목에 해당하면 이 도구의 식단은 맞지 않을 수 있습니다. 의사나 영양사와 상담해 주세요.';return}
+ e.textContent='';step=1;draw();
+}
+function target(){
+ const b=A.basic,bmr=10*b.wt+6.25*b.ht-5*b.ag+(b.sx==='m'?5:-161);
+ let k=bmr*CONFIG.activity[A.act]*CONFIG.goalMul[A.goal],floored=false;
+ const fl=CONFIG.kcalFloor[b.sx];if(k<fl){k=fl;floored=true}
+ return{k,p:b.wt*CONFIG.protPerKg[A.goal],floored,bmi:b.wt/Math.pow(b.ht/100,2)}
+}
+const mk=(m,x=1)=>m.items.reduce((s,[i,g])=>({k:s.k+ING[i].k*g*x/100,p:s.p+ING[i].p*g*x/100,c:s.c+ING[i].c*g*x/100}),{k:0,p:0,c:0});
+function result(){
+ const r=$('#res'),T=target(),ex=A.excl.filter(x=>x!=='none'),notes=[];
+ if(T.bmi<CONFIG.bmiMin&&A.goal==='lose'){r.innerHTML=`<h2>체중 감량 식단은 만들지 않습니다</h2><p class="err">입력하신 키와 몸무게로는 체중 감량을 목표로 하는 식단이 적절하지 않을 수 있습니다. 의사나 영양사와 상담해 주세요.</p><div class="nav"><button class="btn o" id="re">답변 수정</button></div>`;$('#re').onclick=()=>{step=1;show('quiz');draw()};return}
+ const slots=CONFIG.slots[A.meals],w=CONFIG.split[A.meals],used=[],plan=[];let tc=0,tp=0,tk=0,relaxed=false,repeat=false;
+ slots.forEach((s,i)=>{
+  let pool=MENUS.filter(m=>m.slot===s&&!m.items.some(([id])=>ING[id].ex.some(t=>ex.includes(t))));
+  if(!pool.length){plan.push({s,none:1});return}
+  let fresh=pool.filter(m=>!used.includes(m.id));if(!fresh.length){fresh=pool;repeat=true}
+  const cap=A.budget*w[i],sc=m=>Math.max(0,m.lvl-A.prep)+(mk(m).c>cap?1:0);
+  fresh.sort((a,b)=>sc(a)-sc(b));const best=fresh.filter(m=>sc(m)===sc(fresh[0])),m=best[(off+i)%best.length];
+  if(sc(m)>0)relaxed=true;used.push(m.id);
+  const x=Math.min(2,Math.max(.5,T.k*w[i]/mk(m).k)),v=mk(m,x);tk+=v.k;tp+=v.p;tc+=v.c;plan.push({s,m,x,v});
+ });
+ if(plan.some(p=>p.none))notes.push('제외한 재료 때문에 메뉴를 고를 수 없는 끼니가 있어요. 시험 버전이라 메뉴 수가 적습니다.');
+ if(relaxed)notes.push('조건에 맞는 메뉴가 부족해 요리 수준이나 예산을 넘는 메뉴가 일부 포함됐어요.');
+ if(repeat)notes.push('메뉴 수가 적어 같은 메뉴가 반복됩니다.');
+ if(T.floored)notes.push('계산된 열량이 최소 기준보다 낮아 최소 기준으로 올려 계산했어요.');
+ if(tc>A.budget&&A.budget<1e9)notes.push(`예상 식비가 선택한 예산을 넘습니다.`);
+ const gl={};plan.forEach(p=>p.m&&p.m.items.forEach(([i,g])=>gl[i]=(gl[i]||0)+g*p.x));
+ const lab={lose:'체지방 감량',gain:'근육 증가',keep:'체중 유지·건강',perf:'운동 퍼포먼스'}[A.goal];
+ r.innerHTML=`<p class="lab">하루 식단 · ${lab}</p><h2>오늘의 식단</h2>
+ <div class="sum"><div><b>${num(T.k)} kcal</b><span>목표 열량</span></div><div><b>${num(T.p)} g</b><span>목표 단백질</span></div><div><b>${num(tk)} kcal</b><span>식단 합계</span></div><div><b>${num(tp)} g</b><span>식단 단백질</span></div><div><b>약 ${num(won(tc))}원</b><span>예상 식비</span></div></div>
+ ${notes.map(n=>`<p class="note">· ${n}</p>`).join('')}
+ ${ex.length?`<p class="note">제외한 재료: ${ex.join(', ')}</p>`:''}
+ ${plan.map(p=>p.none?`<div class="meal"><div class="mb"><div class="s">${CONFIG.slotName[p.s]}</div><p class="mut">조건에 맞는 메뉴가 없습니다.</p></div></div>`:`<div class="meal">${p.m.img?`<img src="${p.m.img}" alt="${p.m.name}">`:'<div class="ph">예시 이미지입니다</div>'}<div class="mb"><div class="s">${CONFIG.slotName[p.s]}</div><h3>${p.m.name}</h3><div class="tags">${p.m.items.map(([i,g])=>`<span>${ING[i].n} ${Math.round(g*p.x/5)*5}g</span>`).join('')}</div><p class="note" style="margin:0">${num(p.v.k)} kcal · 단백질 ${num(p.v.p)} g · 약 ${num(won(p.v.c))}원</p></div></div>`).join('')}
+ <h3 style="margin-top:32px">장보기 목록</h3><div class="tags" style="margin-top:10px">${Object.entries(gl).map(([i,g])=>`<span>${ING[i].n} ${Math.round(g/5)*5}g</span>`).join('')}</div>
+ <p class="note">시험 버전: 영양·가격은 임시 수치이고 열량은 목표와 차이가 날 수 있습니다.</p>
+ <div class="safe">이 식단은 일반적인 식사 예시이며 의료·영양 상담을 대신하지 않습니다. 알레르기, 질환, 임신·수유 등 특별한 고려가 필요하면 전문가와 상담하고 식품 표시를 확인해 주세요.</div>
+ <div class="nav"><button class="btn o" id="re">답변 수정</button><button class="btn" id="sh">다른 메뉴로 바꾸기</button></div>`;
+ $('#re').onclick=()=>{step=1;show('quiz');draw()};$('#sh').onclick=()=>{off++;result();window.scrollTo(0,0)};
+}
+</script>
+</body>
+</html>
