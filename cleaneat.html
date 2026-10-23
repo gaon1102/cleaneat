@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Clean Eat — 나에게 맞는 일주일 식단</title>
-<meta name="description" content="성별·나이·키·몸무게와 목표, 요리 수준, 예산을 입력하면 통곡물·신선식품 중심의 일주일 식단표와 장보기 목록을 계산해 보여줍니다.">
+<title>Clean Eat — 나를 위한 오늘의 식단</title>
+<meta name="description" content="성별·나이·키·몸무게와 목표, 요리 수준, 예산을 입력하면 통곡물·신선식품 중심의 하루 세 끼 메뉴와 분량을 계산해 보여줍니다.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
@@ -51,7 +51,7 @@ footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:.88rem;col
 #quiz,#res{padding:48px 24px 72px}#res{max-width:760px}
 .top{display:flex;justify-content:space-between;align-items:baseline}.top .lab{margin:0;letter-spacing:.02em;font-weight:400;color:#9a9f94;font-size:.85rem}.cnt{font-weight:650;color:var(--g);font-size:.95rem;letter-spacing:.02em}
 .qg{display:grid;grid-template-columns:200px 1fr;gap:56px}.qm{max-width:620px}
-.jn{position:relative;list-style:none;margin:0;padding:0}.jn:before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:1px;background:#e6e8df}.jn li{position:relative;display:flex;align-items:center;gap:12px;height:39px;color:#a2a79f;font-size:.8rem;transition:color .2s}
+.jn{position:relative;list-style:none;margin:0;padding:0;align-self:start}.jn:before{content:"";position:absolute;left:13px;top:40px;bottom:40px;width:1px;background:#e6e8df}.jn li{position:relative;display:flex;align-items:center;gap:12px;height:80px;color:#a2a79f;font-size:.8rem;transition:color .2s}
 .jn b{position:relative;z-index:1;display:grid;place-items:center;width:27px;height:27px;border:1px solid #e2e5dc;border-radius:50%;background:var(--bg);color:#a2a79f;font-size:.62rem;font-weight:650}
 
 .jn li.on{color:var(--gd,var(--fg));font-weight:650}.jn li.on b{background:var(--g);border-color:var(--g);color:#fff}.jn li.dn b{border-color:#dce6d9;background:#e5ede2;color:var(--g)}
@@ -86,10 +86,46 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 .wk th,.wk td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .wk th{color:var(--mut);font-weight:600;font-size:.85rem}.wk td:first-child{font-weight:650;color:var(--g);white-space:nowrap}
 .dd .mb2{padding:10px 0;border-top:1px solid var(--line)}.dd .mb2:first-of-type{border-top:0}.dd .s{font-size:.85rem;color:var(--g);font-weight:700}
+/* 하루 식단 결과 */
+#res{max-width:1160px}
+.rh{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-bottom:28px;border-bottom:1px solid var(--line)}.rh .eb{margin-bottom:14px}
+.rh h2{font-size:clamp(1.7rem,3.2vw,2.3rem)}
+.stat{font-size:.85rem;color:var(--mut);margin:14px 0 0}
+.btn.ed{gap:14px;background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:13px 26px;font-size:.85rem;font-weight:650;box-shadow:none}.btn.ed:hover:not(:disabled){background:var(--soft);transform:none;box-shadow:none}
+.sumt{display:grid;grid-template-columns:2.3fr .9fr 1.15fr 1.3fr .9fr;background:var(--card);border:1px solid var(--line);padding:24px 0;margin-top:20px}
+.sumt>div{padding:2px 20px;border-left:1px solid var(--line);min-width:0}.sumt>div:first-child{border-left:0;display:flex;align-items:center;gap:16px;padding-left:28px}
+.sumt .si{flex:none;width:42px;height:42px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--g)}
+.sumt span{display:block;font-size:.68rem;color:var(--mut)}.sumt b{display:block;font-size:.86rem;font-weight:650;margin-top:4px;line-height:1.5}.sumt small{display:block;font-size:.74rem;color:var(--mut);margin-top:2px}
+.notes{margin-top:14px}.notes p{font-size:.8rem;color:var(--mut);margin:4px 0 0}
+@media(max-width:760px){.sumt{grid-template-columns:1fr 1fr;padding:0}.sumt>div{padding:14px 18px;border-left:0;border-top:1px solid var(--line)}.sumt>div:first-child{grid-column:1/-1;border-top:0;padding-left:18px}}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;align-items:stretch}
+.card{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;min-height:330px}
+.card .im{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--soft)}.card .im img{width:100%;height:100%;object-fit:cover;display:block}
+.card .bd{position:absolute;left:12px;bottom:12px;background:var(--card);color:var(--fg);font-size:.6rem;font-weight:700;letter-spacing:.14em;padding:5px 8px}
+.card .cb{padding:22px 20px 20px;display:flex;flex-direction:column;flex:1}
+.ct{display:flex;justify-content:space-between;align-items:baseline;font-size:.72rem;font-weight:700;color:var(--g)}.ct i{font-family:Georgia,serif;font-weight:400;color:var(--mut)}
+.card h3{font-size:1.15rem;margin:14px 0 8px}.card .ds{font-size:.85rem;color:var(--mut)}
+.card .kc{font-size:.78rem;color:var(--mut);margin-top:10px}
+.card .ft{margin-top:auto;padding-top:24px}
+.card .tags span{border-radius:2px;font-size:.72rem;padding:3px 9px}
+.card details{border:0;padding:6px 0 0}.card summary{font-size:.75rem;color:var(--g);font-weight:600}.card details ul{margin:6px 0 0;padding-left:1.1em;font-size:.78rem;color:var(--mut)}
+.card.em{justify-content:center;align-items:center;color:var(--mut);font-size:.9rem;padding:24px;text-align:center}
+.r2{display:grid;grid-template-columns:1fr 1.5fr;gap:16px;margin-top:40px}
+.box{position:relative;background:var(--soft);border:1px solid var(--line);padding:30px 22px 28px}
+.box .k{font-size:.62rem;font-weight:700;letter-spacing:.14em;color:#74816f}
+.box h3{font-size:1.15rem;margin:16px 0 8px}.box p{font-size:.85rem;color:var(--mut)}
+.box .ic{position:absolute;right:18px;top:18px;width:34px;height:34px;border-radius:50%;background:var(--card);display:grid;place-items:center;color:var(--g)}
+.box .tags{margin-top:18px}.box .tags span{background:var(--card);border:1px solid var(--line);border-radius:2px;font-size:.72rem;padding:3px 12px}
+.ck{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:14px 0 0;padding:0;font-size:.72rem;color:var(--mut)}.ck li:before{content:"✓";color:var(--g);margin-right:6px}
+.foot{display:flex;justify-content:flex-end;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin-top:32px}
+.foot .l{display:flex;align-items:center;gap:14px}.foot .ic2{width:38px;height:38px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--g);flex:none}
+.foot b{font-size:.92rem}.foot p{font-size:.78rem;color:var(--mut)}.foot .bs{display:flex;gap:10px;flex-wrap:wrap}
+.disc{font-size:.72rem;color:var(--mut);margin:16px 0 0}
+@media(max-width:760px){.cards,.r2{grid-template-columns:1fr}.card{min-height:0}.foot .bs{width:100%}.foot .bs .btn{flex:1}}
 </style>
 </head>
 <body>
-<header><div class="w"><button class="logo" id="logo" aria-label="처음 화면으로"><i class="mk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></i><span>clean<b>eat</b></span></button><nav class="nv"><button data-to="rules">식단 기준</button><button data-to="faq">자주 묻는 질문</button></nav></div></header>
+<header><div class="w"><button class="logo" id="logo" aria-label="처음 화면으로"><i class="mk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></i><span>clean<b>eat</b></span></button><nav class="nv"><button data-to="rules">핵심 원칙</button><button data-to="faq">자주 묻는 질문</button></nav></div></header>
 
 <main>
 <div id="home">
@@ -97,7 +133,7 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
  <section class="hero">
   <div>
    <p class="eb">FOOD, IN ITS BEST FORM</p><h1>잘 먹는 하루를,<br><em>나답게</em> 설계해요.</h1>
-   <p class="lead">복잡한 기준보다, 나에게 맞는 좋은 재료 한 끼.<br class="db"> 일곱 가지 질문으로 일주일 식단을 제안해요.</p>
+   <p class="lead">복잡한 기준보다, 나에게 맞는 좋은 재료 한 끼.<br class="db"> 일곱 가지 질문으로 오늘의 세 끼를 제안해요.</p>
    <button class="btn" data-go>내 식단 시작하기 <span aria-hidden="true">→</span></button>
    <p class="note">가입 없음. 입력한 값은 이 페이지 안에서만 계산합니다.</p>
   </div>
@@ -105,39 +141,33 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
  </section>
 
  <section class="sec">
-  <p class="lab">HOW IT WORKS</p>
-  <h2>입력부터 식단까지 <em>세 단계</em></h2>
-  <div class="rows">
-   <div class="row"><span class="k">01</span><div><h3>질문에 답합니다</h3><p class="mut">모두 선택형이고, 숫자 입력은 기본 정보 한 화면뿐입니다.</p></div></div>
-   <div class="row"><span class="k">02</span><div><h3>목표 열량과 단백질을 계산합니다</h3><p class="mut">Mifflin-St Jeor 공식으로 기초대사량을 구하고 활동량과 목표를 반영합니다.</p></div></div>
-   <div class="row"><span class="k">03</span><div><h3>일주일 식단표와 장보기 목록을 확인합니다</h3><p class="mut">요일별 메뉴의 재료·분량·열량·단백질·예상 비용과, 일주일 재료를 합산한 목록이 나옵니다.</p></div></div>
-  </div>
- </section>
-
- <section class="sec">
   <p class="lab" id="rules">OUR RULES</p>
-  <h2>식단은 이 기준으로 <em>고릅니다</em></h2>
-  <div class="two">
-   <div><h3>재료 기준</h3><ul><li>통곡물, 채소, 과일, 달걀·두부·닭가슴살·생선 같은 단백질 위주</li><li>가공을 줄이고, 포장 제품은 성분표가 짧은 것</li></ul></div>
-   <div><h3>계산 기준</h3><ul><li>영양과 가격은 재료 단위로 계산해 메뉴에 합산</li><li>못 먹는 음식은 재료에서 찾아 자동으로 제외</li></ul></div>
+  <h2>클린 이트의 <em>네 가지</em> 원칙</h2>
+  <div class="rows">
+   <div class="row"><span class="k">01</span><div><h3>가공이 적은 음식 먹기</h3><p class="mut">채소·과일·달걀·생선·두부·통곡물처럼 원래 모습에 가까운 음식을 골라요.</p></div></div>
+   <div class="row"><span class="k">02</span><div><h3>설탕과 초가공식품 줄이기</h3><p class="mut">단 음료와 과자, 패스트푸드는 조금씩 덜 먹어요.</p></div></div>
+   <div class="row"><span class="k">03</span><div><h3>영양소를 골고루 먹기</h3><p class="mut">탄수화물·단백질·지방을 무조건 제한하지 않고 적절히 먹어요.</p></div></div>
+   <div class="row"><span class="k">04</span><div><h3>무리하지 않고 꾸준히</h3><p class="mut">무언가를 끊기보다, 일상에서 조금 더 나은 쪽을 골라요.</p></div></div>
   </div>
  </section>
 
  <section class="sec">
   <p class="lab">GOOD TO KNOW</p>
-  <h2>이런 경우에는 <em>맞지 않아요</em></h2>
-  <div class="two">
-   <div><h3>이 도구를 쓰지 마세요</h3><ul><li>만 18세 미만</li><li>임신·수유 중</li><li>식이 제한이 필요한 질환이 있는 경우</li><li>섭식장애 병력이 있는 경우</li></ul><p class="note">해당하면 의사나 영양사와 상담해 주세요.</p></div>
-   <div><h3>대상이 아닌 식사</h3><ul><li>구내식당·외식·급식 위주로 먹는 경우</li><li>하루 세 끼가 아닌 경우 (세 끼 기준으로 계산합니다)</li></ul><p class="note">직접 챙겨 먹으려는데 무엇을 먹을지 막막한 사람을 위한 도구입니다.</p></div>
+  <h2>이렇게 먹으면 <em>좋은 점</em></h2>
+  <div class="rows">
+   <div class="row"><span class="k">01</span><div><h3>식이섬유와 비타민을 더 챙길 수 있어요</h3><p class="mut">채소·과일·통곡물이 늘면 자연스럽게 채워져요.</p></div></div>
+   <div class="row"><span class="k">02</span><div><h3>식습관 개선과 체중 관리에 도움이 될 수 있어요</h3><p class="mut">포만감이 오래가는 음식이라 과식이 줄기 쉬워요.</p></div></div>
+   <div class="row"><span class="k">03</span><div><h3>첨가당과 나트륨을 과하게 먹는 걸 줄일 수 있어요</h3><p class="mut">가공식품이 줄면 함께 줄어요. 국물·장류 간은 싱겁게.</p></div></div>
   </div>
   <div id="faq" style="margin-top:32px">
    <details><summary>입력한 정보는 저장되나요?</summary><p>이 페이지 안에서만 계산하고 서버로 보내지 않습니다. 새로고침하면 사라집니다.</p></details>
    <details><summary>영양 수치는 어디서 가져오나요?</summary><p>현재는 시험 버전이라 임시 수치를 씁니다. 공식 영양성분 DB로 교체한 뒤 출처를 표기할 예정입니다.</p></details>
    <details><summary>의학적 조언인가요?</summary><p>아닙니다. 일반적인 식사 구성 예시이며 진단이나 치료를 대신하지 않습니다.</p></details>
+   <details><summary>쓰면 안 되는 사람도 있나요?</summary><p>만 18세 미만, 임신·수유 중이거나 식이 제한이 필요한 질환 또는 섭식장애 병력이 있다면 이 도구 대신 의사나 영양사와 상담해 주세요.</p></details>
   </div>
  </section>
 
- 
+
 </div>
 </div>
 
@@ -171,47 +201,48 @@ const QUESTIONS=[
  {id:'prep',l:'준비 방식',t:'평소 어느 정도까지 요리할 수 있나요?',h:'가장 가까운 항목 하나를 선택해 주세요.',o:[[1,'조리 없이 바로 먹는 음식','완제품이나 간편식 위주'],[2,'전자레인지로 간단히 조리','데우거나 간단하게 익히기'],[3,'10~15분 간단한 요리','달걀, 볶음밥 등'],[4,'30분 정도 일반적인 요리','여러 재료 활용'],[5,'요리를 즐겨요','새로운 레시피도 괜찮아요']]},
  {id:'budget',l:'하루 예산',t:'하루 식비는 어느 정도인가요?',h:'식재료 기준입니다. 대략적인 금액을 골라 주세요.',o:[[15000,'1만~1.5만 원'],[25000,'1.5만~2.5만 원'],[1e9,'2.5만 원 이상'],[1e9,'제한 없음']]}
 ];
-/* ============ 3. 재료 (100g당) — 임시 수치! 공식 영양성분 DB와 실제 가격으로 교체. k 열량, p 단백질(g), c 가격(원) ============ */
+/* ============ 3. 재료 (100g당) — 임시 수치! 공식 영양성분 DB와 실제 가격으로 교체. k 열량, p 단백질(g), cb 탄수화물(g), f 지방(g), c 가격(원) ============ */
 const ING={
- chicken:{n:'닭가슴살',k:109,p:23,c:1300,ex:['육류']},pork:{n:'돼지 안심',k:120,p:21,c:1500,ex:['육류']},beef:{n:'소고기 우둔살',k:140,p:21,c:3500,ex:['육류']},
- salmon:{n:'연어',k:208,p:20,c:4500,ex:['해산물']},egg:{n:'달걀',k:143,p:12.6,c:500,ex:['달걀']},yog:{n:'그릭요거트',k:97,p:9,c:1200,ex:['유제품']},
- tofu:{n:'두부',k:84,p:8,c:400,ex:[]},lentil:{n:'렌틸콩(생)',k:353,p:25,c:800,ex:[]},chickpea:{n:'병아리콩(건)',k:364,p:19,c:700,ex:[]},soymilk:{n:'무가당 두유',k:45,p:3.5,c:250,ex:[]},
- brice:{n:'현미(생)',k:360,p:7.5,c:500,ex:[]},oat:{n:'오트밀',k:380,p:13,c:700,ex:[]},bread:{n:'통밀빵',k:250,p:10,c:800,ex:[]},sweet:{n:'고구마',k:86,p:1.6,c:500,ex:[]},potato:{n:'감자',k:77,p:2,c:300,ex:[]},
- broc:{n:'브로콜리',k:34,p:2.8,c:900,ex:[]},spin:{n:'시금치',k:23,p:2.9,c:700,ex:[]},sprout:{n:'콩나물',k:30,p:3.5,c:300,ex:[]},mush:{n:'양송이버섯',k:22,p:3,c:700,ex:[]},
- cabbage:{n:'양배추',k:25,p:1.3,c:250,ex:[]},tomato:{n:'토마토',k:18,p:.9,c:600,ex:[]},banana:{n:'바나나',k:89,p:1.1,c:500,ex:[]},apple:{n:'사과',k:52,p:.3,c:800,ex:[]},
- avo:{n:'아보카도',k:160,p:2,c:2500,ex:[]},oil:{n:'올리브유',k:884,p:0,c:2000,ex:[]}
+ chicken:{n:'닭가슴살',k:109,p:23,cb:0,f:1.5,c:1300,ex:['육류']},pork:{n:'돼지 안심',k:120,p:21,cb:0,f:3.5,c:1500,ex:['육류']},beef:{n:'소고기 우둔살',k:140,p:21,cb:0,f:5,c:3500,ex:['육류']},
+ salmon:{n:'연어',k:208,p:20,cb:0,f:13,c:4500,ex:['해산물']},egg:{n:'달걀',k:143,p:12.6,cb:0.7,f:9.5,c:500,ex:['달걀']},yog:{n:'그릭요거트',k:97,p:9,cb:4,f:5,c:1200,ex:['유제품']},
+ tofu:{n:'두부',k:84,p:8,cb:2,f:5,c:400,ex:[]},lentil:{n:'렌틸콩(생)',k:353,p:25,cb:60,f:1,c:800,ex:[]},chickpea:{n:'병아리콩(건)',k:364,p:19,cb:61,f:6,c:700,ex:[]},soymilk:{n:'무가당 두유',k:45,p:3.5,cb:1.5,f:2,c:250,ex:[]},
+ brice:{n:'현미(생)',k:360,p:7.5,cb:77,f:2.7,c:500,ex:[]},oat:{n:'오트밀',k:380,p:13,cb:66,f:7,c:700,ex:[]},bread:{n:'통밀빵',k:250,p:10,cb:43,f:3.5,c:800,ex:[]},sweet:{n:'고구마',k:86,p:1.6,cb:20,f:0.1,c:500,ex:[]},potato:{n:'감자',k:77,p:2,cb:17,f:0.1,c:300,ex:[]},
+ broc:{n:'브로콜리',k:34,p:2.8,cb:7,f:0.4,c:900,ex:[]},spin:{n:'시금치',k:23,p:2.9,cb:3.6,f:0.4,c:700,ex:[]},sprout:{n:'콩나물',k:30,p:3.5,cb:4,f:1,c:300,ex:[]},mush:{n:'양송이버섯',k:22,p:3,cb:3.3,f:0.3,c:700,ex:[]},
+ cabbage:{n:'양배추',k:25,p:1.3,cb:5.8,f:0.1,c:250,ex:[]},tomato:{n:'토마토',k:18,p:.9,cb:3.9,f:0.2,c:600,ex:[]},banana:{n:'바나나',k:89,p:1.1,cb:23,f:0.3,c:500,ex:[]},apple:{n:'사과',k:52,p:.3,cb:14,f:0.2,c:800,ex:[]},
+ avo:{n:'아보카도',k:160,p:2,cb:8.5,f:15,c:2500,ex:[]},oil:{n:'올리브유',k:884,p:0,cb:0,f:100,c:2000,ex:[]}
 };
-/* ============ 4. 메뉴 — slot: a 아침 / m 점심·저녁, lvl: 조리 난이도 1~5, pro: 주 단백질 유형(chicken·red·egg·soy·fish·none), img: 사진 주소 ============
+/* ============ 4. 메뉴 — slot: a 아침 / m 점심·저녁, lvl: 조리 난이도 1~5, pro: 주 단백질 유형(chicken·red·egg·soy·fish·none), img: 사진 주소, desc: 카드 설명 한 줄 ============
    임시 메뉴입니다. 영양·가격 임시 수치와 함께 공개 전 교체·검증 필요. */
 const MENUS=[
- {id:'a1',name:'바나나 오트밀',slot:'a',lvl:2,pro:'none',img:'',items:[['oat',50],['banana',100]]},
- {id:'a2',name:'두부 시금치 스크램블',slot:'a',lvl:3,pro:'soy',img:'',items:[['tofu',150],['spin',60],['oil',5]]},
- {id:'a3',name:'아보카도 달걀 토스트',slot:'a',lvl:3,pro:'egg',img:'',items:[['bread',70],['egg',100],['avo',60]]},
- {id:'a4',name:'요거트 오트밀 볼',slot:'a',lvl:1,pro:'egg',img:'',items:[['yog',150],['oat',40],['apple',100]]},
- {id:'a5',name:'두유 바나나 오트밀',slot:'a',lvl:2,pro:'soy',img:'',items:[['soymilk',200],['oat',50],['banana',80]]},
- {id:'a6',name:'달걀 채소 오믈렛',slot:'a',lvl:3,pro:'egg',img:'',items:[['egg',120],['mush',50],['spin',40],['oil',5]]},
- {id:'a7',name:'닭가슴살 토마토 샌드위치',slot:'a',lvl:2,pro:'chicken',img:'',items:[['bread',70],['chicken',80],['tomato',60]]},
- {id:'a8',name:'고구마와 두유',slot:'a',lvl:1,pro:'soy',img:'',items:[['sweet',150],['soymilk',200]]},
- {id:'m1',name:'닭가슴살 현미 브로콜리',slot:'m',lvl:3,pro:'chicken',img:'',items:[['chicken',150],['brice',80],['broc',100],['oil',5]]},
- {id:'m2',name:'구운 연어 고구마',slot:'m',lvl:4,pro:'fish',img:'',items:[['salmon',130],['sweet',200],['broc',80]]},
- {id:'m3',name:'렌틸 시금치 수프',slot:'m',lvl:4,pro:'soy',img:'',items:[['lentil',70],['spin',80],['oil',8]]},
- {id:'m4',name:'닭가슴살 양배추 볶음밥',slot:'m',lvl:3,pro:'chicken',img:'',items:[['chicken',120],['brice',80],['cabbage',100],['oil',8]]},
- {id:'m5',name:'돼지 안심 채소 볶음과 현미밥',slot:'m',lvl:3,pro:'red',img:'',items:[['pork',130],['brice',80],['cabbage',100],['mush',60],['oil',8]]},
- {id:'m6',name:'소고기 버섯 덮밥',slot:'m',lvl:3,pro:'red',img:'',items:[['beef',120],['brice',80],['mush',80],['oil',6]]},
- {id:'m7',name:'두부 콩나물 비빔밥',slot:'m',lvl:3,pro:'soy',img:'',items:[['tofu',150],['brice',80],['sprout',100],['spin',60],['oil',5]]},
- {id:'m8',name:'달걀 채소 덮밥',slot:'m',lvl:3,pro:'egg',img:'',items:[['egg',100],['brice',80],['spin',60],['mush',50],['oil',6]]},
- {id:'m9',name:'닭가슴살 감자 샐러드',slot:'m',lvl:2,pro:'chicken',img:'',items:[['chicken',130],['potato',150],['tomato',80],['spin',50],['oil',8]]},
- {id:'m10',name:'소고기 채소 구이',slot:'m',lvl:3,pro:'red',img:'',items:[['beef',100],['sweet',150],['broc',100],['oil',5]]},
- {id:'m11',name:'두부 스테이크와 채소',slot:'m',lvl:3,pro:'soy',img:'',items:[['tofu',200],['broc',100],['potato',120],['oil',8]]},
- {id:'m12',name:'달걀 토마토 샌드위치',slot:'m',lvl:2,pro:'egg',img:'',items:[['bread',100],['egg',100],['tomato',80],['spin',40]]},
- {id:'m13',name:'병아리콩 토마토 볶음밥',slot:'m',lvl:3,pro:'soy',img:'',items:[['chickpea',70],['tomato',120],['spin',60],['brice',70],['oil',8]]},
- {id:'m14',name:'감자 두부 버섯 조림',slot:'m',lvl:3,pro:'soy',img:'',items:[['tofu',150],['potato',150],['mush',60],['oil',6]]}
+ {id:'a1',name:'바나나 오트밀',desc:'따뜻하게 끓인 오트밀에 바나나를 얹었어요.',slot:'a',lvl:2,pro:'none',img:'',items:[['oat',50],['banana',100]]},
+ {id:'a2',name:'두부 시금치 스크램블',desc:'으깬 두부를 시금치와 함께 부드럽게 볶았어요.',slot:'a',lvl:3,pro:'soy',img:'',items:[['tofu',150],['spin',60],['oil',5]]},
+ {id:'a3',name:'아보카도 달걀 토스트',desc:'통밀빵에 아보카도와 달걀을 올렸어요.',slot:'a',lvl:3,pro:'egg',img:'',items:[['bread',70],['egg',100],['avo',60]]},
+ {id:'a4',name:'요거트 오트밀 볼',desc:'그릭요거트에 오트밀과 사과를 곁들였어요.',slot:'a',lvl:1,pro:'egg',img:'',items:[['yog',150],['oat',40],['apple',100]]},
+ {id:'a5',name:'두유 바나나 오트밀',desc:'두유에 불린 오트밀과 바나나를 담았어요.',slot:'a',lvl:2,pro:'soy',img:'',items:[['soymilk',200],['oat',50],['banana',80]]},
+ {id:'a6',name:'달걀 채소 오믈렛',desc:'달걀에 버섯과 시금치를 넣어 부쳤어요.',slot:'a',lvl:3,pro:'egg',img:'',items:[['egg',120],['mush',50],['spin',40],['oil',5]]},
+ {id:'a7',name:'닭가슴살 토마토 샌드위치',desc:'통밀빵에 닭가슴살과 토마토를 넣었어요.',slot:'a',lvl:2,pro:'chicken',img:'',items:[['bread',70],['chicken',80],['tomato',60]]},
+ {id:'a8',name:'고구마와 두유',desc:'찐 고구마와 무가당 두유 한 잔.',slot:'a',lvl:1,pro:'soy',img:'',items:[['sweet',150],['soymilk',200]]},
+ {id:'m1',name:'닭가슴살 현미 브로콜리',desc:'구운 닭가슴살과 데친 브로콜리를 현미밥에 곁들였어요.',slot:'m',lvl:3,pro:'chicken',img:'',items:[['chicken',150],['brice',80],['broc',100],['oil',5]]},
+ {id:'m2',name:'구운 연어 고구마',desc:'구운 연어에 고구마와 브로콜리를 곁들였어요.',slot:'m',lvl:4,pro:'fish',img:'',items:[['salmon',130],['sweet',200],['broc',80]]},
+ {id:'m3',name:'렌틸 시금치 수프',desc:'렌틸콩과 시금치를 뭉근하게 끓였어요.',slot:'m',lvl:4,pro:'soy',img:'',items:[['lentil',70],['spin',80],['oil',8]]},
+ {id:'m4',name:'닭가슴살 양배추 볶음밥',desc:'닭가슴살과 양배추를 현미밥과 함께 볶았어요.',slot:'m',lvl:3,pro:'chicken',img:'',items:[['chicken',120],['brice',80],['cabbage',100],['oil',8]]},
+ {id:'m5',name:'돼지 안심 채소 볶음과 현미밥',desc:'돼지 안심과 채소를 볶아 현미밥과 함께 담았어요.',slot:'m',lvl:3,pro:'red',img:'',items:[['pork',130],['brice',80],['cabbage',100],['mush',60],['oil',8]]},
+ {id:'m6',name:'소고기 버섯 덮밥',desc:'소고기와 버섯을 볶아 현미밥에 얹었어요.',slot:'m',lvl:3,pro:'red',img:'',items:[['beef',120],['brice',80],['mush',80],['oil',6]]},
+ {id:'m7',name:'두부 콩나물 비빔밥',desc:'두부와 콩나물, 시금치를 현미밥에 비볐어요.',slot:'m',lvl:3,pro:'soy',img:'',items:[['tofu',150],['brice',80],['sprout',100],['spin',60],['oil',5]]},
+ {id:'m8',name:'달걀 채소 덮밥',desc:'달걀과 채소를 볶아 현미밥에 얹었어요.',slot:'m',lvl:3,pro:'egg',img:'',items:[['egg',100],['brice',80],['spin',60],['mush',50],['oil',6]]},
+ {id:'m9',name:'닭가슴살 감자 샐러드',desc:'닭가슴살과 감자, 채소를 가볍게 버무렸어요.',slot:'m',lvl:2,pro:'chicken',img:'',items:[['chicken',130],['potato',150],['tomato',80],['spin',50],['oil',8]]},
+ {id:'m10',name:'소고기 채소 구이',desc:'소고기와 고구마, 브로콜리를 함께 구웠어요.',slot:'m',lvl:3,pro:'red',img:'',items:[['beef',100],['sweet',150],['broc',100],['oil',5]]},
+ {id:'m11',name:'두부 스테이크와 채소',desc:'두부를 노릇하게 굽고 채소를 곁들였어요.',slot:'m',lvl:3,pro:'soy',img:'',items:[['tofu',200],['broc',100],['potato',120],['oil',8]]},
+ {id:'m12',name:'달걀 토마토 샌드위치',desc:'통밀빵에 달걀과 토마토, 시금치를 넣었어요.',slot:'m',lvl:2,pro:'egg',img:'',items:[['bread',100],['egg',100],['tomato',80],['spin',40]]},
+ {id:'m13',name:'병아리콩 토마토 볶음밥',desc:'병아리콩과 토마토를 현미밥과 함께 볶았어요.',slot:'m',lvl:3,pro:'soy',img:'',items:[['chickpea',70],['tomato',120],['spin',60],['brice',70],['oil',8]]},
+ {id:'m14',name:'감자 두부 버섯 조림',desc:'두부와 감자, 버섯을 자작하게 조렸어요.',slot:'m',lvl:3,pro:'soy',img:'',items:[['tofu',150],['potato',150],['mush',60],['oil',6]]}
 ];
 
 /* ============ 5. 로직 (계산 전용 — 화면·전역 상태에 의존하지 않음. 정적 페이지 생성에도 그대로 씁니다) ============ */
 const num=n=>Math.round(n).toLocaleString('ko-KR'),won=n=>Math.round(n/100)*100;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-const mkv=(m,x=1)=>m.items.reduce((s,[i,g])=>({k:s.k+ING[i].k*g*x/100,p:s.p+ING[i].p*g*x/100,c:s.c+ING[i].c*g*x/100}),{k:0,p:0,c:0});
+const Z0={k:0,p:0,cb:0,f:0,c:0},addv=(a,b)=>({k:a.k+b.k,p:a.p+b.p,cb:a.cb+b.cb,f:a.f+b.f,c:a.c+b.c});
+const mkv=(m,x=1)=>m.items.reduce((s,[i,g])=>{const I=ING[i],q=g*x/100;return{k:s.k+I.k*q,p:s.p+I.p*q,cb:s.cb+I.cb*q,f:s.f+I.f*q,c:s.c+I.c*q}},Z0);
 const exList=A=>A.excl.filter(x=>x!=='none');
 const hasEx=(m,ex)=>m.items.some(([id])=>ING[id].ex.some(t=>ex.includes(t)));
 /* 기본 정보 검증: 오류 문구를 돌려주고, 통과하면 '' */
@@ -232,14 +263,13 @@ function targetOf(A){
  const fl=CONFIG.kcalFloor[b.sx];if(k<fl){k=fl;floored=true}
  return{k,p:b.wt*CONFIG.protPerKg[A.goal],floored};
 }
-/* 7일 식단 생성. 같은 입력과 seed면 항상 같은 결과(결정적). seed를 바꾸면 다른 조합 */
-function buildWeek(A,seed=0){
- if(bmiBlock(A))return{blocked:true,msg:BMI_MSG};
+/* n일치 메뉴 선택 (공통 엔진). 같은 입력과 seed면 항상 같은 결과(결정적). seed를 바꾸면 다른 조합 */
+function planDays(A,seed,n){
  const T=targetOf(A),ex=exList(A),pro=proBlocked(A.pro,ex)?'any':A.pro;
  const S=CONFIG.slots,w=CONFIG.split,use={},cat={};
  let relaxed=0,none=0,capped=0,mj=0,prevIds=[];
  const days=[];
- for(let d=0;d<7;d++){
+ for(let d=0;d<n;d++){
   const meals=[],today=[];
   S.forEach((s,i)=>{
    const pool=MENUS.filter(m=>m.slot===s&&!hasEx(m,ex));
@@ -264,22 +294,40 @@ function buildWeek(A,seed=0){
    meals.push({m,x,v:mkv(m,x),slot:s});
   });
   prevIds=today;
-  const tot=meals.reduce((a,e)=>e?{k:a.k+e.v.k,p:a.p+e.v.p,c:a.c+e.v.c}:a,{k:0,p:0,c:0});
-  days.push({d:CONFIG.days[d],meals,tot});
+  const tot=meals.reduce((a,e)=>e?addv(a,e.v):a,Z0);
+  days.push({d:CONFIG.days[d%7],meals,tot});
  }
- const sum=days.reduce((a,D)=>({k:a.k+D.tot.k,p:a.p+D.tot.p,c:a.c+D.tot.c}),{k:0,p:0,c:0});
- const avg={k:sum.k/7,p:sum.p/7,c:sum.c/7},gl={};
- days.forEach(D=>D.meals.forEach(e=>e&&e.m.items.forEach(([i,g])=>gl[i]=(gl[i]||0)+g*e.x)));
- const grocery=Object.entries(gl).map(([i,g])=>[i,Math.round(g/10)*10]).sort((a,b)=>ING[b[0]].c*b[1]-ING[a[0]].c*a[1]);
- const maxUse=Math.max(0,...Object.values(use)),notes=[];
- if(none)notes.push('제외한 재료 때문에 메뉴를 고를 수 없는 끼니가 있어요. 시험 버전이라 메뉴 수가 적습니다.');
- if(relaxed)notes.push('조건에 맞는 메뉴가 부족해 요리 수준이나 예산을 넘는 메뉴가 일부 포함됐어요.');
+ return{T,ex,pro,days,use,relaxed,none,capped};
+}
+/* 공통 안내 문구. avg는 하루 기준 값 */
+function notesOf(P,avg,A,maxUse){
+ const T=P.T,notes=[];
+ if(P.none)notes.push('제외한 재료 때문에 메뉴를 고를 수 없는 끼니가 있어요. 시험 버전이라 메뉴 수가 적습니다.');
+ if(P.relaxed)notes.push('조건에 맞는 메뉴가 부족해 요리 수준이나 예산을 넘는 메뉴가 일부 포함됐어요.');
  if(maxUse>3)notes.push('메뉴 수가 적어 같은 메뉴가 여러 번 반복됩니다.');
  if(T.floored)notes.push('계산된 열량이 최소 기준보다 낮아 최소 기준으로 올려 계산했어요.');
- if(avg.k<T.k*.9)notes.push(`하루 평균 열량이 목표보다 약 ${Math.round((1-avg.k/T.k)*100)}% 낮습니다. 한 끼 분량 상한 때문에 목표를 채우지 못했어요.`);
- if(avg.p<T.p*.85)notes.push(`하루 평균 단백질이 목표보다 약 ${Math.round((1-avg.p/T.p)*100)}% 낮습니다.`);
+ if(avg.k<T.k*.9)notes.push(`열량이 목표보다 약 ${Math.round((1-avg.k/T.k)*100)}% 낮습니다. 한 끼 분량 상한 때문에 목표를 채우지 못했어요.`);
+ if(avg.p<T.p*.85)notes.push(`단백질이 목표보다 약 ${Math.round((1-avg.p/T.p)*100)}% 낮습니다.`);
  if(A.budget<1e9&&avg.c>A.budget)notes.push('예상 식비가 선택한 예산을 넘습니다.');
- return{blocked:false,T,days,avg,total:sum,grocery,notes,pro,maxUse,relaxed,none,capped};
+ return notes;
+}
+/* 하루 식단 (현재 화면에서 쓰는 결과). 같은 입력·seed면 같은 결과 */
+function buildDay(A,seed=0){
+ if(bmiBlock(A))return{blocked:true,msg:BMI_MSG};
+ // seed번째 '바꾸기'는 내부적으로 seed+1일치를 짜고 마지막 날을 보여 줌 → 직전 조합과 겹치지 않게 반복 벌점이 적용됨
+ const P=planDays(A,0,seed+1),D=P.days[seed];
+ return{blocked:false,T:P.T,ex:P.ex,pro:P.pro,meals:D.meals,tot:D.tot,notes:notesOf(P,D.tot,A,0),relaxed:P.relaxed,none:P.none,capped:P.capped};
+}
+/* 7일 식단 (정적 페이지·향후 구독용으로 보존) */
+function buildWeek(A,seed=0){
+ if(bmiBlock(A))return{blocked:true,msg:BMI_MSG};
+ const P=planDays(A,seed,7),{T,days}=P;
+ const sum=days.reduce((a,D)=>addv(a,D.tot),Z0);
+ const avg={k:sum.k/7,p:sum.p/7,cb:sum.cb/7,f:sum.f/7,c:sum.c/7},gl={};
+ days.forEach(D=>D.meals.forEach(e=>e&&e.m.items.forEach(([i,g])=>gl[i]=(gl[i]||0)+g*e.x)));
+ const grocery=Object.entries(gl).map(([i,g])=>[i,Math.round(g/10)*10]).sort((a,b)=>ING[b[0]].c*b[1]-ING[a[0]].c*a[1]);
+ const maxUse=Math.max(0,...Object.values(P.use));
+ return{blocked:false,T,days,avg,total:sum,grocery,notes:notesOf(P,avg,A,maxUse),pro:P.pro,maxUse,relaxed:P.relaxed,none:P.none,capped:P.capped};
 }
 /* ============ 6. 출력용 HTML 조각 (순수 함수 — 정적 페이지 생성에도 재사용) ============ */
 const gtxt=(id,g)=>`${ING[id].n} ${g}g`;
@@ -290,6 +338,48 @@ function dayDetailHTML(W){
  return W.days.map(D=>`<details class="dd"><summary>${D.d}요일 · ${num(D.tot.k)} kcal · 단백질 ${num(D.tot.p)}g · 약 ${num(won(D.tot.c))}원</summary>${D.meals.map((e,i)=>e?`<div class="mb2"><div class="s">${CONFIG.slotName[i]}</div><b>${e.m.name}</b><div class="tags">${e.m.items.map(([id,g])=>`<span>${gtxt(id,Math.round(g*e.x/5)*5)}</span>`).join('')}</div><p class="note" style="margin:0">${num(e.v.k)} kcal · 단백질 ${num(e.v.p)}g · 약 ${num(won(e.v.c))}원</p></div>`:`<p class="mut">${CONFIG.slotName[i]}: 조건에 맞는 메뉴가 없습니다.</p>`).join('')}</details>`).join('');
 }
 const groceryHTML=W=>`<div class="tags" style="margin-top:10px">${W.grocery.map(([i,g])=>`<span>${gtxt(i,g)}</span>`).join('')}</div>`;
+/* 하루 식단 결과 화면 */
+const GOAL_LABEL={lose:'체지방 감량',gain:'근육 증가',keep:'체중 유지·건강',perf:'운동 퍼포먼스'};
+const short=id=>ING[id].n.replace(/\(.*?\)/g,'');
+const ICON={
+ drop:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>',
+ leaf:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
+ back:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+ dish:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
+ spark:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/><path d="M20 3v4M22 5h-4"/></svg>'
+};
+function mealCardHTML(e,i){
+ const no=String(i+1).padStart(2,'0'),slot=CONFIG.slotName[i];
+ if(!e)return`<article class="card em"><p>${slot}: 조건에 맞는 메뉴가 없습니다.</p></article>`;
+ const m=e.m,img=`<div class="im">${m.img?`<img src="${m.img}" alt="${m.name}" loading="lazy"><span class="bd">CLEAN PLATE</span>`:''}</div>`;
+ return`<article class="card">${img}<div class="cb"><div class="ct"><span>${slot}</span><i>${no}</i></div><h3>${m.name}</h3>
+ <div class="ft"><div class="tags">${m.items.map(([id])=>`<span>${short(id)}</span>`).join('')}</div>
+ <details><summary>분량 보기</summary><ul>${m.items.map(([id,g])=>`<li>${gtxt(id,Math.round(g*e.x/5)*5)}</li>`).join('')}</ul></details></div></div></article>`;
+}
+/* 선택한 답변의 보기 문구. 화면에서 고른 순번(sel)이 있으면 그걸, 없으면 값으로 찾음 */
+const optLabel=(id,A)=>{const o=QUESTIONS.find(q=>q.id===id).o,i=A.sel&&A.sel[id];return(i!=null&&o[i]?o[i]:o.find(x=>x[0]===A[id])||['',''])[1]};
+const sameSet=(a,b)=>a.length===b.length&&a.every(x=>b.includes(x));
+function styleOf(R){
+ const ex=R.ex,base=sameSet(ex,PRESET.vegan)?'비건':sameSet(ex,PRESET.veg)?'채식':ex.length?ex.join('·')+' 제외':'';
+ return[base,R.pro==='any'?'단백질 다양하게':PRO_LABEL[R.pro]+' 위주'].filter(Boolean).join(' · ');
+}
+function dayResultHTML(R,A){
+ const gl=GOAL_LABEL[A.goal],t=R.tot;
+ const why=(R.pro==='any'?`${gl} 목표에 맞춰 단백질을 고루 섞어 메뉴를 골랐어요.`:`${gl} 목표와 ${PRO_LABEL[R.pro]} 취향을 고려해 메뉴를 골랐어요.`)+(R.ex.length?` ${R.ex.join('·')} 재료는 뺐어요.`:'')+' 가공은 조금 덜하고 식재료 본연의 맛을 살렸어요.';
+ const cell=(l,v)=>`<div><span>${l}</span><b>${v}</b></div>`;
+ return`<div class="rh"><div><p class="eb">YOUR TABLE, YOUR RHYTHM</p><h2>나를 위한 오늘의 식단</h2><p class="stat">목표 약 ${num(R.T.k)} kcal · 단백질 ${num(R.T.p)}g</p></div>
+ <button class="btn ed" id="re">${ICON.back}응답 수정</button></div>
+ <div class="sumt"><div><span class="si">${ICON.dish}</span><div><span>오늘 식단의 영양소</span><b>${num(t.k)} kcal</b><small>탄수화물 ${num(t.cb)}g · 단백질 ${num(t.p)}g · 지방 ${num(t.f)}g</small></div></div>
+ ${cell('나의 목표',gl)}${cell('준비 방식',optLabel('prep',A))}${cell('음식 스타일',styleOf(R))}${cell('하루 식비',`약 ${num(won(t.c))}원`)}</div>
+ ${R.notes.length?`<div class="notes">${R.notes.map(x=>`<p>· ${x}</p>`).join('')}</div>`:''}
+ <div class="cards">${R.meals.map(mealCardHTML).join('')}</div>
+ <div class="r2">
+  <section class="box"><span class="ic">${ICON.drop}</span><p class="k">A LITTLE REMINDER</p><h3>오늘의 수분 습관</h3><p>식사 사이에 물을 가까이 두고, 무가당 허브티나 탄산수도 편하게 골라보세요.</p><div class="tags"><span>물</span><span>허브티</span><span>탄산수</span></div></section>
+  <section class="box"><span class="ic">${ICON.leaf}</span><p class="k">GOOD FOOD, NO PRESSURE</p><h3>나에게 맞는 한 끼</h3><p>${why}</p><ul class="ck"><li>통식품 중심</li><li>성분표 살피기</li><li>덜 가공하기</li></ul></section>
+ </div>
+ <div class="foot"><div class="bs"><button class="btn o" id="sh">다른 메뉴로 바꾸기</button></div></div>
+ <p class="disc">이 식단은 일반적인 식사 아이디어이며 의료·영양 상담을 대신하지 않아요. 알레르기, 질환, 임신·수유 등 특별한 고려가 필요하다면 전문가와 상담하고 식품 표시를 확인해 주세요. 시험 버전: 영양·가격은 임시 수치입니다.</p>`;
+}
 /* ===== UI:START — 여기부터는 화면·전역 상태 (계산에는 쓰지 않음) ===== */
 const $=s=>document.querySelector(s);
 let step=0,off=0,A={basic:{},goal:null,act:null,excl:[],pro:null,prep:null,budget:null,sel:{}};
@@ -343,19 +433,9 @@ function checkBasic(){
  e.textContent='';step=1;draw();
 }
 function result(){
- const r=$('#res'),W=buildWeek(A,off);
- if(W.blocked){r.innerHTML=`<h2>체중 감량 식단은 만들지 않습니다</h2><p class="err">${W.msg}</p><div class="nav"><button class="btn o" id="re">답변 수정</button></div>`;$('#re').onclick=()=>{step=1;show('quiz');draw()};return}
- const ex=exList(A),lab={lose:'체지방 감량',gain:'근육 증가',keep:'체중 유지·건강',perf:'운동 퍼포먼스'}[A.goal];
- r.innerHTML=`<p class="lab">7일 식단 · ${lab} · 선호 단백질 ${PRO_LABEL[W.pro]}</p><h2>일주일 식단표</h2>
- <div class="sum"><div><b>${num(W.T.k)} kcal</b><span>목표 열량</span></div><div><b>${num(W.T.p)} g</b><span>목표 단백질</span></div><div><b>${num(W.avg.k)} kcal</b><span>하루 평균 열량</span></div><div><b>${num(W.avg.p)} g</b><span>하루 평균 단백질</span></div><div><b>약 ${num(won(W.avg.c))}원</b><span>하루 평균 식비</span></div><div><b>약 ${num(won(W.total.c))}원</b><span>일주일 식비</span></div></div>
- ${W.notes.map(n=>`<p class="note">· ${n}</p>`).join('')}
- ${ex.length?`<p class="note">제외한 재료: ${ex.join(', ')}</p>`:''}
- ${weekTableHTML(W)}
- <h3 style="margin-top:32px">요일별 상세</h3><div style="margin-top:10px">${dayDetailHTML(W)}</div>
- <h3 style="margin-top:32px">일주일 장보기 목록</h3>${groceryHTML(W)}
- <p class="note">시험 버전: 영양·가격은 임시 수치이고 열량은 목표와 차이가 날 수 있습니다.</p>
- <div class="safe">이 식단은 일반적인 식사 예시이며 의료·영양 상담을 대신하지 않습니다. 알레르기, 질환, 임신·수유 등 특별한 고려가 필요하면 전문가와 상담하고 식품 표시를 확인해 주세요.</div>
- <div class="nav"><button class="btn o" id="re">답변 수정</button><button class="btn" id="sh">다른 조합으로 바꾸기</button></div>`;
+ const r=$('#res'),R=buildDay(A,off);
+ if(R.blocked){r.innerHTML=`<h2>체중 감량 식단은 만들지 않습니다</h2><p class="err">${R.msg}</p><div class="nav"><button class="btn o" id="re">답변 수정</button></div>`;$('#re').onclick=()=>{step=1;show('quiz');draw()};return}
+ r.innerHTML=dayResultHTML(R,A);
  $('#re').onclick=()=>{step=1;show('quiz');draw()};$('#sh').onclick=()=>{off++;result();window.scrollTo(0,0)};
 }
 </script>
