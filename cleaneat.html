@@ -126,6 +126,9 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 .wk th{color:var(--mut);font-weight:600;font-size:.85rem}.wk td:first-child{font-weight:650;color:var(--g);white-space:nowrap}
 .dd .mb2{padding:10px 0;border-top:1px solid var(--line)}.dd .mb2:first-of-type{border-top:0}.dd .s{font-size:.85rem;color:var(--g);font-weight:700}
 /* 하루 식단 결과 */
+.swp{display:inline-flex;align-items:center;gap:5px;background:none;border:0;margin:-9px -4px -9px 0;padding:9px 4px 9px 10px;font:inherit;font-size:.72rem;font-weight:600;letter-spacing:0;color:var(--mut);cursor:pointer;transition:color .15s}.swp:hover{color:var(--g)}.swp svg{transition:transform .4s ease}.swp:hover svg{transform:rotate(-120deg)}
+.card.sw{animation:swIn .38s ease}@keyframes swIn{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.card.sw{animation:none}.swp svg{transition:none}}
 .rh{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}.rh .eb{margin-bottom:14px}
 .rh h2{font-size:clamp(1.7rem,3.2vw,2.3rem)}.rh .cn{color:var(--mut);font-size:.78rem}.rh .cn b{font-family:Georgia,serif;font-weight:400;font-size:1.35rem;color:var(--fg)}
 .stat{font-size:.85rem;color:var(--mut);margin:14px 0 0}
@@ -134,7 +137,7 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 .card .im{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--soft)}.card .im img{width:100%;height:100%;object-fit:cover;display:block}
 .card .bd{position:absolute;left:12px;bottom:12px;background:var(--card);color:var(--fg);font-size:.6rem;font-weight:700;letter-spacing:.14em;padding:5px 8px}
 .card .cb{padding:22px 20px 20px;display:flex;flex-direction:column;flex:1}
-.ct{display:flex;justify-content:space-between;align-items:baseline;font-size:.72rem;font-weight:700;color:var(--g)}.ct i{font-family:Georgia,serif;font-weight:400;color:var(--mut)}
+.ct{display:flex;justify-content:space-between;align-items:center;min-height:20px;font-size:.72rem;font-weight:700;color:var(--g)}.ct i{font-family:Georgia,serif;font-weight:400;color:var(--mut)}
 .card h3{font-size:1.15rem;margin:14px 0 8px}.card .ds{font-size:.85rem;color:var(--mut)}
 .card .kc{font-size:.78rem;color:var(--mut);margin-top:10px}
 .card .ft{margin-top:auto;padding-top:24px}
@@ -241,16 +244,16 @@ const CONFIG={
 /* 홈 화면 '예시 결과'에 쓰는 입력값 (실제 계산 엔진으로 만들어 보여줌). 바꾸면 예시도 바뀜 */
 const EXAMPLE={basic:{sx:'f',ag:29,ht:163,wt:58},goal:'lose',act:2,excl:[],pro:'any',cu:'any',prep:3,budget:20000,sel:{}};
 /* 음식 취향 '지중해식'으로 고를 때 우선하는 메뉴 (올리브유·생선·콩·통곡물·채소 중심, 장류·아시아 양념 제외). 메뉴를 추가하면 여기에도 넣어 주세요 */
-const MED_IDS=new Set(['a3','a4','a6','a14','R79','R82','R115','c1','c2','c3','c5','m2','f1','f2','f5','f6','f7','f8','m3','m13','s1','s3','s4','s5','s6','s12','e2','e4','e5','R51','R94','R100','R101','R105','R107','R112','R116','R118','R119','R122','L1','L3','L7','L8','L9','L10','L11','L12','L19','L32','L33','L35','L37']);
+const MED_IDS=new Set(['a3','a4','a6','a14','R79','R82','R115','c1','c2','c3','c5','m2','f1','f2','f5','f6','f7','f8','m3','m13','s1','s3','s4','s5','s6','s12','e2','e4','e5','R51','R94','R100','R101','R105','R107','R112','R116','R118','R119','R122','L1','L3','L7','L8','L9','L10','L11','L12','L19','L32','L33','L35','L37','N1','N3','N5','N6','N7','N8']);
 const PRESET={veg:['육류','해산물'],vegan:['육류','해산물','달걀','유제품']};
 const PRO_LABEL={meat:'육류',chicken:'닭고기',red:'소고기·돼지고기',egg:'달걀·유제품',soy:'두부·콩',fish:'생선·해산물',none:'기타',any:'다양하게'};
 /* ============ 2. 질문 (기본 정보 다음 단계) — 순서: 목표 → 활동 → 제한 식품 → 선호 단백질 → 음식 스타일 → 준비 방식 → 예산 ============ */
 const QUESTIONS=[
  {id:'goal',l:'나의 목표',t:'이번 식단에서 바라는 건 무엇인가요?',h:'나에게 더 가까운 목표 하나를 골라주세요.',o:[['lose','체중 감량 및 체지방 감소','무리 없이 천천히 줄여가는 식단을 원해요'],['gain','근육량 증가 및 체력 증진','단백질과 탄수화물을 챙기는 식단을 원해요'],['keep','현재 체중 및 체형 유지','지금의 균형을 꾸준히 이어가고 싶어요'],['energy','일상 활력 충전 및 피로 회복','속 편하고 든든하게 하루를 보내고 싶어요'],['health','식습관 교정 및 건강 관리','덜 가공된 음식으로 식습관을 바로잡고 싶어요']]},
  {id:'act',l:'주간 활동',t:'평소 일주일에 얼마나 움직이나요?',h:'운동뿐 아니라 산책처럼 일상에서 하는 활동도 떠올려 보세요.',o:[[0,'가벼운 활동','산책이나 스트레칭 위주'],[1,'주 1~2회','가끔 시간을 내서 운동해요'],[2,'주 3~4회','규칙적으로 몸을 움직여요'],[3,'주 5~6회','활동량이 많은 편이에요'],[4,'매일','매일 땀 흘릴 만큼 운동해요']]},
- {id:'excl',l:'제한 식품',multi:1,t:'못 먹거나 피해야 하는 음식이 있나요?',h:'알레르기나 개인적인 이유로 피하는 식품을 모두 선택해주세요.',note:'선택하지 않아도 다음으로 넘어갈 수 있어요.',warn:'실제 알레르기가 있다면 모든 재료와 조리 도구의 교차 접촉 여부를 꼭 확인해 주세요. 이 목록에 없는 밀·메밀·대두 등은 걸러지지 않아요.',o:[['유제품','유제품','우유, 치즈, 요거트'],['견과류','견과류','호두, 땅콩, 아몬드 등'],['해산물','해산물','생선, 새우, 오징어, 젓갈이 든 김치'],['달걀','달걀','달걀이 들어간 요리 전체'],['육류','육류','닭·소·돼지고기']]},
- {id:'pro',l:'선호 단백질',t:'어떤 단백질 식품을 가장 선호하나요?',h:'평소 즐겨 먹거나 좋아하는 단백질 식품을 떠올려 보세요.',o:[['meat','육류','닭고기, 소고기, 돼지고기'],['egg','달걀·유제품','달걀, 그릭요거트 등'],['fish','생선·해산물','연어, 고등어, 새우 등'],['soy','두부·콩','두부, 콩, 낫토 등'],['any','다양하게 먹고 싶어요','한 가지에 치우치지 않게']]},
- {id:'cu',l:'음식 취향',t:'어떤 스타일의 음식을 가장 선호하나요?',h:'내 취향에 가까운 음식 스타일을 선택해 주세요.',o:[['kr','한식 위주','밥, 국, 찌개 등'],['west','양식 위주','샐러드, 파스타, 수프 등'],['med','지중해식','올리브유, 생선, 콩, 채소 중심'],['world','다양한 세계 음식','일식, 중식, 동남아, 인도식 등'],['any','상관 없음','가리지 않고 다양하게']]},
+ {id:'excl',l:'제한 식품',multi:1,t:'못 먹거나 피해야 하는 음식이 있나요?',h:'알레르기나 개인적인 이유로 피하는 식품을 모두 선택해주세요.',note:'선택하지 않아도 다음으로 넘어갈 수 있어요.',warn:'실제 알레르기가 있다면 모든 재료와 조리 도구의 교차 접촉 여부를 꼭 확인해 주세요. 이 목록에 없는 밀·메밀·대두 등은 걸러지지 않아요.',o:[['유제품','유제품','우유, 치즈, 요거트 등'],['견과류','견과류','호두, 땅콩, 아몬드 등'],['해산물','해산물','생선, 새우, 오징어 등'],['달걀','달걀','달걀이 들어간 요리 전체'],['육류','육류','닭·소·돼지고기']]},
+ {id:'pro',l:'선호 단백질',t:'어떤 단백질 식품을 가장 선호하나요?',h:'평소 즐겨 먹거나 좋아하는 단백질 식품을 떠올려 보세요.',o:[['meat','육류','닭고기, 소고기, 돼지고기 등'],['egg','달걀·유제품','달걀, 그릭요거트 등'],['fish','생선·해산물','연어, 고등어, 새우 등'],['soy','두부·콩','두부, 콩, 낫토 등'],['any','다양하게 먹고 싶어요','한 가지에 치우치지 않게']]},
+ {id:'cu',l:'음식 취향',t:'어떤 스타일의 음식을 가장 선호하나요?',h:'내 취향에 가까운 음식 스타일을 선택해 주세요.',o:[['kr','한식 위주','밥, 국, 찌개 등'],['west','양식 위주','샐러드, 파스타, 수프 등'],['med','지중해식','올리브유, 생선, 채소 등'],['world','다양한 세계 음식','일식, 중식, 동남아, 인도식 등'],['any','상관 없음','가리지 않고 다양하게']]},
  {id:'prep',l:'준비 방식',t:'평소 어느 정도까지 요리할 수 있나요?',h:'가장 가까운 항목 하나를 선택해 주세요.',o:[[1,'조리 없이 차리는 식사','썰고 담고 섞기만 하면 돼요'],[2,'전자레인지로 간단히 조리','데우거나 간단하게 익히기'],[3,'10~15분 간단한 요리','달걀, 볶음밥 등'],[4,'30분 정도 일반적인 요리','여러 재료 활용'],[5,'요리를 즐겨요','새로운 레시피도 괜찮아요']]},
  {id:'budget',l:'하루 예산',t:'하루 식비는 어느 정도가 편한가요?',h:'식재료를 선택할 때 참고할 하루 전체 예산을 골라주세요.',o:[[10000,'10,000원 이하','하루 식비 기준으로 알뜰하게'],[15000,'10,000~15,000원','부담 없이 균형 있게'],[20000,'15,000~20,000원','재료 선택을 조금 더 넓게'],[25000,'20,000~25,000원','다양한 재료를 두루 활용'],[1e9,'제한 없음','가격보다 메뉴를 우선해요']]}
 ];
@@ -303,7 +306,8 @@ const ING={
  plainyog:{n:'플레인 요거트',k:61,p:3.5,c:500,ex:['유제품']},fishsauce:{n:'액젓',k:35,p:5,c:1000,ex:['해산물']},
  /* 조리 수준 1~2단계용 재료 (2026-10-25 추가, 임시 수치) */
  rtchicken:{n:'닭가슴살(시판 조리 제품, 저염)',k:115,p:23,c:2000,ex:['육류']},ricepack:{n:'즉석 현미밥',k:150,p:3.2,c:900,ex:[]},
- boilegg:{n:'삶은 달걀(시판 구운 달걀 가능)',k:143,p:12.6,c:900,ex:['달걀']},silken:{n:'연두부',k:50,p:4.5,c:500,ex:[]}
+ boilegg:{n:'삶은 달걀(시판 구운 달걀 가능)',k:143,p:12.6,c:900,ex:['달걀']},silken:{n:'연두부',k:50,p:4.5,c:500,ex:[]},
+ couscous:{n:'통밀 쿠스쿠스(건)',k:360,p:13,c:1500,ex:[]}
 };
 /* ============ 4. 메뉴 — slot: a 아침 / m 점심·저녁 / s 간식(현재 미사용), lvl: 조리 난이도 1~5, pro: 주 단백질 유형(chicken·red·egg·soy·fish·none), cu: 음식 스타일(kr 한식·west 양식·world 세계), img: 사진 주소, desc: 카드 설명 한 줄, sea: 양념(표시용, 계산 안 함) ============
    임시 메뉴입니다. 영양·가격 임시 수치와 함께 공개 전 교체·검증 필요. */
@@ -555,6 +559,15 @@ const MENUS=[
  {id:'B9',name:'북어 달걀국과 현미밥',desc:'북어와 무, 달걀을 넣어 맑게 끓인 국.',slot:'a',lvl:3,pro:'fish',cu:'kr',img:'',sea:['국간장','마늘'],items:[['bugeo',15],['egg',50],['radish',50],['brice',60],['sesoil',3]]},
  {id:'B10',name:'애호박 달걀 덮밥',desc:'애호박과 달걀을 전자레인지로 익혀 현미밥에 얹었어요.',slot:'a',lvl:2,pro:'egg',cu:'kr',img:'',sea:['소금','참깨'],items:[['egg',100],['zuc',60],['ricepack',150],['soy',5],['sesoil',3]]},
  {id:'B11',name:'오이 미역 냉국과 두부밥',desc:'오이 미역 냉국에 두부와 데운 현미밥을 곁들였어요.',slot:'a',lvl:2,pro:'soy',cu:'kr',img:'',sea:['식초','찬물','참깨'],items:[['seaweed',50],['cuc',60],['tofu',100],['ricepack',150],['soy',5]]},
+ /* ---------- 2026-10-25 사용자 제안 메뉴 ---------- */
+ {id:'N1',name:'그릭요거트 과일 볼',desc:'그릭요거트에 딸기, 바나나, 블루베리, 키위와 호두를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',200],['strawberry',60],['banana',50],['blueberry',40],['kiwi',50],['walnut',15]]},
+ {id:'N6',name:'바나나 블루베리 요거트 볼',desc:'그릭요거트에 바나나와 블루베리, 호두를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',200],['banana',80],['blueberry',60],['walnut',15]]},
+ {id:'N7',name:'딸기 블루베리 요거트 볼',desc:'그릭요거트에 딸기와 블루베리, 호두를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',200],['strawberry',80],['blueberry',60],['walnut',15]]},
+ {id:'N8',name:'바나나 딸기 요거트 볼',desc:'그릭요거트에 바나나와 딸기, 호두를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',200],['banana',80],['strawberry',60],['walnut',15]]},
+ {id:'N2',name:'라임 갈릭 새우 덮밥',desc:'새우를 마늘에 볶아 라임즙을 뿌리고 현미밥, 채소와 담았어요.',slot:'m',lvl:3,pro:'fish',cu:'world',img:'',sea:['라임즙 또는 레몬즙','고수','후추'],items:[['shrimp',130],['garlic',10],['brice',80],['paprika',50],['broc',60],['oil',8]]},
+ {id:'N3',name:'치킨 쿠스쿠스 볼',desc:'불린 통밀 쿠스쿠스에 닭가슴살과 채소를 올리고 레몬 올리브유를 뿌렸어요.',slot:'m',lvl:2,pro:'chicken',cu:'world',img:'',sea:['큐민','파슬리'],items:[['couscous',70],['rtchicken',120],['cuc',50],['tomato',60],['paprika',40],['oil',8],['lemon',10]]},
+ {id:'N4',name:'스테이크 감자 플레이트',desc:'소고기 우둔살 스테이크에 감자와 완두콩을 곁들였어요.',slot:'m',lvl:3,pro:'red',cu:'west',img:'',sea:['소금','후추','로즈마리'],items:[['beef',150],['potato',200],['peas',80],['oil',8]]},
+ {id:'N5',name:'새우 토마토 펜네',desc:'새우와 완두콩을 넣은 토마토 소스 통밀 펜네.',slot:'m',lvl:3,pro:'fish',cu:'west',img:'',sea:['바질','후추'],items:[['pasta',80],['shrimp',110],['tomatocan',150],['peas',60],['garlic',8],['oil',8]]},
  /* ---------- 간식 (slot:'s') — 현재 화면에서는 쓰지 않음. 간식 끼니를 추가할 때 사용 ---------- */
  {id:'S48',name:'바나나 오트 쿠키',desc:'바나나와 오트밀, 호두로 구운 쿠키.',slot:'s',lvl:4,pro:'none',cu:'west',img:'',sea:['계피'],items:[['banana',80],['oat',40],['walnut',10]]},
  {id:'S83',name:'사과와 시나몬 요거트',desc:'그릭요거트에 사과와 계피를 곁들였어요.',slot:'s',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피'],items:[['apple',100],['yog',100]]},
@@ -595,6 +608,18 @@ function targetOf(A){
  const fl=CONFIG.kcalFloor[b.sx];if(k<fl){k=fl;floored=true}
  return{k,p:b.wt*CONFIG.protPerKg[A.goal],floored};
 }
+/* 끼니 i에 메뉴를 고를 때의 공통 기준 (planDays와 swapMeal이 함께 씀)
+   xOf: 목표 열량에 맞춘 분량 배수 / rel: 조건 초과 수(요리 수준 + 예산) / fit: 목표 맞춤 벌점 / cuPen: 음식 취향 벌점 */
+function slotRules(A,T,i){
+ const w=CONFIG.split[i],isM=CONFIG.slots[i]==='m',cap=A.budget*w;
+ // 예산 비교는 목표 열량에 맞춰 늘리거나 줄인 실제 분량 기준 (기본 분량으로 비교하면 2배로 늘린 뒤 예산을 넘는 경우가 생김)
+ const xOf=m=>clamp(T.k*w/mkv(m).k,CONFIG.portion.min,CONFIG.portion.max);
+ const rel=m=>Math.max(0,m.lvl-A.prep)+(mkv(m,xOf(m)).c>cap?1:0);
+ // 목표 맞춤 벌점: 분량 상한(2배)으로도 열량을 못 채우거나, 맞춘 분량에서 단백질이 끼니 목표의 70% 미만인 메뉴를 덜 고름
+ const fit=m=>{const b=mkv(m),raw=T.k*w/b.k,x=clamp(raw,CONFIG.portion.min,CONFIG.portion.max);return(raw>CONFIG.portion.max?CONFIG.fit.kcal:0)+(b.p*x<.7*T.p*w?CONFIG.fit.prot:0)};
+ const cuPen=m=>A.cu&&A.cu!=='any'&&(A.cu==='med'?!MED_IDS.has(m.id):m.cu!==A.cu)?(isM?CONFIG.cuPenalty.m:CONFIG.cuPenalty.a):0;
+ return{w,isM,xOf,rel,fit,cuPen};
+}
 /* n일치 메뉴 선택 (공통 엔진). 같은 입력과 seed면 항상 같은 결과(결정적). seed를 바꾸면 다른 조합 */
 function planDays(A,seed,n){
  const T=targetOf(A),ex=exList(A),pro=proBlocked(A.pro,ex)?'any':A.pro;
@@ -608,15 +633,10 @@ function planDays(A,seed,n){
    const isM=s==='m',wantPref=isM&&pro!=='any'&&Math.floor((mj+1)*CONFIG.prefShare)>Math.floor(mj*CONFIG.prefShare);
    if(isM)mj++;
    if(!pool.length){meals.push(null);none++;return}
-   const cap=A.budget*w[i];
-   // 예산 비교는 목표 열량에 맞춰 늘리거나 줄인 실제 분량 기준 (기본 분량으로 비교하면 2배로 늘린 뒤 예산을 넘는 경우가 생김)
-   const xOf=m=>clamp(T.k*w[i]/mkv(m).k,CONFIG.portion.min,CONFIG.portion.max);
-   const rel=m=>Math.max(0,m.lvl-A.prep)+(mkv(m,xOf(m)).c>cap?1:0);
-   // 목표 맞춤 벌점: 분량 상한(2배)으로도 열량을 못 채우거나, 맞춘 분량에서 단백질이 끼니 목표의 70% 미만인 메뉴를 덜 고름
-   const fit=m=>{const b=mkv(m),raw=T.k*w[i]/b.k,x=clamp(raw,CONFIG.portion.min,CONFIG.portion.max);return(raw>CONFIG.portion.max?CONFIG.fit.kcal:0)+(b.p*x<.7*T.p*w[i]?CONFIG.fit.prot:0)};
+   const {rel,fit,cuPen}=slotRules(A,T,i);
    const sc=m=>{
     let v=rel(m)*20+(use[m.id]||0)*2+(today.includes(m.id)?50:0)+(prevIds.includes(m.id)?2:0);
-    if(A.cu&&A.cu!=='any'&&(A.cu==='med'?!MED_IDS.has(m.id):m.cu!==A.cu))v+=isM?CONFIG.cuPenalty.m:CONFIG.cuPenalty.a;
+    v+=cuPen(m);
     v+=fit(m);
     if(pro==='any'){if(isM)v+=1.5*(cat[m.pro]||0)}
     else if(isM)v+=wantPref?(proMatch(m,pro)?0:6):(proMatch(m,pro)?2:0);
@@ -644,8 +664,6 @@ function notesOf(P,avg,A,maxUse){
  if(P.relaxed)notes.push('조건에 맞는 메뉴가 부족해 요리 수준이나 예산을 넘는 메뉴가 일부 포함됐어요.');
  if(maxUse>3)notes.push('메뉴 수가 적어 같은 메뉴가 여러 번 반복됩니다.');
  if(T.floored)notes.push('계산된 열량이 최소 기준보다 낮아 최소 기준으로 올려 계산했어요.');
- if(avg.k<T.k*.9)notes.push(`열량이 목표보다 약 ${Math.round((1-avg.k/T.k)*100)}% 낮습니다. 한 끼 분량 상한 때문에 목표를 채우지 못했어요.`);
- if(avg.p<T.p*.85)notes.push(`단백질이 목표보다 약 ${Math.round((1-avg.p/T.p)*100)}% 낮습니다.`);
  if(A.budget<1e9&&avg.c>A.budget)notes.push('예상 식비가 선택한 예산을 넘습니다.');
  return notes;
 }
@@ -655,6 +673,32 @@ function buildDay(A,seed=0){
  // seed번째 '바꾸기'는 내부적으로 seed+1일치를 짜고 마지막 날을 보여 줌 → 직전 조합과 겹치지 않게 반복 벌점이 적용됨
  const P=planDays(A,0,seed+1),D=P.days[seed];
  return{blocked:false,T:P.T,ex:P.ex,pro:P.pro,meals:D.meals,tot:D.tot,notes:notesOf(P,D.tot,A,0),relaxed:P.relaxed,none:P.none,capped:P.capped};
+}
+/* 끼니 하나만 바꾸기: 나머지 두 끼는 그대로 두고 i번째 끼니만 다른 메뉴로 바꾼 결과를 돌려줌.
+   seen: 이 끼니에 이미 보여 준 메뉴 id (다 보여 주면 처음부터 다시). 같은 입력·seen이면 같은 결과 */
+function swapMeal(A,R,i,seen=[]){
+ const T=R.T,ex=R.ex,pro=R.pro,s=CONFIG.slots[i],{isM,xOf,rel,fit,cuPen}=slotRules(A,T,i);
+ const cur=R.meals[i]&&R.meals[i].m,others=R.meals.filter((e,j)=>e&&j!==i).map(e=>e.m);
+ let pool=MENUS.filter(m=>m.slot===s&&!hasEx(m,ex)&&!others.some(o=>o.id===m.id)&&!(cur&&m.id===cur.id));
+ if(!pool.length)return R;
+ // 아직 안 보여 준 메뉴를 우선하되, 조건(요리 수준·예산)에 맞는 새 메뉴가 없으면 이미 보여 준 메뉴로 돌아감
+ const relMin=a=>Math.min(...a.map(rel)),fresh=pool.filter(m=>!seen.includes(m.id));
+ if(fresh.length&&relMin(fresh)<=relMin(pool))pool=fresh;
+ // 선호 단백질 끼니였으면 계속 선호 단백질로, 아니었으면 지금 비율을 유지
+ const keepPref=isM&&pro!=='any'&&cur&&proMatch(cur,pro);
+ const sc=m=>{
+  let v=rel(m)*20+cuPen(m)+fit(m);
+  if(pro==='any'){if(isM)v+=1.5*others.filter(o=>o.slot==='m'&&o.pro===m.pro).length}
+  else if(isM)v+=keepPref?(proMatch(m,pro)?0:6):(proMatch(m,pro)?2:0);
+  else if(proMatch(m,pro))v-=1;
+  return v;
+ };
+ const scored=pool.map(m=>[sc(m),m]),min=Math.min(...scored.map(x=>x[0])),best=scored.filter(x=>x[0]===min).map(x=>x[1]);
+ const m=best[seen.length%best.length],x=xOf(m);
+ const meals=R.meals.map((e,j)=>j===i?{m,x,v:mkv(m,x),slot:s}:e);
+ const tot=meals.reduce((a,e)=>e?{k:a.k+e.v.k,p:a.p+e.v.p,c:a.c+e.v.c}:a,{k:0,p:0,c:0});
+ const relaxed=meals.filter((e,j)=>e&&slotRules(A,T,j).rel(e.m)>0).length;
+ return{...R,meals,tot,relaxed,notes:notesOf({T,none:R.none,relaxed},tot,A,0)};
 }
 /* 7일 식단 (정적 페이지·향후 구독용으로 보존) */
 function buildWeek(A,seed=0){
@@ -680,6 +724,7 @@ const groceryHTML=W=>`<div class="tags" style="margin-top:10px">${W.grocery.map(
 const GOAL_LABEL={lose:'체중 감량',gain:'근육량 증가',keep:'체중 유지',energy:'활력 충전',health:'식습관 교정',perf:'운동 퍼포먼스 향상'};
 const CHK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
  CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
+const SWP='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg>';
 const short=id=>ING[id].n.replace(/\(.*?\)/g,'');
 const ICON={
  drop:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>',
@@ -689,11 +734,11 @@ const ICON={
  loop:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg>',
  dish:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>'
 };
-function mealCardHTML(e,i){
+function mealCardHTML(e,i,swap){
  const slot=CONFIG.slotName[i];
  if(!e)return`<article class="card em"><p>${slot}: 조건에 맞는 메뉴가 없습니다.</p></article>`;
  const m=e.m,img=`<div class="im">${m.img?`<img src="${m.img}" alt="${m.name}" loading="lazy"><span class="bd">CLEAN PLATE</span>`:''}</div>`;  // 사진이 없어도 자리는 남김
- return`<article class="card">${img}<div class="cb"><div class="ct"><span>${slot}</span></div><h3>${m.name}</h3><p class="ds">${(m.desc||'').replace(/\.$/,'')}</p>
+ return`<article class="card">${img}<div class="cb"><div class="ct"><span>${slot}</span>${swap?`<button class="swp" data-swap="${i}" aria-label="${slot} 메뉴만 바꾸기">${SWP}바꾸기</button>`:''}</div><h3>${m.name}</h3><p class="ds">${(m.desc||'').replace(/\.$/,'')}</p>
  <p class="kc">${num(e.v.k)} kcal · 단백질 ${num(e.v.p)}g</p>
  <div class="ft"><div class="tags">${m.items.map(([id])=>`<span>${short(id)}</span>`).join('')}</div>
  <details><summary>분량 보기</summary><ul>${m.items.map(([id,g])=>`<li>${gtxt(id,Math.round(g*e.x/5)*5)}</li>`).join('')}${m.sea&&m.sea.length?`<li>양념: ${m.sea.join(', ')} (적당량)</li>`:''}</ul></details></div></div></article>`;
@@ -706,24 +751,24 @@ function styleOf(R,A){
  const cu={kr:'한식',west:'양식',med:'지중해식',world:'세계 음식'}[A.cu];
  return[base,R.pro==='any'?'단백질 다양하게':PRO_LABEL[R.pro]+' 위주',cu].filter(Boolean).join(' · ');
 }
-function planHTML(R,A){
+function planHTML(R,A,swap){
  const t=R.tot,cell=(l,v)=>`<div><span>${l}</span><b>${v}</b></div>`;
  return`<div class="sumt"><div><span class="si">${ICON.dish}</span><div><span>오늘 식단의 영양소</span><b>${num(t.k)} kcal</b><small>단백질 ${num(t.p)}g</small></div></div>
  ${cell('나의 목표',GOAL_LABEL[A.goal])}${cell('준비 방식',optLabel('prep',A))}${cell('음식 취향',optLabel('cu',A))}${cell('하루 식비',`약 ${num(won(t.c))}원`)}</div>
- <div class="cards">${R.meals.map(mealCardHTML).join('')}</div>`;
+ <div class="cards">${R.meals.map((e,i)=>mealCardHTML(e,i,swap)).join('')}</div>`;
 }
 function dayResultHTML(R,A){
  const n=R.meals.filter(Boolean).length,gl=GOAL_LABEL[A.goal];
  const CU_LABEL={kr:'한식',west:'양식',med:'지중해식',world:'세계 음식'},cuTxt=A.cu&&A.cu!=='any'?` ${CU_LABEL[A.cu]} 위주로 담았어요.`:'';
  const why=(R.pro==='any'?`${gl} 목표에 맞춰 단백질을 고루 섞어 메뉴를 골랐어요.`:`${gl} 목표와 ${PRO_LABEL[R.pro]} 취향을 고려해 메뉴를 골랐어요.`)+cuTxt+(R.ex.length?` ${R.ex.join('·')} 재료는 뺐어요.`:'')+' 가공은 조금 덜하고 식재료 본연의 맛을 살렸어요.';
  return`<div class="rh"><div><p class="eb">YOUR TABLE, YOUR RHYTHM</p><h2>나를 위한 오늘의 식단</h2><p class="stat">목표 약 ${num(R.T.k)} kcal · 단백질 ${num(R.T.p)}g</p></div><button class="tl bk" id="re"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 응답 수정</button></div>
- ${planHTML(R,A)}
+ ${planHTML(R,A,true)}
  ${R.notes.map(t=>`<p class="note" style="margin:6px 0 0">· ${t}</p>`).join('')}
  <div class="r2">
   <section class="box"><span class="ic">${ICON.drop}</span><p class="k">A LITTLE REMINDER</p><h3>오늘의 수분 습관</h3><p>식사 사이에 물을 가까이 두고, 무가당 허브티나 탄산수도 편하게 골라보세요.</p><div class="tags"><span>물</span><span>허브티</span><span>탄산수</span></div></section>
   <section class="box"><span class="ic">${ICON.leaf}</span><p class="k">GOOD FOOD, NO PRESSURE</p><h3>나에게 맞는 한 끼</h3><p>${why}</p><ul class="ck"><li>통식품 중심</li><li>성분표 살피기</li><li>덜 가공하기</li></ul></section>
  </div>
- <div class="foot"><div class="bs"><button class="tl" id="sh"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg> 다른 메뉴로 바꾸기</button></div></div>
+ <div class="foot"><div class="bs"><button class="tl" id="sh"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg> 세 끼 모두 바꾸기</button></div></div>
  <p class="disc">이 식단은 일반적인 식사 아이디어이며 의료·영양 상담을 대신하지 않아요. 알레르기, 질환, 임신·수유 등 특별한 고려가 필요하다면 전문가와 상담하고 식품 표시를 확인해 주세요. 시험 버전: 영양·가격은 임시 수치입니다.</p>`;
 }
 /* ===== UI:START — 여기부터는 화면·전역 상태 (계산에는 쓰지 않음) ===== */
@@ -797,11 +842,19 @@ function checkBasic(){
  const m=validateBasic(b);if(m){e.textContent=m;return}
  e.textContent='';step=1;draw();
 }
+let curR=null,seenBy=[];  // 지금 보이는 결과와, 끼니별로 이미 보여 준 메뉴
 function result(){
  const r=$('#res'),R=buildDay(A,off);
  if(R.blocked){r.innerHTML=`<h2>체중 감량 식단은 만들지 않습니다</h2><p class="err">${R.msg}</p><div class="nav"><button class="btn o" id="re">답변 수정</button></div>`;$('#re').onclick=()=>{step=1;show('quiz');draw()};return}
- r.innerHTML=dayResultHTML(R,A);
+ curR=R;seenBy=R.meals.map(e=>e?[e.m.id]:[]);
+ renderRes();
+}
+function renderRes(swapped){
+ const r=$('#res');r.innerHTML=dayResultHTML(curR,A);
  $('#re').onclick=()=>{step=0;show('quiz');draw()};$('#sh').onclick=()=>{off++;result();window.scrollTo(0,0)};
+ r.querySelectorAll('[data-swap]').forEach(b=>b.onclick=()=>{
+  const i=+b.dataset.swap;curR=swapMeal(A,curR,i,seenBy[i]);const e=curR.meals[i];if(e)seenBy[i].push(e.m.id);renderRes(i)});
+ if(swapped!=null){r.querySelectorAll('.card')[swapped].classList.add('sw');const b=r.querySelector(`[data-swap="${swapped}"]`);if(b)b.focus({preventScroll:true})}
 }
 </script>
 </body>
