@@ -21,6 +21,7 @@ const BMI_MSG='입력하신 키와 몸무게로는 체중 감량을 목표로 �
 const bmiBlock=A=>A.goal==='lose'&&A.basic.wt/Math.pow(A.basic.ht/100,2)<CONFIG.bmiMin;
 /* 제한 식품과 맞지 않는 단백질 선택지 */
 const proBlocked=(v,ex)=>(v==='meat'||v==='chicken'||v==='red')?ex.includes('육류'):v==='fish'?ex.includes('해산물'):v==='egg'?(ex.includes('달걀')&&ex.includes('유제품')):false;
+const splitOf=A=>CONFIG.splitBy[A.goal]||CONFIG.split;  // 목표별 끼니 비율
 function targetOf(A){
  const b=A.basic,bmr=10*b.wt+6.25*b.ht-5*b.ag+(b.sx==='m'?5:-161);
  let k=bmr*CONFIG.activity[A.act]*CONFIG.goalMul[A.goal],floored=false;
@@ -30,7 +31,7 @@ function targetOf(A){
 /* 끼니 i에 메뉴를 고를 때의 공통 기준 (planDays와 swapMeal이 함께 씀)
    xOf: 목표 열량에 맞춘 분량 배수 / rel: 조건 초과 수(요리 수준 + 예산) / fit: 목표 맞춤 벌점 / cuPen: 음식 취향 벌점 */
 function slotRules(A,T,i,capIn){
- const w=CONFIG.split[i],isM=CONFIG.slots[i]==='m',cap=capIn===undefined?A.budget*w:capIn;
+ const w=splitOf(A)[i],isM=CONFIG.slots[i]==='m',cap=capIn===undefined?A.budget*w:capIn;
  // 예산 비교는 목표 열량에 맞춰 늘리거나 줄인 실제 분량 기준 (기본 분량으로 비교하면 2배로 늘린 뒤 예산을 넘는 경우가 생김)
  const xOf=m=>clamp(T.k*w/mkv(m).k,CONFIG.portion.min,CONFIG.portion.max);
  // 요리 수준 초과를 예산 초과보다 무겁게 봄 (못 만드는 메뉴는 쓸 수 없지만, 예산을 조금 넘는 건 받아들일 수 있음)
@@ -40,12 +41,21 @@ function slotRules(A,T,i,capIn){
  // 목표 맞춤 벌점: 분량 상한(2배)으로도 열량을 못 채우면 kcal 벌점, 맞춘 분량의 단백질이 끼니 목표보다 모자란 만큼 비례해 prot 벌점 (감량·근육 증가 목표의 단백질 부족을 줄이려고 구간식 70% 기준에서 바꿈)
  const fit=m=>{const b=mkv(m),raw=T.k*w/b.k,x=clamp(raw,CONFIG.portion.min,CONFIG.portion.max);return(raw>CONFIG.portion.max?CONFIG.fit.kcal:0)+CONFIG.fit.prot*Math.max(0,1-b.p*x/(T.p*w))};
  const cuPen=m=>A.cu&&A.cu!=='any'&&(A.cu==='med'?!MED_IDS.has(m.id):m.cu!==A.cu)?(isM?CONFIG.cuPenalty.m:CONFIG.cuPenalty.a):0;
- return{w,isM,xOf,rel,over,fit,cuPen};
+ // 목표별 구성 벌점 — 유지: 열량 중 단백질·지방·탄수화물 비율이 적정 범위를 벗어난 만큼 / 활력: 끼니당 채소·과일이 기준보다 적은 만큼 + 지방 비율이 상한을 넘는 만큼
+ const out=(v,[lo,hi])=>Math.max(0,lo-v,v-hi);
+ const goalPen=m=>{
+  if(A.goal!=='keep'&&A.goal!=='energy')return 0;
+  const b=mkv(m),fr=b.f*9/b.k;
+  if(A.goal==='keep'){const B=CONFIG.balance;return B.w*(out(b.p*4/b.k,B.p)+out(fr,B.f)+out(b.cb*4/b.k,B.cb))}
+  const E=CONFIG.energy,vg=m.items.reduce((s,[id,g])=>VEG_FRUIT.has(id)?s+g:s,0)*xOf(m);
+  return E.vegW*Math.max(0,1-vg/E.veg)+E.fatW*Math.max(0,fr-E.fatMax);
+ };
+ return{w,isM,xOf,rel,over,fit,cuPen,goalPen};
 }
 /* n일치 메뉴 선택 (공통 엔진). 같은 입력과 seed면 항상 같은 결과(결정적). seed를 바꾸면 다른 조합 */
 function planDays(A,seed,n){
  const T=targetOf(A),ex=exList(A),pro=proBlocked(A.pro,ex)?'any':A.pro;
- const S=CONFIG.slots,w=CONFIG.split,use={},cat={};
+ const S=CONFIG.slots,w=splitOf(A),use={},cat={};
  let relaxed=0,none=0,capped=0,mj=0,prevIds=[];
  const days=[];
  for(let d=0;d<n;d++){
@@ -57,11 +67,11 @@ function planDays(A,seed,n){
    if(!pool.length){meals.push(null);none++;return}
    // 예산은 하루 단위: 앞 끼니에서 쓰고 남은 예산을 남은 끼니 비율로 나눠 이번 끼니 한도로 씀 (아침을 싸게 먹으면 점심·저녁에 더 쓸 수 있음)
    const spent=meals.reduce((a,e)=>e?a+e.v.c:a,0),remW=w.slice(i).reduce((a,b)=>a+b,0);
-   const {rel,over,fit,cuPen}=slotRules(A,T,i,(A.budget-spent)*w[i]/remW);
+   const {rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,(A.budget-spent)*w[i]/remW);
    const sc=m=>{
     let v=rel(m)*20+(use[m.id]||0)*2+(today.includes(m.id)?50:0)+(prevIds.includes(m.id)?2:0);
     v+=cuPen(m);
-    v+=fit(m)+over(m);
+    v+=fit(m)+over(m)+goalPen(m);
     if(pro==='any'){if(isM)v+=1.5*(cat[m.pro]||0)}
     else if(isM)v+=wantPref?(proMatch(m,pro)?0:6):(proMatch(m,pro)?2:0);
     else if(proMatch(m,pro))v-=1;
@@ -88,6 +98,7 @@ function notesOf(P,avg,A,maxUse){
  if(P.relaxed)notes.push('조건에 맞는 메뉴가 부족해 선택한 요리 수준을 넘는 메뉴가 일부 포함됐어요.');
  if(maxUse>3)notes.push('메뉴 수가 적어 같은 메뉴가 여러 번 반복됩니다.');
  if(T.floored)notes.push('계산된 열량이 최소 기준보다 낮아 최소 기준으로 올려 계산했어요.');
+ if(A.goal==='lose'&&A.basic.wt/Math.pow(A.basic.ht/100,2)<CONFIG.bmiNormalMax)notes.push('입력하신 키와 몸무게는 정상 체중 범위(BMI 18.5~22.9)예요. 체중 감량이 꼭 필요하지 않을 수 있으니 유지 목표도 함께 고려해 보세요.');
  if(A.budget<1e9&&avg.c>A.budget)notes.push(budgetNote(A,T,avg,P.alt));
  const pn=proteinNote(T,avg,exList(A));if(pn)notes.push(pn);
  return notes;
@@ -131,7 +142,7 @@ function swapMeal(A,R,i,seen=[]){
  const T=R.T,ex=R.ex,pro=R.pro,s=CONFIG.slots[i];
  const cur=R.meals[i]&&R.meals[i].m,others=R.meals.filter((e,j)=>e&&j!==i).map(e=>e.m);
  // 이 끼니의 예산 한도 = 하루 예산 − 나머지 두 끼 식비
- const {isM,xOf,rel,over,fit,cuPen}=slotRules(A,T,i,A.budget-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.c:a,0));
+ const {isM,xOf,rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,A.budget-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.c:a,0));
  let pool=MENUS.filter(m=>m.slot===s&&!hasEx(m,ex)&&!others.some(o=>o.id===m.id)&&!(cur&&m.id===cur.id));
  if(!pool.length)return R;
  // 아직 안 보여 준 메뉴를 우선하되, 조건(요리 수준·예산)에 맞는 새 메뉴가 없으면 이미 보여 준 메뉴로 돌아감
@@ -140,7 +151,7 @@ function swapMeal(A,R,i,seen=[]){
  // 선호 단백질 끼니였으면 계속 선호 단백질로, 아니었으면 지금 비율을 유지
  const keepPref=isM&&pro!=='any'&&cur&&proMatch(cur,pro);
  const sc=m=>{
-  let v=rel(m)*20+cuPen(m)+fit(m)+over(m);
+  let v=rel(m)*20+cuPen(m)+fit(m)+over(m)+goalPen(m);
   if(pro==='any'){if(isM)v+=1.5*others.filter(o=>o.slot==='m'&&o.pro===m.pro).length}
   else if(isM)v+=keepPref?(proMatch(m,pro)?0:6):(proMatch(m,pro)?2:0);
   else if(proMatch(m,pro))v-=1;
@@ -174,6 +185,8 @@ function dayDetailHTML(W){
 }
 const groceryHTML=W=>`<div class="tags" style="margin-top:10px">${W.grocery.map(([i,g])=>`<span>${gtxt(i,g)}</span>`).join('')}</div>`;
 /* 하루 식단 결과 화면 */
+/* 목표별 추천 이유 (결과 화면 '나에게 맞는 한 끼' 상자). 효과를 단정하지 않고 어떻게 구성했는지만 말함 */
+const GOAL_WHY={keep:' 탄수화물·단백질·지방이 한쪽으로 치우치지 않도록 비율을 맞추고, 끼니마다 알맞은 양으로 나눴어요.',energy:' 끼니마다 채소나 과일을 곁들이고 너무 기름지지 않은 메뉴 위주로 담았어요. 아침도 든든하게 담아 세 끼를 규칙적으로 이어가기 쉽게 구성했어요.'};
 const GOAL_LABEL={lose:'체중 감량',gain:'근육량 증가',keep:'체중 유지',energy:'활력 충전',health:'식습관 교정',perf:'운동 퍼포먼스 향상'};
 const CHK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
  CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
@@ -212,7 +225,7 @@ function planHTML(R,A,swap){
 function dayResultHTML(R,A){
  const n=R.meals.filter(Boolean).length,gl=GOAL_LABEL[A.goal];
  const CU_LABEL={kr:'한식',west:'양식',med:'지중해식',world:'세계 음식'},cuTxt=A.cu&&A.cu!=='any'?` ${CU_LABEL[A.cu]} 위주로 담았어요.`:'';
- const why=(R.pro==='any'?`${gl} 목표에 맞춰 단백질을 고루 섞어 메뉴를 골랐어요.`:`${gl} 목표와 ${PRO_LABEL[R.pro]} 취향을 고려해 메뉴를 골랐어요.`)+cuTxt+(R.ex.length?` ${R.ex.join('·')} 재료는 뺐어요.`:'')+' 가공은 조금 덜하고 식재료 본연의 맛을 살렸어요.';
+ const why=(R.pro==='any'?`${gl} 목표에 맞춰 단백질을 고루 섞어 메뉴를 골랐어요.`:`${gl} 목표와 ${PRO_LABEL[R.pro]} 취향을 고려해 메뉴를 골랐어요.`)+cuTxt+(R.ex.length?` ${R.ex.join('·')} 재료는 뺐어요.`:'')+(GOAL_WHY[A.goal]||'')+' 가공은 조금 덜하고 식재료 본연의 맛을 살렸어요.';
  return`<div class="rh"><div><p class="eb">YOUR TABLE, YOUR RHYTHM</p><h2>나를 위한 오늘의 식단</h2><p class="stat">목표 약 ${num(R.T.k)} kcal · 단백질 ${num(R.T.p)}g</p></div><button class="tl bk" id="re"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 응답 수정</button></div>
  ${planHTML(R,A,true)}
  ${R.notes.map(t=>`<p class="note" style="margin:6px 0 0">· ${t}</p>`).join('')}
