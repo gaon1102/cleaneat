@@ -75,7 +75,7 @@ addEventListener('resize',()=>{if(!$('#quiz').hidden)fitQ()});
 function ready(Q){return Q.multi?true:A.sel[Q.id]!==undefined}  // 제한 식품은 선택하지 않아도 진행
 function checkBasic(){
  const g=k=>$('#'+k).value,b=A.basic={sx:g('sx'),ag:+g('ag'),ht:+g('ht'),wt:+g('wt'),c1:$('#c1').checked,c2:$('#c2').checked,c3:$('#c3').checked},e=$('#err');
- const m=validateBasic(b);if(m){e.textContent=m;e.scrollIntoView({block:'nearest'});return}
+ const m=validateBasic(b);if(m){e.textContent=m;e.scrollIntoView({block:'nearest'});if(b.ag>0&&b.ag<CONFIG.minAge)ev('blocked-age',1);return}
  e.textContent='';ev('step-02',1);step=1;draw();
 }
 let curR=null,seenBy=[];const have=new Set();  // '있어요'로 체크한 재료(바꾸기·세 끼 바꾸기 뒤에도 유지)
