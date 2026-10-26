@@ -5,9 +5,14 @@ const $=s=>document.querySelector(s);
 document.addEventListener('click',e=>document.querySelectorAll('.card details[open]').forEach(d=>{if(!d.contains(e.target))d.open=false}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.card details[open]').forEach(d=>d.open=false)});
 let step=0,off=0,A={basic:{},goal:null,act:null,excl:[],pro:null,cu:null,prep:null,budget:null,sel:{}};
+/* 방문 통계(GoatCounter, 쿠키 없음): goatcounter.com에서 만든 사이트 코드를 넣으면 켜짐. 비어 있으면 아무것도 보내지 않음 */
+const GC_CODE='';
+if(GC_CODE&&location.protocol.startsWith('http')){const s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;document.head.appendChild(s)}
+const evSeen=new Set();
+function ev(name,once){if(once){if(evSeen.has(name))return;evSeen.add(name)}try{window.goatcounter&&goatcounter.count&&goatcounter.count({path:name,title:name,event:true})}catch(e){}}
 const TOTAL=QUESTIONS.length+1,LABELS=['기본 정보',...QUESTIONS.map(q=>q.l)];
 function show(v){['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);window.scrollTo(0,0)}
-document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{step=0;show('quiz');draw()});
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ev('quiz-start',1);step=0;show('quiz');draw()});
 function goHome(id){show('home');const e=id&&document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})}
 $('#logo').onclick=()=>goHome();
 document.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>goHome(b.dataset.to));
@@ -49,7 +54,7 @@ function draw(){
  $('#bk').onclick=()=>{step--;draw()};
  $('#nx').onclick=()=>{
   if(Q.id==='goal'&&bmiBlock(A)){$('#err').textContent=BMI_MSG;return}
-  if(step===TOTAL-1){off=0;result();show('res')}else{step++;draw()}};
+  if(step===TOTAL-1){off=0;result();show('res')}else{step++;ev('step-'+String(step+1).padStart(2,'0'),1);draw()}};
  fitQ();
 }
 /* 질문 화면 맞춤: 질문 문장이 한 줄을 넘으면 글자 크기를 줄이고, 목차를 다음 버튼 바로 위까지 늘림 */
@@ -71,19 +76,19 @@ function ready(Q){return Q.multi?true:A.sel[Q.id]!==undefined}  // 제한 식품
 function checkBasic(){
  const g=k=>$('#'+k).value,b=A.basic={sx:g('sx'),ag:+g('ag'),ht:+g('ht'),wt:+g('wt'),c1:$('#c1').checked,c2:$('#c2').checked,c3:$('#c3').checked},e=$('#err');
  const m=validateBasic(b);if(m){e.textContent=m;e.scrollIntoView({block:'nearest'});return}
- e.textContent='';step=1;draw();
+ e.textContent='';ev('step-02',1);step=1;draw();
 }
 let curR=null,seenBy=[];  // 지금 보이는 결과와, 끼니별로 이미 보여 준 메뉴
 function result(){
  const r=$('#res'),R=buildDay(A,off);
- if(R.blocked){r.innerHTML=`<h2>체중 감량 식단은 만들지 않습니다</h2><p class="err">${R.msg}</p><div class="nav"><button class="btn o" id="re">답변 수정</button></div>`;$('#re').onclick=()=>{step=1;show('quiz');draw()};return}
- curR=R;seenBy=R.meals.map(e=>e?[e.m.id]:[]);
+ if(R.blocked){r.innerHTML=`<h2>체중 감량 식단은 만들지 않습니다</h2><p class="err">${R.msg}</p><div class="nav"><button class="btn o" id="re">답변 수정</button></div>`;$('#re').onclick=()=>{step=1;show('quiz');draw()};ev('blocked',1);return}
+ ev('result/'+A.goal,1);curR=R;seenBy=R.meals.map(e=>e?[e.m.id]:[]);
  renderRes();
 }
 function renderRes(swapped){
  const r=$('#res');r.innerHTML=dayResultHTML(curR,A);
- $('#re').onclick=()=>{step=0;show('quiz');draw()};$('#sh').onclick=()=>{off++;result();window.scrollTo(0,0)};
+ $('#re').onclick=()=>{ev('edit-answers');step=0;show('quiz');draw()};$('#sh').onclick=()=>{ev('swap-all');off++;result();window.scrollTo(0,0)};
  r.querySelectorAll('[data-swap]').forEach(b=>b.onclick=()=>{
-  const i=+b.dataset.swap;curR=swapMeal(A,curR,i,seenBy[i]);const e=curR.meals[i];if(e)seenBy[i].push(e.m.id);renderRes(i)});
+  ev('swap');const i=+b.dataset.swap;curR=swapMeal(A,curR,i,seenBy[i]);const e=curR.meals[i];if(e)seenBy[i].push(e.m.id);renderRes(i)});
  if(swapped!=null){r.querySelectorAll('.card')[swapped].classList.add('sw');const b=r.querySelector(`[data-swap="${swapped}"]`);if(b)b.focus({preventScroll:true})}
 }
