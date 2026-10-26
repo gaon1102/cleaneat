@@ -26,7 +26,8 @@ function targetOf(A){
  const b=A.basic,bmr=10*b.wt+6.25*b.ht-5*b.ag+(b.sx==='m'?5:-161);
  let k=bmr*CONFIG.activity[A.act]*CONFIG.goalMul[A.goal],floored=false;
  const fl=CONFIG.kcalFloor[b.sx];if(k<fl){k=fl;floored=true}
- return{k,p:b.wt*CONFIG.protPerKg[A.goal],floored};
+ const ref=CONFIG.protRefBmi*Math.pow(b.ht/100,2),pw=b.wt>ref?ref+CONFIG.protExcess*(b.wt-ref):b.wt;  // 단백질용 체중(조정체중)
+ return{k,p:pw*CONFIG.protPerKg[A.goal],floored};
 }
 /* 끼니 i에 메뉴를 고를 때의 공통 기준 (planDays와 swapMeal이 함께 씀)
    xOf: 목표 열량에 맞춘 분량 배수 / rel: 조건 초과 수(요리 수준 + 예산) / fit: 목표 맞춤 벌점 / cuPen: 음식 취향 벌점 */
@@ -102,6 +103,7 @@ function notesOf(P,avg,A,maxUse){
  if(maxUse>3)notes.push('메뉴 수가 적어 같은 메뉴가 여러 번 반복됩니다.');
  if(T.floored)notes.push('계산된 열량이 최소 기준보다 낮아 최소 기준으로 올려 계산했어요.');
  if(A.goal==='lose'&&A.basic.wt/Math.pow(A.basic.ht/100,2)<CONFIG.bmiNormalMax)notes.push('입력하신 키와 몸무게는 정상 체중 범위(BMI 18.5~22.9)예요. 체중 감량이 꼭 필요하지 않을 수 있으니 유지 목표도 함께 고려해 보세요.');
+ if(A.goal==='lose'&&A.basic.ag>=CONFIG.oldAge)notes.push('65세 이상은 체중을 줄일 때 근육과 뼈도 함께 줄기 쉬워요. 천천히 감량하고, 단백질과 근력 운동을 함께 챙기세요. 감량을 시작하기 전에 의사와 상담하는 것을 권해요.');
  if(A.budget<1e9&&avg.c>A.budget)notes.push(budgetNote(A,T,avg,P.alt));
  const pn=proteinNote(T,avg,exList(A));if(pn)notes.push(pn);
  if(A.goal==='health'&&avg.na>CONFIG.sodium.max)notes.push(`오늘 식단은 식재료만으로도 나트륨이 하루 권고 기준(${num(CONFIG.sodium.max)}mg)을 넘어요. 조리할 때 넣는 소금·양념은 계산에 포함하지 않았으니 실제 섭취량은 더 많을 수 있어요.`);
