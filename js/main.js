@@ -57,7 +57,7 @@ function fitQ(){
  const h=$('#quiz .q h2'),jn=$('#quiz .jn'),nav=$('#quiz .nav');if(!h)return;
  // 여러 개 고르는 단계(제한 식품): 안내 문구가 있어도 아래 선이 다른 단계와 같은 높이에 오도록,
  // 같은 화면을 일반 선택지(안내 문구 없음)로 잠깐 바꿔 선 위치를 재고, 그 차이만큼 선택지 칸을 고르게 늘림
- const os=$('#os');if(os&&os.classList.contains('ms')){
+ const os=$('#os');if(os&&os.classList.contains('ms')&&innerWidth>760){
   const ex=[...$('#quiz .q').querySelectorAll('.qn,.qw')],top=()=>nav.getBoundingClientRect().top-os.getBoundingClientRect().top;
   os.style.height='';os.classList.remove('ms');ex.forEach(e=>e.style.display='none');const want=top();
   os.classList.add('ms');ex.forEach(e=>e.style.display='');const now=top();
@@ -70,7 +70,7 @@ addEventListener('resize',()=>{if(!$('#quiz').hidden)fitQ()});
 function ready(Q){return Q.multi?true:A.sel[Q.id]!==undefined}  // 제한 식품은 선택하지 않아도 진행
 function checkBasic(){
  const g=k=>$('#'+k).value,b=A.basic={sx:g('sx'),ag:+g('ag'),ht:+g('ht'),wt:+g('wt'),c1:$('#c1').checked,c2:$('#c2').checked,c3:$('#c3').checked},e=$('#err');
- const m=validateBasic(b);if(m){e.textContent=m;return}
+ const m=validateBasic(b);if(m){e.textContent=m;e.scrollIntoView({block:'nearest'});return}
  e.textContent='';step=1;draw();
 }
 let curR=null,seenBy=[];  // 지금 보이는 결과와, 끼니별로 이미 보여 준 메뉴
