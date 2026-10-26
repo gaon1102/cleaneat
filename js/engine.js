@@ -31,6 +31,8 @@ function targetOf(A){
 }
 /* 끼니 i에 메뉴를 고를 때의 공통 기준 (planDays와 swapMeal이 함께 씀)
    xOf: 목표 열량에 맞춘 분량 배수 / rel: 조건 초과 수(요리 수준 + 예산) / fit: 목표 맞춤 벌점 / cuPen: 음식 취향 벌점 */
+/* 나트륨 하루 상한(mg): 나이별 만성질환위험감소섭취량. 75세 이상 1,800 / 65~74세 1,900 / 그 외 2,300 */
+const naMax=A=>{const S=CONFIG.sodium,g=+(A.basic&&A.basic.ag)||0,r=S.byAge.find(([a])=>g>=a);return r?r[1]:S.max};
 function slotRules(A,T,i,capIn,naIn){
  const w=splitOf(A)[i],isM=CONFIG.slots[i]==='m',cap=capIn===undefined?A.budget*w:capIn;
  // 예산 비교는 목표 열량에 맞춰 늘리거나 줄인 실제 분량 기준 (기본 분량으로 비교하면 2배로 늘린 뒤 예산을 넘는 경우가 생김)
@@ -46,7 +48,7 @@ function slotRules(A,T,i,capIn,naIn){
  const out=(v,[lo,hi])=>Math.max(0,lo-v,v-hi);
  // 식습관 교정: 하루 나트륨 상한에서 앞 끼니가 쓰고 남은 이 끼니의 한도(naIn)를 넘은 만큼, 끼니 몫 대비 비율에 비례한 벌점
  const goalPen=m=>{
-  if(A.goal==='health'){const S=CONFIG.sodium,lim=naIn===undefined?S.max*w:naIn;return S.w*Math.max(0,mkv(m,xOf(m)).na-lim)/(S.max*w)}
+  if(A.goal==='health'){const S=CONFIG.sodium,M=naMax(A),lim=naIn===undefined?M*w:naIn;return S.w*Math.max(0,mkv(m,xOf(m)).na-lim)/(M*w)}
   if(A.goal!=='keep'&&A.goal!=='energy')return 0;
   const b=mkv(m),fr=b.f*9/b.k;
   if(A.goal==='keep'){const B=CONFIG.balance;return B.w*(out(b.p*4/b.k,B.p)+out(fr,B.f)+out(b.cb*4/b.k,B.cb))}
@@ -71,7 +73,7 @@ function planDays(A,seed,n){
    // 예산은 하루 단위: 앞 끼니에서 쓰고 남은 예산을 남은 끼니 비율로 나눠 이번 끼니 한도로 씀 (아침을 싸게 먹으면 점심·저녁에 더 쓸 수 있음)
    const spent=meals.reduce((a,e)=>e?a+e.v.c:a,0),remW=w.slice(i).reduce((a,b)=>a+b,0);
    const naSpent=meals.reduce((a,e)=>e?a+e.v.na:a,0);
-   const {rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,(A.budget-spent)*w[i]/remW,(CONFIG.sodium.max-naSpent)*w[i]/remW);
+   const {rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,(A.budget-spent)*w[i]/remW,(naMax(A)-naSpent)*w[i]/remW);
    const sc=m=>{
     let v=rel(m)*20+(use[m.id]||0)*2+(today.includes(m.id)?50:0)+(prevIds.includes(m.id)?2:0);
     v+=cuPen(m);
@@ -106,7 +108,7 @@ function notesOf(P,avg,A,maxUse){
  if(A.goal==='lose'&&A.basic.ag>=CONFIG.oldAge)notes.push('65세 이상은 체중을 줄일 때 근육과 뼈도 함께 줄기 쉬워요. 천천히 감량하고, 단백질과 근력 운동을 함께 챙기세요. 감량을 시작하기 전에 의사와 상담하는 것을 권해요.');
  if(A.budget<1e9&&avg.c>A.budget)notes.push(budgetNote(A,T,avg,P.alt));
  const pn=proteinNote(T,avg,exList(A));if(pn)notes.push(pn);
- if(A.goal==='health'&&avg.na>CONFIG.sodium.max)notes.push(`오늘 식단은 식재료만으로도 나트륨이 하루 권고 기준(${num(CONFIG.sodium.max)}mg)을 넘어요. 조리할 때 넣는 소금·양념은 계산에 포함하지 않았으니 실제 섭취량은 더 많을 수 있어요.`);
+ if(A.goal==='health'&&avg.na>naMax(A))notes.push(`오늘 식단은 식재료만으로도 나트륨이 하루 권고 기준(${num(naMax(A))}mg)을 넘어요. 조리할 때 넣는 소금·양념은 계산에 포함하지 않았으니 실제 섭취량은 더 많을 수 있어요.`);
  return notes;
 }
 /* 예산 초과 안내: 이유(준비 방식·목표 열량)와 예상 식비를 알려 주고, 준비 방식을 한 단계씩 올려 다시 계산해 예산 안에 들어오는 단계가 있으면 함께 알려 줌 */
@@ -148,7 +150,7 @@ function swapMeal(A,R,i,seen=[]){
  const T=R.T,ex=R.ex,pro=R.pro,s=CONFIG.slots[i];
  const cur=R.meals[i]&&R.meals[i].m,others=R.meals.filter((e,j)=>e&&j!==i).map(e=>e.m);
  // 이 끼니의 예산 한도 = 하루 예산 − 나머지 두 끼 식비
- const {isM,xOf,rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,A.budget-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.c:a,0),CONFIG.sodium.max-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.na:a,0));
+ const {isM,xOf,rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,A.budget-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.c:a,0),naMax(A)-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.na:a,0));
  let pool=MENUS.filter(m=>m.slot===s&&!hasEx(m,ex)&&!others.some(o=>o.id===m.id)&&!(cur&&m.id===cur.id));
  if(!pool.length)return R;
  // 아직 안 보여 준 메뉴를 우선하되, 조건(요리 수준·예산)에 맞는 새 메뉴가 없으면 이미 보여 준 메뉴로 돌아감
