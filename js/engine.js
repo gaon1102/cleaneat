@@ -190,7 +190,7 @@ function dayDetailHTML(W){
 const groceryHTML=W=>`<div class="tags" style="margin-top:10px">${W.grocery.map(([i,g])=>`<span>${gtxt(i,g)}</span>`).join('')}</div>`;
 /* 하루 식단 결과 화면 */
 /* 목표별 추천 이유 (결과 화면 '나에게 맞는 한 끼' 상자). 효과를 단정하지 않고 어떻게 구성했는지만 말함 */
-const GOAL_WHY={keep:' 탄수화물·단백질·지방이 한쪽으로 치우치지 않도록 비율을 맞추고, 끼니마다 알맞은 양으로 나눴어요.',energy:' 끼니마다 채소나 과일을 곁들이고 너무 기름지지 않은 메뉴 위주로 담았어요. 아침도 든든하게 담아 세 끼를 규칙적으로 이어가기 쉽게 구성했어요.',health:' 나트륨이 많은 재료와 메뉴는 되도록 피해서 담았어요.'};
+const GOAL_WHY={keep:' 탄수화물·단백질·지방이 한쪽으로 치우치지 않도록 비율을 맞추고, 끼니마다 알맞은 양으로 나눴어요.',energy:' 통곡물과 단백질을 챙기고 끼니마다 채소나 과일을 곁들였어요. 너무 기름지지 않은 메뉴 위주로 담고, 아침도 든든하게 담아 세 끼를 규칙적으로 이어가기 쉽게 구성했어요.',health:' 나트륨이 많은 재료와 메뉴는 되도록 피해서 담았어요.'};
 const GOAL_LABEL={lose:'체중 감량',gain:'근육량 증가',keep:'체중 유지',energy:'활력 충전',health:'식습관 교정',perf:'운동 퍼포먼스 향상'};
 const CHK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
  CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
