@@ -1,6 +1,9 @@
 /* CleanEat — 화면 동작: 홈·질문·결과 화면 전환, 버튼, 입력. data.js·engine.js 다음에 불러옴 */
 /* ===== UI:START — 여기부터는 화면·전역 상태 (계산에는 쓰지 않음) ===== */
 const $=s=>document.querySelector(s);
+// 메뉴 카드의 '분량 보기'·'영양성분 보기'는 한 번에 하나만 열고, 바깥을 누르거나 Esc를 누르면 닫음
+document.addEventListener('click',e=>document.querySelectorAll('.card details[open]').forEach(d=>{if(!d.contains(e.target))d.open=false}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.card details[open]').forEach(d=>d.open=false)});
 let step=0,off=0,A={basic:{},goal:null,act:null,excl:[],pro:null,cu:null,prep:null,budget:null,sel:{}};
 const TOTAL=QUESTIONS.length+1,LABELS=['기본 정보',...QUESTIONS.map(q=>q.l)];
 function show(v){['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);window.scrollTo(0,0)}
