@@ -3,8 +3,8 @@
 /* ============ 5. 로직 (계산 전용 — 화면·전역 상태에 의존하지 않음. 정적 페이지 생성에도 그대로 씁니다) ============ */
 const num=n=>Math.round(n).toLocaleString('ko-KR'),won=n=>Math.round(n/100)*100;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
-const mkv=(m,x=1)=>m.items.reduce((s,[i,g])=>({k:s.k+ING[i].k*g*x/100,p:s.p+ING[i].p*g*x/100,f:s.f+ING[i].f*g*x/100,cb:s.cb+ING[i].cb*g*x/100,c:s.c+ING[i].c*g*x/100}),{k:0,p:0,f:0,cb:0,c:0});
-const addV=(a,v)=>({k:a.k+v.k,p:a.p+v.p,f:a.f+v.f,cb:a.cb+v.cb,c:a.c+v.c}),V0={k:0,p:0,f:0,cb:0,c:0};
+const mkv=(m,x=1)=>m.items.reduce((s,[i,g])=>({k:s.k+ING[i].k*g*x/100,p:s.p+ING[i].p*g*x/100,f:s.f+ING[i].f*g*x/100,cb:s.cb+ING[i].cb*g*x/100,c:s.c+ING[i].c*g*x/100,na:s.na+ING[i].na*g*x/100}),{k:0,p:0,f:0,cb:0,c:0,na:0});
+const addV=(a,v)=>({k:a.k+v.k,p:a.p+v.p,f:a.f+v.f,cb:a.cb+v.cb,c:a.c+v.c,na:a.na+v.na}),V0={k:0,p:0,f:0,cb:0,c:0,na:0};
 const exList=A=>A.excl.filter(x=>x!=='none');
 const hasEx=(m,ex)=>m.items.some(([id])=>ING[id].ex.some(t=>ex.includes(t)));
 /* 선호 단백질과 메뉴가 맞는지. '육류'(meat)는 닭고기(chicken)·소·돼지(red) 메뉴를 모두 포함 */
@@ -30,7 +30,7 @@ function targetOf(A){
 }
 /* 끼니 i에 메뉴를 고를 때의 공통 기준 (planDays와 swapMeal이 함께 씀)
    xOf: 목표 열량에 맞춘 분량 배수 / rel: 조건 초과 수(요리 수준 + 예산) / fit: 목표 맞춤 벌점 / cuPen: 음식 취향 벌점 */
-function slotRules(A,T,i,capIn){
+function slotRules(A,T,i,capIn,naIn){
  const w=splitOf(A)[i],isM=CONFIG.slots[i]==='m',cap=capIn===undefined?A.budget*w:capIn;
  // 예산 비교는 목표 열량에 맞춰 늘리거나 줄인 실제 분량 기준 (기본 분량으로 비교하면 2배로 늘린 뒤 예산을 넘는 경우가 생김)
  const xOf=m=>clamp(T.k*w/mkv(m).k,CONFIG.portion.min,CONFIG.portion.max);
@@ -43,7 +43,9 @@ function slotRules(A,T,i,capIn){
  const cuPen=m=>A.cu&&A.cu!=='any'&&(A.cu==='med'?!MED_IDS.has(m.id):m.cu!==A.cu)?(isM?CONFIG.cuPenalty.m:CONFIG.cuPenalty.a):0;
  // 목표별 구성 벌점 — 유지: 열량 중 단백질·지방·탄수화물 비율이 적정 범위를 벗어난 만큼 / 활력: 끼니당 채소·과일이 기준보다 적은 만큼 + 지방 비율이 상한을 넘는 만큼
  const out=(v,[lo,hi])=>Math.max(0,lo-v,v-hi);
+ // 식습관 교정: 하루 나트륨 상한에서 앞 끼니가 쓰고 남은 이 끼니의 한도(naIn)를 넘은 만큼, 끼니 몫 대비 비율에 비례한 벌점
  const goalPen=m=>{
+  if(A.goal==='health'){const S=CONFIG.sodium,lim=naIn===undefined?S.max*w:naIn;return S.w*Math.max(0,mkv(m,xOf(m)).na-lim)/(S.max*w)}
   if(A.goal!=='keep'&&A.goal!=='energy')return 0;
   const b=mkv(m),fr=b.f*9/b.k;
   if(A.goal==='keep'){const B=CONFIG.balance;return B.w*(out(b.p*4/b.k,B.p)+out(fr,B.f)+out(b.cb*4/b.k,B.cb))}
@@ -67,7 +69,8 @@ function planDays(A,seed,n){
    if(!pool.length){meals.push(null);none++;return}
    // 예산은 하루 단위: 앞 끼니에서 쓰고 남은 예산을 남은 끼니 비율로 나눠 이번 끼니 한도로 씀 (아침을 싸게 먹으면 점심·저녁에 더 쓸 수 있음)
    const spent=meals.reduce((a,e)=>e?a+e.v.c:a,0),remW=w.slice(i).reduce((a,b)=>a+b,0);
-   const {rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,(A.budget-spent)*w[i]/remW);
+   const naSpent=meals.reduce((a,e)=>e?a+e.v.na:a,0);
+   const {rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,(A.budget-spent)*w[i]/remW,(CONFIG.sodium.max-naSpent)*w[i]/remW);
    const sc=m=>{
     let v=rel(m)*20+(use[m.id]||0)*2+(today.includes(m.id)?50:0)+(prevIds.includes(m.id)?2:0);
     v+=cuPen(m);
@@ -101,6 +104,7 @@ function notesOf(P,avg,A,maxUse){
  if(A.goal==='lose'&&A.basic.wt/Math.pow(A.basic.ht/100,2)<CONFIG.bmiNormalMax)notes.push('입력하신 키와 몸무게는 정상 체중 범위(BMI 18.5~22.9)예요. 체중 감량이 꼭 필요하지 않을 수 있으니 유지 목표도 함께 고려해 보세요.');
  if(A.budget<1e9&&avg.c>A.budget)notes.push(budgetNote(A,T,avg,P.alt));
  const pn=proteinNote(T,avg,exList(A));if(pn)notes.push(pn);
+ if(A.goal==='health'&&avg.na>CONFIG.sodium.max)notes.push(`오늘 식단은 식재료만으로도 나트륨이 하루 권고 기준(${num(CONFIG.sodium.max)}mg)을 넘어요. 조리할 때 넣는 소금·양념은 계산에 포함하지 않았으니 실제 섭취량은 더 많을 수 있어요.`);
  return notes;
 }
 /* 예산 초과 안내: 이유(준비 방식·목표 열량)와 예상 식비를 알려 주고, 준비 방식을 한 단계씩 올려 다시 계산해 예산 안에 들어오는 단계가 있으면 함께 알려 줌 */
@@ -142,7 +146,7 @@ function swapMeal(A,R,i,seen=[]){
  const T=R.T,ex=R.ex,pro=R.pro,s=CONFIG.slots[i];
  const cur=R.meals[i]&&R.meals[i].m,others=R.meals.filter((e,j)=>e&&j!==i).map(e=>e.m);
  // 이 끼니의 예산 한도 = 하루 예산 − 나머지 두 끼 식비
- const {isM,xOf,rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,A.budget-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.c:a,0));
+ const {isM,xOf,rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,A.budget-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.c:a,0),CONFIG.sodium.max-R.meals.reduce((a,e,j)=>e&&j!==i?a+e.v.na:a,0));
  let pool=MENUS.filter(m=>m.slot===s&&!hasEx(m,ex)&&!others.some(o=>o.id===m.id)&&!(cur&&m.id===cur.id));
  if(!pool.length)return R;
  // 아직 안 보여 준 메뉴를 우선하되, 조건(요리 수준·예산)에 맞는 새 메뉴가 없으면 이미 보여 준 메뉴로 돌아감
@@ -186,7 +190,7 @@ function dayDetailHTML(W){
 const groceryHTML=W=>`<div class="tags" style="margin-top:10px">${W.grocery.map(([i,g])=>`<span>${gtxt(i,g)}</span>`).join('')}</div>`;
 /* 하루 식단 결과 화면 */
 /* 목표별 추천 이유 (결과 화면 '나에게 맞는 한 끼' 상자). 효과를 단정하지 않고 어떻게 구성했는지만 말함 */
-const GOAL_WHY={keep:' 탄수화물·단백질·지방이 한쪽으로 치우치지 않도록 비율을 맞추고, 끼니마다 알맞은 양으로 나눴어요.',energy:' 끼니마다 채소나 과일을 곁들이고 너무 기름지지 않은 메뉴 위주로 담았어요. 아침도 든든하게 담아 세 끼를 규칙적으로 이어가기 쉽게 구성했어요.'};
+const GOAL_WHY={keep:' 탄수화물·단백질·지방이 한쪽으로 치우치지 않도록 비율을 맞추고, 끼니마다 알맞은 양으로 나눴어요.',energy:' 끼니마다 채소나 과일을 곁들이고 너무 기름지지 않은 메뉴 위주로 담았어요. 아침도 든든하게 담아 세 끼를 규칙적으로 이어가기 쉽게 구성했어요.',health:' 나트륨이 많은 재료와 메뉴는 되도록 피해서 담았어요.'};
 const GOAL_LABEL={lose:'체중 감량',gain:'근육량 증가',keep:'체중 유지',energy:'활력 충전',health:'식습관 교정',perf:'운동 퍼포먼스 향상'};
 const CHK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
  CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
