@@ -152,4 +152,6 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 @media(min-width:1181px) and (max-width:1400px){.sumt{grid-template-columns:2fr 1.1fr 1.3fr 1.1fr 1fr}}
 @media(min-width:761px) and (max-width:1180px){.sumt{grid-template-columns:repeat(4,1fr);padding:0}.sumt>div{padding:18px 20px;border-top:1px solid var(--line)}.sumt>div:nth-child(2){border-left:0}.sumt>div:first-child{grid-column:1/-1;border-top:0;padding:20px 28px}}
 @media(max-width:760px){.cards,.r2{grid-template-columns:1fr}.card{min-height:0}.foot .bs{width:100%}.foot .bs .btn{flex:1}}
+/* 모바일: 질문 화면의 이전·다음 버튼을 화면 아래에 고정(단계마다 위치가 달라지지 않게) */
+@media(max-width:760px){#quiz{padding-bottom:104px}.q .err{scroll-margin-bottom:96px}.q .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;padding:12px 24px calc(12px + env(safe-area-inset-bottom));background:var(--bg);box-shadow:0 -1px 0 var(--line)}}
 @media(max-width:350px){.nv{gap:10px}.nv .lk{font-size:.72rem}.logo{font-size:18px;gap:8px}.mk{width:32px;height:32px}}
