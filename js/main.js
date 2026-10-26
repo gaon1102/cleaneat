@@ -6,7 +6,7 @@ document.addEventListener('click',e=>document.querySelectorAll('.card details[op
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.card details[open]').forEach(d=>d.open=false)});
 let step=0,off=0,A={basic:{},goal:null,act:null,excl:[],pro:null,cu:null,prep:null,budget:null,sel:{}};
 /* 방문 통계(GoatCounter, 쿠키 없음): goatcounter.com에서 만든 사이트 코드를 넣으면 켜짐. 비어 있으면 아무것도 보내지 않음 */
-const GC_CODE='';
+const GC_CODE='gaon';
 if(GC_CODE&&location.protocol.startsWith('http')){const s=document.createElement('script');s.async=true;s.src='https://gc.zgo.at/count.js';s.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;document.head.appendChild(s)}
 const evSeen=new Set();
 function ev(name,once){if(once){if(evSeen.has(name))return;evSeen.add(name)}try{window.goatcounter&&goatcounter.count&&goatcounter.count({path:name,title:name,event:true})}catch(e){}}
