@@ -148,5 +148,8 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 .foot b{font-size:.92rem}.foot p{font-size:.78rem;color:var(--mut)}.foot .bs{display:flex;gap:10px;flex-wrap:wrap}
 .disc{font-size:.72rem;color:var(--mut);margin:16px 0 0}
 @media(min-width:761px) and (max-width:1060px){.card .cb{min-height:330px}}
+/* 요약 막대: 폭이 좁으면 영양소 칸을 위 한 줄로 올리고 나머지 4칸을 아래 줄에 (영양소 칸이 3줄로 쌓이던 문제) */
+@media(min-width:1181px) and (max-width:1400px){.sumt{grid-template-columns:2fr 1.1fr 1.3fr 1.1fr 1fr}}
+@media(min-width:761px) and (max-width:1180px){.sumt{grid-template-columns:repeat(4,1fr);padding:0}.sumt>div{padding:18px 20px;border-top:1px solid var(--line)}.sumt>div:nth-child(2){border-left:0}.sumt>div:first-child{grid-column:1/-1;border-top:0;padding:20px 28px}}
 @media(max-width:760px){.cards,.r2{grid-template-columns:1fr}.card{min-height:0}.foot .bs{width:100%}.foot .bs .btn{flex:1}}
 @media(max-width:350px){.nv{gap:10px}.nv .lk{font-size:.72rem}.logo{font-size:18px;gap:8px}.mk{width:32px;height:32px}}
