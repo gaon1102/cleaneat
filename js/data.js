@@ -24,7 +24,7 @@ const CONFIG={
 /* 홈 화면 '예시 결과'에 쓰는 입력값 (실제 계산 엔진으로 만들어 보여줌). 바꾸면 예시도 바뀜 */
 const EXAMPLE={basic:{sx:'f',ag:29,ht:163,wt:58},goal:'keep',act:2,excl:[],pro:'any',cu:'any',prep:3,budget:20000,sel:{}};
 /* 음식 취향 '지중해식'으로 고를 때 우선하는 메뉴 (올리브유·생선·콩·통곡물·채소 중심, 장류·아시아 양념 제외). 메뉴를 추가하면 여기에도 넣어 주세요 */
-const MED_IDS=new Set(['a3','a4','a6','a14','R79','R82','R115','c1','c2','c3','c5','m2','f1','f2','f5','f6','f7','f8','m3','m13','s1','s3','s4','s5','s6','s12','e2','e4','e5','R51','R94','R100','R101','R105','R107','R112','R116','R118','R119','R122','L1','L3','L7','L8','L9','L10','L11','L12','L19','L32','L33','L35','L37','N1','N3','N5','N6','N7','N8']);
+const MED_IDS=new Set(['a3','a4','a6','a14','R79','R82','R115','c1','c2','c3','c5','m2','f1','f2','f5','f6','f7','f8','m3','m13','s1','s3','s4','s5','s6','s12','e2','e4','e5','R51','R94','R100','R101','R105','R107','R112','R116','R118','R119','R122','L1','L3','L7','L8','L9','L10','L11','L12','L19','L32','L33','L35','L37','N1','N3','N5','N6','N7','N8','N9','N10','N11']);
 const PRESET={veg:['육류','해산물'],vegan:['육류','해산물','달걀','유제품']};
 const PRO_LABEL={meat:'육류',chicken:'닭고기',red:'소고기·돼지고기',egg:'달걀·유제품',soy:'두부·콩',fish:'생선·해산물',none:'기타',any:'다양하게'};
 /* ============ 2. 질문 (기본 정보 다음 단계) — 순서: 목표 → 활동 → 제한 식품 → 선호 단백질 → 음식 스타일 → 준비 방식 → 예산 ============ */
@@ -351,6 +351,9 @@ const MENUS=[
  {id:'N6',name:'바나나 블루베리 요거트 볼',desc:'그릭요거트에 바나나와 블루베리, 호두를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',200],['banana',80],['blueberry',60],['walnut',15]]},
  {id:'N7',name:'딸기 블루베리 요거트 볼',desc:'그릭요거트에 딸기와 블루베리, 호두를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',200],['strawberry',80],['blueberry',60],['walnut',15]]},
  {id:'N8',name:'바나나 딸기 요거트 볼',desc:'그릭요거트에 바나나와 딸기, 호두를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',200],['banana',80],['strawberry',60],['walnut',15]]},
+ {id:'N9',name:'오트밀 바나나 블루베리 요거트 볼',desc:'그릭요거트에 오트밀을 섞고 바나나와 블루베리를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',150],['oat',40],['banana',80],['blueberry',60]]},
+ {id:'N10',name:'오트밀 딸기 블루베리 요거트 볼',desc:'그릭요거트에 오트밀을 섞고 딸기와 블루베리를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',150],['oat',40],['strawberry',80],['blueberry',60]]},
+ {id:'N11',name:'오트밀 바나나 딸기 요거트 볼',desc:'그릭요거트에 오트밀을 섞고 바나나와 딸기를 올렸어요.',slot:'a',lvl:1,pro:'egg',cu:'west',img:'',sea:['계피 약간'],items:[['yog',150],['oat',40],['banana',80],['strawberry',60]]},
  {id:'N2',name:'라임 갈릭 새우 덮밥',desc:'새우를 마늘에 볶아 라임즙을 뿌리고 현미밥, 채소와 담았어요.',slot:'m',lvl:3,pro:'fish',cu:'world',img:'',sea:['라임즙 또는 레몬즙','고수','후추'],items:[['shrimp',130],['garlic',10],['brice',80],['paprika',50],['broc',60],['oil',8]]},
  {id:'N3',name:'치킨 쿠스쿠스 볼',desc:'불린 통밀 쿠스쿠스에 닭가슴살과 채소를 올리고 레몬 올리브유를 뿌렸어요.',slot:'m',lvl:2,pro:'chicken',cu:'world',img:'',sea:['큐민','파슬리'],items:[['couscous',70],['rtchicken',120],['cuc',50],['tomato',60],['paprika',40],['oil',8],['lemon',10]]},
  {id:'N4',name:'스테이크 감자 플레이트',desc:'소고기 우둔살 스테이크에 감자와 완두콩을 곁들였어요.',slot:'m',lvl:3,pro:'red',cu:'west',img:'',sea:['소금','후추','로즈마리'],items:[['beef',150],['potato',200],['peas',80],['oil',8]]},
