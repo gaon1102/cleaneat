@@ -190,6 +190,17 @@ function dayDetailHTML(W){
  return W.days.map(D=>`<details class="dd"><summary>${D.d}요일 · ${num(D.tot.k)} kcal · 단백질 ${num(D.tot.p)}g · 약 ${num(won(D.tot.c))}원</summary>${D.meals.map((e,i)=>e?`<div class="mb2"><div class="s">${CONFIG.slotName[i]}</div><b>${e.m.name}</b><div class="tags">${e.m.items.map(([id,g])=>`<span>${gtxt(id,Math.round(g*e.x/5)*5)}</span>`).join('')}</div><p class="note" style="margin:0">${num(e.v.k)} kcal · 단백질 ${num(e.v.p)}g · 약 ${num(won(e.v.c))}원</p></div>`:`<p class="mut">${CONFIG.slotName[i]}: 조건에 맞는 메뉴가 없습니다.</p>`).join('')}</details>`).join('');
 }
 const groceryHTML=W=>`<div class="tags" style="margin-top:10px">${W.grocery.map(([i,g])=>`<span>${gtxt(i,g)}</span>`).join('')}</div>`;
+/* 오늘 장보기 목록: 세 끼 재료를 합산(카드 '분량 보기'와 같은 5g 단위 값끼리 더함). 집에 있을 법한 기본 재료(PANTRY)는 따로 묶음 */
+const PANTRY=new Set(['brice','oil','sesoil','periloil','soy','doen','gochu','ssam','perillap','sesame','fishsauce','garlic']);
+function groceryBoxHTML(R){
+ const g={},sea=[];
+ R.meals.forEach(e=>{if(!e)return;e.m.items.forEach(([id,q])=>{g[id]=(g[id]||0)+Math.round(q*e.x/5)*5});(e.m.sea||[]).forEach(t=>{if(t!=='찬물'&&!sea.includes(t))sea.push(t)})});
+ const rows=Object.entries(g),row=([id,q])=>`<li><label><input type="checkbox" data-id="${id}"><span>${ING[id].n}</span><b>${q}g</b></label></li>`;
+ const buy=rows.filter(([i])=>!PANTRY.has(i)),pan=rows.filter(([i])=>PANTRY.has(i));
+ return`<section class="box gl"><span class="ic">${ICON.bag}</span><p class="k">TODAY'S GROCERIES</p><h3>오늘 장보기 목록</h3><p>집에 있는 재료는 체크해 두세요. 적힌 양은 오늘 세 끼에 먹는 양이라, 마트에서는 포장 단위로 더 사야 할 수 있어요.</p>
+  <p class="gc" id="gcnt" aria-live="polite"></p><ul class="buy">${buy.map(row).join('')}</ul>
+  ${pan.length||sea.length?`<h4>집에 있을 법한 기본 재료</h4>${pan.length?`<ul>${pan.map(row).join('')}</ul>`:''}${sea.length?`<p class="sea">양념은 적당량: ${sea.join(', ')}</p>`:''}`:''}</section>`;
+}
 /* 하루 식단 결과 화면 */
 /* 목표별 추천 이유 (결과 화면 '나에게 맞는 한 끼' 상자). 효과를 단정하지 않고 어떻게 구성했는지만 말함 */
 const GOAL_WHY={keep:' 탄수화물·단백질·지방이 한쪽으로 치우치지 않도록 비율을 맞추고, 끼니마다 알맞은 양으로 나눴어요.',energy:' 통곡물과 단백질을 챙기고 끼니마다 채소나 과일을 곁들였어요. 너무 기름지지 않은 메뉴 위주로 담고, 아침도 든든하게 담아 세 끼를 규칙적으로 이어가기 쉽게 구성했어요.',health:' 나트륨이 많은 재료와 메뉴는 되도록 피해서 담았어요.'};
@@ -199,7 +210,7 @@ const CHK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="c
 const SWP='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg>';
 const short=id=>ING[id].n.replace(/\(.*?\)/g,'');
 const ICON={
- drop:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>',
+ bag:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>',
  leaf:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
  spark:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/><path d="M20 3v4M22 5h-4"/></svg>',
  pie:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>',
@@ -236,7 +247,7 @@ function dayResultHTML(R,A){
  ${planHTML(R,A,true)}
  ${R.notes.map(t=>`<p class="note" style="margin:6px 0 0">· ${t}</p>`).join('')}
  <div class="r2">
-  <section class="box"><span class="ic">${ICON.drop}</span><p class="k">A LITTLE REMINDER</p><h3>오늘의 수분 습관</h3><p>식사 사이에 물을 가까이 두고, 무가당 허브티나 탄산수도 편하게 골라보세요.</p><div class="tags"><span>물</span><span>허브티</span><span>탄산수</span></div></section>
+  ${groceryBoxHTML(R)}
   <section class="box"><span class="ic">${ICON.leaf}</span><p class="k">GOOD FOOD, NO PRESSURE</p><h3>나에게 맞는 한 끼</h3><p>${why}</p><ul class="ck"><li>통식품 중심</li><li>성분표 살피기</li><li>덜 가공하기</li></ul></section>
  </div>
  <div class="foot"><div class="bs"><button class="tl" id="sh"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg> 세 끼 모두 바꾸기</button></div></div>
