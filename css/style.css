@@ -61,9 +61,9 @@ summary{cursor:pointer;font-weight:500}details p{margin-top:8px;color:var(--mut)
 details ul{margin:10px 0 0;padding-left:1.2em;color:var(--mut)}details li+li{margin-top:4px}
 /* 요약 막대 (홈 예시 결과) */
 .sumt{display:grid;grid-template-columns:1.5fr 1.1fr 1.3fr 1.1fr 1fr;background:var(--card);border:1px solid var(--line);padding:24px 0;margin-top:32px}
-.sumt>div{padding:2px 20px;border-left:1px solid var(--line);min-width:0}.sumt>div:not(:first-child){display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}.sumt>div:first-child{border-left:0;display:flex;align-items:center;gap:16px;padding-left:28px}
+.sumt>div{padding:2px 20px;border-left:1px solid var(--line);min-width:0}.sumt>div:not(:first-child){display:flex;flex-direction:column;justify-content:center}.sumt>div:first-child{border-left:0;display:flex;align-items:center;gap:16px;padding-left:28px}
 .sumt .si{flex:none;width:42px;height:42px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--g)}
-.sumt span{display:block;font-size:.68rem;color:var(--mut)}.sumt b{display:block;font-size:.86rem;font-weight:650;margin-top:4px;line-height:1.5}.sumt small{display:block;font-size:.74rem;color:var(--mut);margin-top:2px}.sumt small.mac{display:flex;flex-wrap:wrap;justify-content:center;gap:1px 10px}.mac span{white-space:nowrap}.mac i{font-style:normal;font-weight:600;color:var(--fg)}
+.sumt span{display:block;font-size:.68rem;color:var(--mut)}.sumt b{display:block;font-size:.86rem;font-weight:650;margin-top:4px;line-height:1.5}.sumt small{display:block;font-size:.74rem;color:var(--mut);margin-top:2px}.sumt small.mac{display:flex;flex-wrap:wrap;gap:1px 10px}.mac span{white-space:nowrap}.mac i{font-style:normal;font-weight:600;color:var(--fg)}
 @media(max-width:1000px){.hero{gap:40px}.ing{grid-template-columns:1fr 1fr}.ing>div:nth-child(3){border-left:0}.ing>div:nth-child(n+3){border-top:1px solid var(--line)}.faq{grid-template-columns:1fr}.faq>div+div details:first-of-type{border-top:0}.faq>div:first-child details:last-of-type{border-bottom:0}}
 .cta{background:var(--soft);border-radius:12px;padding:40px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin:8px 0 72px}
 footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:.88rem;color:var(--mut)}
