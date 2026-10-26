@@ -6,7 +6,7 @@ const fs=require('fs'),path=require('path');
 const N=+(process.argv[2]||5000);
 const src=['js/data.js','js/engine.js'].map(f=>fs.readFileSync(path.join(__dirname,f),'utf8')).join('\n');
 const L=new Function(src+';return{CONFIG,QUESTIONS,MENUS,ING,MED_IDS,buildDay,swapMeal,dayResultHTML,proBlocked,bmiBlock}')();
-const {QUESTIONS,MENUS,ING,MED_IDS,buildDay,swapMeal,dayResultHTML,proBlocked}=L;
+const {CONFIG,QUESTIONS,MENUS,ING,MED_IDS,buildDay,swapMeal,dayResultHTML,proBlocked}=L;
 const opt=id=>QUESTIONS.find(q=>q.id===id).o.map(o=>o[0]);
 
 let seed=12345;const rnd=()=>{seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296};  // 같은 결과가 나오도록 고정 시드
@@ -18,7 +18,7 @@ const mkA=()=>{
  return{basic:{sx:pick(['m','f']),ag:Math.round(R(18,70)),ht:R(150,190),wt:R(45,100)},
   goal:pick(opt('goal')),act:pick(opt('act')),excl,pro,cu:pick(opt('cu')),prep:pick(opt('prep')),budget:pick(BUDGETS),sel:{}};
 };
-const S={n:0,blocked:0,crash:0,violate:0,empty:0,dup:0,kLow:0,pLow:0,pNote:0,htmlFail:0,swapFail:0,cuN:0,cuHit:0,prefN:0,prefHit:0};
+const S={hN:0,hOver:0,hNote:0,n:0,blocked:0,crash:0,violate:0,empty:0,dup:0,kLow:0,pLow:0,pNote:0,htmlFail:0,swapFail:0,cuN:0,cuHit:0,prefN:0,prefHit:0};
 const byB={};BUDGETS.forEach(b=>byB[b]={n:0,over:0,lvl:0,pLow:0,cost:[]});
 const used=new Set(),q=(a,p)=>{a=[...a].sort((x,y)=>x-y);return a[Math.floor(a.length*p)]||0};
 for(let t=0;t<N;t++){
@@ -30,6 +30,7 @@ for(let t=0;t<N;t++){
  if(ms.some(e=>e.m.items.some(([id])=>ING[id].ex.some(x=>A.excl.includes(x)))))S.violate++;
  if(new Set(ms.map(e=>e.m.id)).size<ms.length)S.dup++;
  ms.forEach(e=>used.add(e.m.id));
+ if(A.goal==='health'){S.hN++;if(D.tot.na>CONFIG.sodium.max)S.hOver++;if(D.notes.some(x=>x.includes('나트륨')))S.hNote++}  // 식습관 교정: 식재료 기준 하루 나트륨 상한 초과
  if(D.tot.k<.85*D.T.k)S.kLow++;
  if(D.tot.p<.85*D.T.p){S.pLow++;b.pLow++}
  if(D.notes.some(x=>x.includes('단백질이 목표보다')))S.pNote++;
@@ -46,5 +47,6 @@ console.log(`가상 사용자 ${N}명 → 식단 ${S.n}개 (차단 ${S.blocked},
 console.log(`열량 15% 넘게 부족 ${pct(S.kLow,S.n)} | 단백질 15% 넘게 부족 ${pct(S.pLow,S.n)} (보충 안내 표시 ${pct(S.pNote,S.n)})`);
 console.log(`음식 취향 일치 ${pct(S.cuHit,S.cuN)} | 선호 단백질(점심·저녁) ${pct(S.prefHit,S.prefN)} | 쓰인 메뉴 ${used.size}/${MENUS.filter(m=>m.slot!=='s').length}`);
 console.log(`제한 식품 위반 ${S.violate} | 빈 끼니 ${S.empty} | 같은 날 중복 ${S.dup} | 결과 HTML 오류 ${S.htmlFail} | 바꾸기 오류 ${S.swapFail}`);
+console.log(`식습관 교정 ${S.hN}건: 나트륨 ${CONFIG.sodium.max}mg 초과 ${pct(S.hOver,S.hN)} (안내 표시 ${pct(S.hNote,S.hN)})`);
 console.log('예산별: 예산 초과 / 요리 수준 넘는 끼니 / 단백질 부족 / 하루 식비 중앙값');
 BUDGETS.forEach(k=>{const b=byB[k];console.log(`  ${k>=1e9?'제한 없음':k.toLocaleString()+'원'}  ${pct(b.over,b.n)} / ${pct(b.lvl,b.n)} / ${pct(b.pLow,b.n)} / ${Math.round(q(b.cost,.5)).toLocaleString()}원`)});
