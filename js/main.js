@@ -78,7 +78,10 @@ function checkBasic(){
  const m=validateBasic(b);if(m){e.textContent=m;e.scrollIntoView({block:'nearest'});return}
  e.textContent='';ev('step-02',1);step=1;draw();
 }
-let curR=null,seenBy=[];  // 지금 보이는 결과와, 끼니별로 이미 보여 준 메뉴
+let curR=null,seenBy=[];const have=new Set();  // '있어요'로 체크한 재료(바꾸기·세 끼 바꾸기 뒤에도 유지)
+function updG(){const n=[...document.querySelectorAll('#res .gl .buy input')].filter(i=>!i.checked).length,e=$('#gcnt');if(e)e.textContent=n?`사야 할 재료 ${n}가지`:'모두 챙겼어요'}
+function wireG(r){r.querySelectorAll('.gl input').forEach(i=>{i.checked=have.has(i.dataset.id);i.onchange=()=>{i.checked?have.add(i.dataset.id):have.delete(i.dataset.id);ev('grocery-check',1);updG()}});updG()}
+  // 지금 보이는 결과와, 끼니별로 이미 보여 준 메뉴
 function result(){
  const r=$('#res'),R=buildDay(A,off);
  if(R.blocked){r.innerHTML=`<h2>체중 감량 식단은 만들지 않습니다</h2><p class="err">${R.msg}</p><div class="nav"><button class="btn o" id="re">답변 수정</button></div>`;$('#re').onclick=()=>{step=1;show('quiz');draw()};ev('blocked',1);return}
@@ -88,6 +91,7 @@ function result(){
 function renderRes(swapped){
  const r=$('#res');r.innerHTML=dayResultHTML(curR,A);
  $('#re').onclick=()=>{ev('edit-answers');step=0;show('quiz');draw()};$('#sh').onclick=()=>{ev('swap-all');off++;result();window.scrollTo(0,0)};
+ wireG(r);
  r.querySelectorAll('[data-swap]').forEach(b=>b.onclick=()=>{
   ev('swap');const i=+b.dataset.swap;curR=swapMeal(A,curR,i,seenBy[i]);const e=curR.meals[i];if(e)seenBy[i].push(e.m.id);renderRes(i)});
  if(swapped!=null){r.querySelectorAll('.card')[swapped].classList.add('sw');const b=r.querySelector(`[data-swap="${swapped}"]`);if(b)b.focus({preventScroll:true})}
