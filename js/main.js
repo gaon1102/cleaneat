@@ -26,7 +26,7 @@ function wrap(inner){return `<div class="top"><span class="lab">YOUR PERSONAL FO
 function draw(){
  const q=$('#quiz');
  if(step===0){const b=A.basic;
-  q.innerHTML=wrap(`<div class="q"><p class="stp">STEP 01</p><h2>먼저, 지금의 나를 알려주세요</h2><p class="mut">입력한 값은 이 페이지 안에서만 계산에 쓰입니다.</p>
+  q.innerHTML=wrap(`<div class="q"><p class="stp">STEP 01</p><h2>먼저, 지금의 나를 알려주세요</h2><p class="mut">입력한 정보는 이 브라우저에서 식단을 제안하는 데만 사용해요.</p>
   <label class="f" for="sx">성별</label><select id="sx"><option value="">선택해 주세요</option><option value="m">남성</option><option value="f">여성</option></select>
   <div class="g2"><div><label class="f" for="ag">나이 (세)</label><input id="ag" type="number" inputmode="numeric" placeholder="예: 25"></div><div><label class="f" for="ht">키 (cm)</label><input id="ht" type="number" inputmode="decimal" placeholder="예: 170"></div></div>
   <label class="f" for="wt">몸무게 (kg)</label><input id="wt" type="number" inputmode="decimal" placeholder="예: 65">

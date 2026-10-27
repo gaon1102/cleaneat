@@ -228,7 +228,7 @@ const optLabel=(id,A)=>{const o=QUESTIONS.find(q=>q.id===id).o,i=A.sel&&A.sel[id
 function planHTML(R,A,swap){
  const t=R.tot,cell=(l,v)=>`<div><span>${l}</span><b>${v}</b></div>`;
  return`<div class="sumt"><div><span class="si">${ICON.dish}</span><div><span>오늘 식단의 영양소</span><b>${num(t.k)} kcal</b><small class="mac"><span>단백질 <i>${num(t.p)}g</i></span><span>탄수화물 <i>${num(t.cb)}g</i></span><span>지방 <i>${num(t.f)}g</i></span></small></div></div>
- ${cell('나의 목표',GOAL_LABEL[A.goal])}${cell('준비 방식',optLabel('prep',A))}${cell('음식 취향',optLabel('cu',A))}${cell('하루 식비',`약 ${num(won(t.c))}원`)}</div>
+ ${cell('나의 목표',GOAL_LABEL[A.goal])}${cell('준비 방식',optLabel('prep',A))}${cell('음식 취향',optLabel('cu',A).replace(/[을를] 선호해요$/,' 선호'))}${cell('하루 식비',`약 ${num(won(t.c))}원`)}</div>
  <div class="cards">${R.meals.map((e,i)=>mealCardHTML(e,i,swap)).join('')}</div>`;
 }
 function dayResultHTML(R,A){
