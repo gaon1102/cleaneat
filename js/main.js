@@ -15,7 +15,7 @@ if(GC_CODE&&location.protocol.startsWith('http')){const s=document.createElement
 const evSeen=new Set();
 function ev(name,once){if(once){if(evSeen.has(name))return;evSeen.add(name)}try{window.goatcounter&&goatcounter.count&&goatcounter.count({path:name,title:name,event:true})}catch(e){}}
 const TOTAL=QUESTIONS.length+1,LABELS=['기본 정보',...QUESTIONS.map(q=>q.l)];
-function show(v){['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);$('#meal-status').textContent='';window.scrollTo(0,0)}
+function show(v){document.documentElement.dataset.v=v;['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);$('#meal-status').textContent='';window.scrollTo(0,0)}
 /* 화면·단계가 바뀌면 제목으로 포커스를 옮겨 스크린리더가 새 내용을 읽게 함 */
 function focusH(sel){const h=$(sel);if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ev('quiz-start',1);step=0;show('quiz');draw()});
@@ -103,3 +103,15 @@ function renderRes(swapped){
   $('#meal-status').textContent=e&&e.m.id!==prev?`${CONFIG.slotName[i]} 메뉴를 바꿨어요. ${e.m.name}입니다.`:'조건에 맞는 다른 메뉴가 없습니다.'});
  if(swapped!=null){r.querySelectorAll('.card')[swapped].classList.add('sw');const b=r.querySelector(`[data-swap="${swapped}"]`);if(b)b.focus({preventScroll:true})}
 }
+
+// 히어로 사진: 넘기기 + 왼쪽 아래 홈(노치) 모양
+(()=>{const t=document.getElementById('hpt'),d=document.getElementById('hpd');if(!t||!d)return;const b=[...d.children];
+ b.forEach((x,i)=>x.addEventListener('click',()=>t.scrollTo({left:i*t.clientWidth})));
+ t.addEventListener('scroll',()=>{const i=Math.round(t.scrollLeft/t.clientWidth);b.forEach((x,k)=>x.setAttribute('aria-current',k===i?'true':'false'))},{passive:true});
+ // 모양: 사용자 시안(1792×2240)의 왼쪽 아래 곡선 좌표. 가로 기준 같은 비율로 줄이고, 아래쪽 기준으로 맞춘다
+ const P=[0,1264,5,1291,10,1312,19,1331,28,1347,48,1371,207,1533,232,1566,250,1602,256,1620,262,1645,268,1701,269,2123,272,2161,277,2176,283,2190,293,2205,303,2216,314,2224,332,2232,345,2236,366,2239],SW=1792,SH=2240,SR=98;
+ const clip=()=>{const W=t.clientWidth,H=t.clientHeight;if(!W||!H)return;const s=W/SW,r=SR*s,n=P.length/2,f=v=>+v.toFixed(1);
+  let d=`M${f(r)} 0H${f(W-r)}A${f(r)} ${f(r)} 0 0 1 ${W} ${f(r)}V${f(H-r)}A${f(r)} ${f(r)} 0 0 1 ${f(W-r)} ${H}`;
+  for(let k=n-1;k>=0;k--)d+=`L${f(P[2*k]*s)} ${f(H-(SH-P[2*k+1])*s)}`;
+  t.style.clipPath=`path('${d}V${f(r)}A${f(r)} ${f(r)} 0 0 1 ${f(r)} 0Z')`};
+ if(window.ResizeObserver)new ResizeObserver(clip).observe(t);clip()})();

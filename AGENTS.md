@@ -40,7 +40,7 @@
 | `js/engine.js` | 계산 엔진 + 결과 HTML 조각(화면에 의존하지 않음). 메뉴 선택(벌점 방식), 안내 문구(`notesOf`), 장보기 목록(`groceryBoxHTML`) |
 | `js/main.js` | 화면 전환·질문 진행·결과 표시·바꾸기 버튼·장보기 체크, 방문 통계(`GC_CODE`, `ev()`) |
 | `sim.js` | 무작위 가상 사용자 시뮬레이션. `node sim.js 3000` |
-| `images/` | `home-chicken-rice.jpg`, `home-yogurt-bowl.jpg`, `og.jpg`(공유 미리보기 1200×630), **`menus/<메뉴 id>.webp`(메뉴 사진)** |
+| `images/` | `home-slide-1.webp`(홈 히어로 큰 사진 슬라이드 1번, 2·3번은 비어 있음), `og.jpg`(공유 미리보기 1200×630), **`menus/<메뉴 id>.webp`(메뉴 사진)** |
 | `data/ING_MATCHING.csv`, `data/PRICE_SOURCES.csv` | 재료 124종의 식약처·USDA 매칭 결과, 가격 출처(사용자가 저장소에 올리면 이 경로를 쓴다) |
 
 수정할 곳: 홈 문구·FAQ·공유 태그 → `index.html` / 질문 문구·메뉴·재료·기준값 → `js/data.js` / 결과 안내 문구·계산 방식·장보기 → `js/engine.js` / 색·간격·모바일 → `css/style.css` / 버튼 동작·통계 → `js/main.js` / 사진 → `images/menus/` + 메뉴의 `img` 칸.

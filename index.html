@@ -28,16 +28,23 @@
 <div id="home">
 <div class="w wide">
  <section class="hero">
-  <div>
-   <p class="eb">FOOD, IN ITS BEST FORM</p><h1>잘 먹는 하루를<br><em>나답게</em> 설계하다</h1>
-   <p class="lead">복잡한 기준보다 좋은 재료로<br class="db"> 여덟 가지 질문에 맞춘 당신만의 특별한 식단을 제안합니다.</p>
+  <div class="ht">
+   <h1>잘 먹는 하루를<br><em>나답게</em> 설계하다</h1>
+   <p class="lead">복잡한 기준 대신 여덟 가지 질문을 통해,<br class="db"> 당신만을 위한 특별한 식단을 제안합니다.</p>
    <button class="btn" data-go>나만의 식단 만들기 <span aria-hidden="true">→</span></button>
-   <p class="ok">가입 없음. 입력한 값은 이 페이지 안에서만 계산합니다.</p>
   </div>
-  <div class="col">
-   <div class="blob"></div>
-   <figure class="pol a"><img src="images/home-chicken-rice.jpg" alt="닭가슴살과 브로콜리를 곁들인 현미 볶음밥"></figure>
-   <figure class="pol b"><img src="images/home-yogurt-bowl.jpg" alt="과일과 견과류를 올린 요거트 볼"></figure>
+  <ul class="hm" aria-label="식단 예시">
+   <li><img src="images/menus/L3.webp" alt="" width="800" height="600"><p><span>아침</span><b>닭가슴살 후무스 랩</b></p></li>
+   <li><img src="images/menus/c2.webp" alt="" width="800" height="600"><p><span>점심</span><b>요거트 드레싱 치킨 시저 샐러드</b></p></li>
+   <li><img src="images/menus/m10.webp" alt="" width="800" height="600"><p><span>저녁</span><b>소고기 스테이크와 구운 채소</b></p></li>
+  </ul>
+  <div class="hp" role="region" aria-roledescription="슬라이드" aria-label="메뉴 사진">
+   <div class="hpt" id="hpt" tabindex="0" aria-label="메뉴 사진, 좌우 화살표로 넘기기">
+    <figure><img src="images/home-slide-1.webp" alt="비트와 리코타를 올린 채소 샐러드" width="896" height="1345"></figure>
+    <figure class="hpe" aria-hidden="true"></figure>
+    <figure class="hpe" aria-hidden="true"></figure>
+   </div>
+   <div class="hpd" id="hpd"><button type="button" aria-label="사진 1 보기" aria-current="true"></button><button type="button" aria-label="사진 2 보기"></button><button type="button" aria-label="사진 3 보기"></button></div>
   </div>
  </section>
 
