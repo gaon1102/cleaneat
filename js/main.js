@@ -4,6 +4,10 @@ const $=s=>document.querySelector(s);
 // 메뉴 카드의 '분량 보기'·'영양성분 보기'는 한 번에 하나만 열고, 바깥을 누르거나 Esc를 누르면 닫음
 document.addEventListener('click',e=>document.querySelectorAll('.card details[open]').forEach(d=>{if(!d.contains(e.target))d.open=false}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.card details[open]').forEach(d=>d.open=false)});
+// 인쇄할 때만 분량·영양성분을 펼치고, 인쇄 종료·취소 후에는 원래 상태로 되돌림
+let printDetails=[];
+addEventListener('beforeprint',()=>{if(printDetails.length)return;printDetails=[...document.querySelectorAll('.card details')].map(d=>[d,d.open]);printDetails.forEach(([d])=>d.open=true)});
+addEventListener('afterprint',()=>{printDetails.forEach(([d,open])=>d.open=open);printDetails=[]});
 let step=0,off=0,A={basic:{},goal:null,act:null,excl:[],pro:null,cu:null,prep:null,budget:null,sel:{}};
 /* 방문 통계(GoatCounter, 쿠키 없음): goatcounter.com에서 만든 사이트 코드를 넣으면 켜짐. 비어 있으면 아무것도 보내지 않음 */
 const GC_CODE='gaon';

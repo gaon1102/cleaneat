@@ -162,3 +162,28 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 /* 모바일: 질문 화면의 이전·다음 버튼을 화면 아래에 고정(단계마다 위치가 달라지지 않게) */
 @media(max-width:760px){#quiz{padding-bottom:104px}.q .err{scroll-margin-bottom:96px}.q .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;padding:12px 24px calc(12px + env(safe-area-inset-bottom));background:var(--bg);box-shadow:0 -1px 0 var(--line)}}
 @media(max-width:350px){.nv{gap:10px}.nv .lk{font-size:.72rem}.logo{font-size:18px;gap:8px}.mk{width:32px;height:32px}}
+
+/* 인쇄: 사진 대신 메뉴·분량을 모아 출력하고 장보기는 다음 장에 표시 */
+@page{size:A4;margin:12mm}
+@media print{
+ :root,:root[data-theme],:root:not([data-theme="light"]){--bg:#fff;--fg:#26352d;--mut:#4f5a52;--lab:#4f5a52;--g:#304e38;--gd:#304e38;--card:#fff;--soft:#fff;--line:#b9c1b9;--warn:#703325}
+ html{font-size:10pt}body{background:#fff;line-height:1.5}
+ .w{max-width:none;padding:0}header .w{height:14mm}.nv,.swp,#res #re,#res .foot{display:none}
+ #res{padding-top:6mm;padding-bottom:0}.rh .eb{margin-bottom:3mm}.rh h2{font-size:20pt}.stat{margin-top:3mm}
+ #res .sumt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:0;margin-top:5mm;break-inside:avoid}
+ #res .sumt>div{padding:3mm;border-left:0;border-top:1px solid var(--line)}
+ #res .sumt>div:first-child{grid-column:1/-1;border-top:0;padding:3mm}
+ .cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:4mm;align-items:start;margin-top:5mm}
+ .sumt,.row,.ing>div{break-inside:avoid}#home>.w{padding:0 1mm}#home [data-go]{display:none}
+ .card{min-height:0;break-inside:avoid}.card .im{display:none}.card .cb{min-height:0;padding:4mm}
+ .card h3{font-size:12pt;margin:3mm 0}.card .ds{font-size:9pt}.card .tags{display:none}
+ .card .ft{margin-top:3mm}.card .ft .dt{padding-top:3mm}.card .dt{display:block}.card .dt .nu{margin-top:4mm;min-width:0;width:100%}
+ .card summary{font-size:9pt;list-style:none}.card summary::marker{content:''}.card summary::-webkit-details-marker{display:none}
+ .card .dt details>ul,.card .dt details>dl{position:static;width:auto;max-width:none;margin:2mm 0 0;padding:0;border:0;box-shadow:none;font-size:9pt}
+ .card .dt details>ul{padding-left:1.1em}.card .dt details>dl{gap:1mm 3mm}
+ #res .gl{break-before:page;margin-top:0;padding:5mm}.gl .gh{display:block}.gl .gc{display:inline-block;margin-top:3mm}
+ .gl ul{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:8mm}.gl li{break-inside:avoid}.gl label{font-size:10pt;padding:2mm 0}
+ .gl h3,.gl h4{break-after:avoid}.note,.disc{font-size:9pt}.disc{margin-top:5mm}
+ .q .nav{position:static;box-shadow:none}.qg{display:block}.jn{display:none}#quiz{padding-bottom:0}
+ footer{margin-top:5mm;padding:3mm 0}
+}
