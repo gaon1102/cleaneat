@@ -15,7 +15,7 @@ if(GC_CODE&&location.protocol.startsWith('http')){const s=document.createElement
 const evSeen=new Set();
 function ev(name,once){if(once){if(evSeen.has(name))return;evSeen.add(name)}try{window.goatcounter&&goatcounter.count&&goatcounter.count({path:name,title:name,event:true})}catch(e){}}
 const TOTAL=QUESTIONS.length+1,LABELS=['기본 정보',...QUESTIONS.map(q=>q.l)];
-function show(v){['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);window.scrollTo(0,0)}
+function show(v){['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);$('#meal-status').textContent='';window.scrollTo(0,0)}
 /* 화면·단계가 바뀌면 제목으로 포커스를 옮겨 스크린리더가 새 내용을 읽게 함 */
 function focusH(sel){const h=$(sel);if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ev('quiz-start',1);step=0;show('quiz');draw()});
@@ -93,10 +93,13 @@ function result(){
  renderRes();
 }
 function renderRes(swapped){
+ if(swapped==null)$('#meal-status').textContent='';
  const r=$('#res');r.innerHTML=dayResultHTML(curR,A);
  $('#re').onclick=()=>{ev('edit-answers');step=0;show('quiz');draw()};$('#sh').onclick=()=>{ev('swap-all');off++;result();window.scrollTo(0,0);focusH('#res h2')};
  wireG(r);
  r.querySelectorAll('[data-swap]').forEach(b=>b.onclick=()=>{
-  ev('swap');const i=+b.dataset.swap;curR=swapMeal(A,curR,i,seenBy[i]);const e=curR.meals[i];if(e)seenBy[i].push(e.m.id);renderRes(i)});
+  ev('swap');const i=+b.dataset.swap,prev=curR.meals[i]&&curR.meals[i].m.id;curR=swapMeal(A,curR,i,seenBy[i]);const e=curR.meals[i];if(e)seenBy[i].push(e.m.id);renderRes(i);
+  // 결과를 다시 그린 뒤에도 남아 있는 상태 영역으로 새 메뉴를 안내함
+  $('#meal-status').textContent=e&&e.m.id!==prev?`${CONFIG.slotName[i]} 메뉴를 바꿨어요. ${e.m.name}입니다.`:'조건에 맞는 다른 메뉴가 없습니다.'});
  if(swapped!=null){r.querySelectorAll('.card')[swapped].classList.add('sw');const b=r.querySelector(`[data-swap="${swapped}"]`);if(b)b.focus({preventScroll:true})}
 }
