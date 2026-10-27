@@ -128,23 +128,25 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 .card .cb{padding:22px 20px 20px;display:flex;flex-direction:column;flex:1;min-height:246px}  /* 카드 본문 높이 고정: 전체 메뉴(251개)의 약 90%가 들어가는 높이(글자 +1px 후 측정값: 최소 246, 중앙값 246, 90% 282, 최대 306px). 가장 큰 메뉴(설명·재료 모두 2줄)는 이보다 커져 그 줄의 카드가 함께 커짐. 폭이 좁은 태블릿은 아래 미디어 쿼리 */
 .ct{display:flex;justify-content:space-between;align-items:center;min-height:20px;font-size:.78rem;font-weight:700;color:var(--g)}.ct i{font-family:Georgia,serif;font-weight:400;color:var(--mut)}
 .card h3{font-size:1.21rem;margin:14px 0 14px}.card .ds{font-size:.91rem;line-height:1.6;color:var(--mut)}
-.dt{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}.dt .nu{justify-self:end;min-width:9.5em}.nu dl{display:grid;grid-template-columns:auto auto;gap:3px 14px;margin:8px 0 0;font-size:.84rem;color:var(--mut)}.nu dd{margin:0;text-align:right;color:var(--fg);font-weight:600;white-space:nowrap}
+.dt{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}.dt .nu{justify-self:end;min-width:9.5em}.nu dl{display:grid;grid-template-columns:auto auto;gap:3px 14px;margin:8px 0 0;font-size:.84rem;color:var(--mut)}.nu dd{margin:0;text-align:left;color:var(--fg);font-weight:600;white-space:nowrap}
 .card .ft{margin-top:14px;flex:1;display:flex;flex-direction:column}.card .ft .tags{margin-bottom:14px}.card .ft .dt{margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}  /* 설명 바로 아래에 재료, 남는 여백은 보기 버튼 위(가는 선 앞)로 모음 */
 .card .tags span{border-radius:2px;font-size:.78rem;padding:3px 9px}
 .card details{border:0;padding:0}.card summary{font-size:.81rem;color:var(--g);font-weight:600}.card details ul{margin:0;padding-left:1.1em;font-size:.84rem;color:var(--mut)}
 /* 분량·영양성분은 카드 크기를 바꾸지 않고 버튼 아래로 떠서(카드 밖으로 넘쳐) 나옴. 한 번에 하나만 열림(main.js) */
 .card .dt details{position:relative}.card .dt details>ul,.card .dt details>dl{position:absolute;top:100%;left:0;z-index:30;margin:6px 0 0;width:max-content;max-width:min(280px,calc(100vw - 96px));background:var(--card);border:1px solid var(--line);box-shadow:0 10px 28px rgba(38,53,45,.16);padding:12px 16px}.card .dt details>ul{padding-left:calc(16px + 1.1em)}.card .dt .nu>dl{left:auto;right:0}
 .card.em{justify-content:center;align-items:center;color:var(--mut);font-size:.9rem;padding:24px;text-align:center}
-.gl{margin-top:40px}
+.gl{margin-top:40px}.gl.box{padding:34px 34px 30px}
 .box{position:relative;background:var(--soft);border:1px solid var(--line);padding:30px 22px 28px}
 .box .k{font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--lab)}
 .box h3{font-size:1.15rem;margin:16px 0 8px}.box p{font-size:.85rem;color:var(--mut)}
 .box .ic{position:absolute;right:18px;top:18px;width:34px;height:34px;border-radius:50%;background:var(--card);display:grid;place-items:center;color:var(--g)}
 .box .tags{margin-top:18px}.box .tags span{background:var(--card);border:1px solid var(--line);border-radius:2px;font-size:.72rem;padding:3px 12px}
-.gl .gc{margin:14px 0 4px;font-size:.8rem;font-weight:600;color:var(--g)}.gl ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 32px}
+.gl .gh{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:22px}.gl h3{margin:0 0 10px}.gl .gi{margin:0;font-size:.95rem;color:var(--fg);line-height:1.65}.gl .gi span{display:block;margin-top:2px;font-size:.85rem;color:var(--mut)}
+.gl .gc{margin:0;flex:none;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 16px;font-size:.82rem;font-weight:600;color:var(--g);white-space:nowrap}.gl ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0 44px}
 .gl label{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.88rem;color:var(--fg);cursor:pointer}.gl label span{flex:1;min-width:0}.gl label b{font-weight:600;font-size:.82rem;color:var(--mut);white-space:nowrap}
 .gl input{accent-color:var(--g);width:16px;height:16px;margin:0;flex:none}.gl input:checked~span,.gl input:checked~b{color:var(--mut);text-decoration:line-through}
 .gl h4{font-size:.8rem;font-weight:620;color:var(--mut);margin:22px 0 4px}.gl .sea{margin:12px 0 0;font-size:.8rem}
+@media(max-width:560px){.gl.box{padding:26px 20px 24px}.gl .gh{flex-direction:column;gap:16px;margin-bottom:14px}}
 .foot{display:flex;justify-content:flex-end;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin-top:32px}
 .foot .l{display:flex;align-items:center;gap:14px}.foot .ic2{width:38px;height:38px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--g);flex:none}
 .foot b{font-size:.92rem}.foot p{font-size:.78rem;color:var(--mut)}.foot .bs{display:flex;gap:10px;flex-wrap:wrap}
@@ -153,7 +155,7 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 /* 요약 막대: 폭이 좁으면 영양소 칸을 위 한 줄로 올리고 나머지 4칸을 아래 줄에 (영양소 칸이 3줄로 쌓이던 문제) */
 @media(min-width:1181px) and (max-width:1400px){.sumt{grid-template-columns:2fr 1.1fr 1.3fr 1.1fr 1fr}}
 @media(min-width:761px) and (max-width:1180px){.sumt{grid-template-columns:repeat(4,1fr);padding:0}.sumt>div{padding:18px 20px;border-top:1px solid var(--line)}.sumt>div:nth-child(2){border-left:0}.sumt>div:first-child{grid-column:1/-1;border-top:0;padding:20px 28px}}
-@media(max-width:560px){.gl ul{grid-template-columns:1fr}}
+
 @media(max-width:760px){.cards{grid-template-columns:1fr}.card{min-height:0}.foot .bs{width:100%}.foot .bs .btn{flex:1}}
 /* 모바일: 질문 화면의 이전·다음 버튼을 화면 아래에 고정(단계마다 위치가 달라지지 않게) */
 @media(max-width:760px){#quiz{padding-bottom:104px}.q .err{scroll-margin-bottom:96px}.q .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;padding:12px 24px calc(12px + env(safe-area-inset-bottom));background:var(--bg);box-shadow:0 -1px 0 var(--line)}}
