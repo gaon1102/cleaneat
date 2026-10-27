@@ -203,8 +203,6 @@ function groceryBoxHTML(R){
   ${pan.length||sea.length?`<h4>집에 있을 법한 기본 재료</h4>${pan.length?`<ul>${pan.map(row).join('')}</ul>`:''}${sea.length?`<p class="sea">양념은 적당량: ${sea.join(', ')}</p>`:''}`:''}</section>`;
 }
 /* 하루 식단 결과 화면 */
-/* 목표별 추천 이유 (결과 화면 '나에게 맞는 한 끼' 상자). 효과를 단정하지 않고 어떻게 구성했는지만 말함 */
-const GOAL_WHY={keep:' 탄수화물·단백질·지방이 한쪽으로 치우치지 않도록 비율을 맞추고, 끼니마다 알맞은 양으로 나눴어요.',energy:' 통곡물과 단백질을 챙기고 끼니마다 채소나 과일을 곁들였어요. 너무 기름지지 않은 메뉴 위주로 담고, 아침도 든든하게 담아 세 끼를 규칙적으로 이어가기 쉽게 구성했어요.',health:' 나트륨이 많은 재료와 메뉴는 되도록 피해서 담았어요.'};
 const GOAL_LABEL={lose:'체중 감량',gain:'근육량 증가',keep:'체중 유지',energy:'활력 충전',health:'식습관 교정',perf:'운동 퍼포먼스 향상'};
 const CHK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
  CHEV='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>';
@@ -235,16 +233,11 @@ function planHTML(R,A,swap){
  <div class="cards">${R.meals.map((e,i)=>mealCardHTML(e,i,swap)).join('')}</div>`;
 }
 function dayResultHTML(R,A){
- const n=R.meals.filter(Boolean).length,gl=GOAL_LABEL[A.goal];
- const CU_LABEL={kr:'한식',west:'양식',med:'지중해식',world:'세계 음식'},cuTxt=A.cu&&A.cu!=='any'?` ${CU_LABEL[A.cu]} 위주로 담았어요.`:'';
- const why=(R.pro==='any'?`${gl} 목표에 맞춰 단백질을 고루 섞어 메뉴를 골랐어요.`:`${gl} 목표와 ${PRO_LABEL[R.pro]} 취향을 고려해 메뉴를 골랐어요.`)+cuTxt+(R.ex.length?` ${R.ex.join('·')} 재료는 뺐어요.`:'')+(GOAL_WHY[A.goal]||'')+' 가공은 조금 덜하고 식재료 본연의 맛을 살렸어요.';
  return`<div class="rh"><div><p class="eb">YOUR TABLE, YOUR RHYTHM</p><h2>나를 위한 오늘의 식단</h2><p class="stat">목표 약 ${num(R.T.k)} kcal · 단백질 ${num(R.T.p)}g</p></div><button class="tl bk" id="re"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 응답 수정</button></div>
  ${planHTML(R,A,true)}
+ ${R.ex.length?`<p class="note" style="margin:6px 0 0">· ${R.ex.join('·')} 재료는 뺐어요.</p>`:''}
  ${R.notes.map(t=>`<p class="note" style="margin:6px 0 0">· ${t}</p>`).join('')}
- <div class="r2">
-  ${groceryBoxHTML(R)}
-  <section class="box"><span class="ic">${ICON.leaf}</span><p class="k">GOOD FOOD, NO PRESSURE</p><h3>나에게 맞는 한 끼</h3><p>${why}</p><ul class="ck"><li>통식품 중심</li><li>성분표 살피기</li><li>덜 가공하기</li></ul></section>
- </div>
+ ${groceryBoxHTML(R)}
  <div class="foot"><div class="bs"><button class="tl" id="sh"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg> 세 끼 모두 바꾸기</button></div></div>
  <p class="disc">이 식단은 일반적인 식사 아이디어이며 의료·영양 상담을 대신하지 않아요. 알레르기, 질환, 임신·수유 등 특별한 고려가 필요하다면 전문가와 상담하고 식품 표시를 확인해 주세요. 시험 버전: 재료 가격은 2026년 10월 전국 평균 소매가 기준이며 일부는 추정치입니다.</p>`;
 }
