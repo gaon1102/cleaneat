@@ -198,8 +198,8 @@ function groceryBoxHTML(R){
  R.meals.forEach(e=>{if(!e)return;e.m.items.forEach(([id,q])=>{g[id]=(g[id]||0)+Math.round(q*e.x/5)*5});(e.m.sea||[]).forEach(t=>{if(t!=='찬물'&&!sea.includes(t))sea.push(t)})});
  const rows=Object.entries(g),row=([id,q])=>`<li><label><input type="checkbox" data-id="${id}"><span>${ING[id].n}</span><b>${q}g</b></label></li>`;
  const buy=rows.filter(([i])=>!PANTRY.has(i)),pan=rows.filter(([i])=>PANTRY.has(i));
- return`<section class="box gl"><span class="ic">${ICON.bag}</span><p class="k">TODAY'S GROCERIES</p><h3>오늘 장보기 목록</h3><p>집에 있는 재료는 체크해 두세요. 적힌 양은 오늘 세 끼에 먹는 양이라, 마트에서는 포장 단위로 더 사야 할 수 있어요.</p>
-  <p class="gc" id="gcnt" aria-live="polite"></p><ul class="buy">${buy.map(row).join('')}</ul>
+ return`<section class="box gl"><div class="gh"><div><h3>오늘의 장보기</h3><p class="gi">이미 있는 재료는 체크해서 지워 가세요. 남은 항목이 오늘 사야 할 재료예요.<span>적힌 양은 오늘 세 끼 기준이에요. 마트에서는 포장 단위로 팔아서 이보다 더 사야 할 수 있어요.</span></p></div><p class="gc" id="gcnt" aria-live="polite"></p></div>
+  <ul class="buy">${buy.map(row).join('')}</ul>
   ${pan.length||sea.length?`<h4>집에 있을 법한 기본 재료</h4>${pan.length?`<ul>${pan.map(row).join('')}</ul>`:''}${sea.length?`<p class="sea">양념은 적당량: ${sea.join(', ')}</p>`:''}`:''}</section>`;
 }
 /* 하루 식단 결과 화면 */
@@ -209,7 +209,6 @@ const CHK='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="c
 const SWP='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg>';
 const short=id=>ING[id].n.replace(/\(.*?\)/g,'');
 const ICON={
- bag:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>',
  leaf:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>',
  spark:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.13-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.13a.5.5 0 0 1 .96 0l1.58 6.13a2 2 0 0 0 1.44 1.44l6.13 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.13a.5.5 0 0 1-.96 0z"/><path d="M20 3v4M22 5h-4"/></svg>',
  pie:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>',
