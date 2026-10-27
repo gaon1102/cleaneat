@@ -191,7 +191,6 @@ function weekTableHTML(W){
 function dayDetailHTML(W){
  return W.days.map(D=>`<details class="dd"><summary>${D.d}요일 · ${num(D.tot.k)} kcal · 단백질 ${num(D.tot.p)}g · 약 ${num(won(D.tot.c))}원</summary>${D.meals.map((e,i)=>e?`<div class="mb2"><div class="s">${CONFIG.slotName[i]}</div><b>${e.m.name}</b><div class="tags">${e.m.items.map(([id,g])=>`<span>${gtxt(id,Math.round(g*e.x/5)*5)}</span>`).join('')}</div><p class="note" style="margin:0">${num(e.v.k)} kcal · 단백질 ${num(e.v.p)}g · 약 ${num(won(e.v.c))}원</p></div>`:`<p class="mut">${CONFIG.slotName[i]}: 조건에 맞는 메뉴가 없습니다.</p>`).join('')}</details>`).join('');
 }
-const groceryHTML=W=>`<div class="tags" style="margin-top:10px">${W.grocery.map(([i,g])=>`<span>${gtxt(i,g)}</span>`).join('')}</div>`;
 /* 오늘 장보기 목록: 세 끼 재료를 합산(카드 '분량 보기'와 같은 5g 단위 값끼리 더함). 집에 있을 법한 기본 재료(PANTRY)는 따로 묶음 */
 const PANTRY=new Set(['brice','oil','sesoil','periloil','soy','doen','gochu','ssam','perillap','sesame','fishsauce','garlic']);
 function groceryBoxHTML(R){
@@ -222,19 +221,13 @@ const ICON={
 function mealCardHTML(e,i,swap){
  const slot=CONFIG.slotName[i];
  if(!e)return`<article class="card em"><p>${slot}: 조건에 맞는 메뉴가 없습니다.</p></article>`;
- const m=e.m,img=`<div class="im">${m.img?`<img src="${m.img}" alt="${m.name}" loading="lazy"><span class="bd">CLEAN PLATE</span>`:''}</div>`;  // 사진이 없어도 자리는 남김
+ const m=e.m,img=`<div class="im">${m.img?`<img src="${m.img}" alt="" loading="lazy"><span class="bd">CLEAN PLATE</span>`:''}</div>`;  // 사진이 없어도 자리는 남김
  return`<article class="card">${img}<div class="cb"><div class="ct"><span>${slot}</span>${swap?`<button class="swp" data-swap="${i}" aria-label="${slot} 메뉴만 바꾸기">${SWP}바꾸기</button>`:''}</div><h3>${m.name}</h3><p class="ds">${(m.desc||'').replace(/\.$/,'')}</p>
  <div class="ft"><div class="tags">${m.items.map(([id])=>`<span>${short(id)}</span>`).join('')}</div>
  <div class="dt"><details><summary>분량 보기</summary><ul>${m.items.map(([id,g])=>`<li>${gtxt(id,Math.round(g*e.x/5)*5)}</li>`).join('')}${m.sea&&m.sea.length?`<li>양념: ${m.sea.join(', ')} (적당량)</li>`:''}</ul></details><details class="nu"><summary>영양성분 보기</summary><dl><dt>열량</dt><dd>${num(e.v.k)} kcal</dd><dt>단백질</dt><dd>${num(e.v.p)}g</dd><dt>탄수화물</dt><dd>${num(e.v.cb)}g</dd><dt>지방</dt><dd>${num(e.v.f)}g</dd></dl></details></div></div></div></article>`;
 }
 /* 홈 예시 결과: 요약 막대 + 세 끼 카드. 선택한 답변 문구는 순번(sel)이 있으면 그걸, 없으면 값으로 찾음 */
 const optLabel=(id,A)=>{const o=QUESTIONS.find(q=>q.id===id).o,i=A.sel&&A.sel[id];return(i!=null&&o[i]?o[i]:o.find(x=>x[0]===A[id])||['',''])[1]};
-const sameSet=(a,b)=>a.length===b.length&&a.every(x=>b.includes(x));
-function styleOf(R,A){
- const ex=R.ex,base=sameSet(ex,PRESET.vegan)?'비건':sameSet(ex,PRESET.veg)?'채식':ex.length?ex.join('·')+' 제외':'';
- const cu={kr:'한식',west:'양식',med:'지중해식',world:'세계 음식'}[A.cu];
- return[base,R.pro==='any'?'단백질 다양하게':PRO_LABEL[R.pro]+' 위주',cu].filter(Boolean).join(' · ');
-}
 function planHTML(R,A,swap){
  const t=R.tot,cell=(l,v)=>`<div><span>${l}</span><b>${v}</b></div>`;
  return`<div class="sumt"><div><span class="si">${ICON.dish}</span><div><span>오늘 식단의 영양소</span><b>${num(t.k)} kcal</b><small class="mac"><span>단백질 <i>${num(t.p)}g</i></span><span>탄수화물 <i>${num(t.cb)}g</i></span><span>지방 <i>${num(t.f)}g</i></span></small></div></div>

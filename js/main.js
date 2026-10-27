@@ -12,6 +12,8 @@ const evSeen=new Set();
 function ev(name,once){if(once){if(evSeen.has(name))return;evSeen.add(name)}try{window.goatcounter&&goatcounter.count&&goatcounter.count({path:name,title:name,event:true})}catch(e){}}
 const TOTAL=QUESTIONS.length+1,LABELS=['기본 정보',...QUESTIONS.map(q=>q.l)];
 function show(v){['home','quiz','res'].forEach(i=>$('#'+i).hidden=i!==v);window.scrollTo(0,0)}
+/* 화면·단계가 바뀌면 제목으로 포커스를 옮겨 스크린리더가 새 내용을 읽게 함 */
+function focusH(sel){const h=$(sel);if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
 document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ev('quiz-start',1);step=0;show('quiz');draw()});
 function goHome(id){show('home');const e=id&&document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})}
 $('#logo').onclick=()=>goHome();
@@ -34,11 +36,10 @@ function draw(){
   <label class="chk"><input type="checkbox" id="c3">섭식장애 병력이 있습니다</label>
   <p class="err" id="err" role="alert"></p><div class="nav"><span></span><button class="tl nx" id="nx">다음 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div></div>`);
   $('#sx').value=b.sx||'';['ag','ht','wt'].forEach(k=>$('#'+k).value=b[k]||'');$('#c1').checked=!!b.c1;$('#c2').checked=!!b.c2;$('#c3').checked=!!b.c3;
-  $('#nx').onclick=checkBasic;fitQ();return}
+  $('#nx').onclick=checkBasic;fitQ();focusH('#quiz .q h2');return}
  const Q=QUESTIONS[step-1],exl=exList(A);
  if(Q.id==='pro'&&A.sel.pro!==undefined&&proBlocked(A.pro,exl)){A.pro=null;delete A.sel.pro}
- const presets=Q.pre?`<div class="pre"><button type="button" class="btn o" data-pre="veg">채식 (육류·해산물 제외)</button><button type="button" class="btn o" data-pre="vegan">비건 (육류·해산물·달걀·유제품 제외)</button></div>`:'';
- q.innerHTML=wrap(`<div class="q"><p class="stp">STEP ${String(step+1).padStart(2,'0')}</p><h2>${Q.t}</h2><p class="mut">${Q.h}</p>${presets}<div id="os"${Q.multi?' class="ms"':''}></div>${Q.note?`<p class="qn">${Q.note}</p>`:''}${Q.warn?`<p class="qw">${Q.warn}</p>`:''}<p class="err" id="err" role="alert"></p><div class="nav"><button class="tl bk" id="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 이전</button><button class="tl nx" id="nx">${step===TOTAL-1?'식단 보기':'다음'} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div></div>`);
+ q.innerHTML=wrap(`<div class="q"><p class="stp">STEP ${String(step+1).padStart(2,'0')}</p><h2>${Q.t}</h2><p class="mut">${Q.h}</p><div id="os"${Q.multi?' class="ms"':''}></div>${Q.note?`<p class="qn">${Q.note}</p>`:''}${Q.warn?`<p class="qw">${Q.warn}</p>`:''}<p class="err" id="err" role="alert"></p><div class="nav"><button class="tl bk" id="bk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 이전</button><button class="tl nx" id="nx">${step===TOTAL-1?'식단 보기':'다음'} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div></div>`);
  const os=$('#os'),isOn=(o,i)=>Q.multi?A.excl.includes(o[0]):A.sel[Q.id]===i;
  Q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='opt';b.type='button';
   const dis=Q.id==='pro'&&proBlocked(o[0],exl);
@@ -49,13 +50,12 @@ function draw(){
    else{A[Q.id]=o[0];A.sel[Q.id]=i}
    [...os.children].forEach((c,j)=>c.setAttribute('aria-pressed',isOn(Q.o[j],j)));$('#nx').disabled=!ready(Q)};
   os.appendChild(b)});
- q.querySelectorAll('[data-pre]').forEach(b=>b.onclick=()=>{A.excl=[...PRESET[b.dataset.pre]];draw()});
  $('#nx').disabled=!ready(Q);
  $('#bk').onclick=()=>{step--;draw()};
  $('#nx').onclick=()=>{
   if(Q.id==='goal'&&bmiBlock(A)){$('#err').textContent=BMI_MSG;return}
-  if(step===TOTAL-1){off=0;result();show('res')}else{step++;ev('step-'+String(step+1).padStart(2,'0'),1);draw()}};
- fitQ();
+  if(step===TOTAL-1){off=0;result();show('res');focusH('#res h2')}else{step++;ev('step-'+String(step+1).padStart(2,'0'),1);draw()}};
+ fitQ();focusH('#quiz .q h2');
 }
 /* 질문 화면 맞춤: 질문 문장이 한 줄을 넘으면 글자 크기를 줄이고, 목차를 다음 버튼 바로 위까지 늘림 */
 function fitQ(){
@@ -90,7 +90,7 @@ function result(){
 }
 function renderRes(swapped){
  const r=$('#res');r.innerHTML=dayResultHTML(curR,A);
- $('#re').onclick=()=>{ev('edit-answers');step=0;show('quiz');draw()};$('#sh').onclick=()=>{ev('swap-all');off++;result();window.scrollTo(0,0)};
+ $('#re').onclick=()=>{ev('edit-answers');step=0;show('quiz');draw()};$('#sh').onclick=()=>{ev('swap-all');off++;result();window.scrollTo(0,0);focusH('#res h2')};
  wireG(r);
  r.querySelectorAll('[data-swap]').forEach(b=>b.onclick=()=>{
   ev('swap');const i=+b.dataset.swap;curR=swapMeal(A,curR,i,seenBy[i]);const e=curR.meals[i];if(e)seenBy[i].push(e.m.id);renderRes(i)});
