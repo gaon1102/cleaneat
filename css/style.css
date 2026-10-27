@@ -152,6 +152,8 @@ h3{font-weight:620}.mk{display:inline-grid;place-items:center;width:34px;height:
 .foot b{font-size:.92rem}.foot p{font-size:.78rem;color:var(--mut)}.foot .bs{display:flex;gap:10px;flex-wrap:wrap}
 .disc{font-size:.72rem;color:var(--mut);margin:16px 0 0}
 @media(min-width:761px) and (max-width:1060px){.card .cb{min-height:330px}}
+@media(min-width:761px) and (max-width:800px){.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card .cb{padding-left:14px;padding-right:14px}.card .dt{grid-template-columns:auto auto;justify-content:space-between}.dt .nu{min-width:0}.card .dt summary{white-space:nowrap}}  /* 3열이 가장 좁은 구간: 하단 '분량·영양성분 보기' 줄(최소 199px)이 카드를 밀어 가로로 넘치던 문제 */
+@media(min-width:761px) and (max-width:1060px){.cards .card:nth-child(3n) .dt details:not(.nu)>ul{left:auto;right:0}}  /* 오른쪽 끝 카드의 '분량 보기' 팝업(약 317px)이 화면 밖으로 나가 가로 스크롤을 만들던 문제: 오른쪽 기준으로 펼침 */
 /* 요약 막대: 폭이 좁으면 영양소 칸을 위 한 줄로 올리고 나머지 4칸을 아래 줄에 (영양소 칸이 3줄로 쌓이던 문제) */
 @media(min-width:1181px) and (max-width:1400px){.sumt{grid-template-columns:2fr 1.1fr 1.3fr 1.1fr 1fr}}
 @media(min-width:761px) and (max-width:1180px){.sumt{grid-template-columns:repeat(4,1fr);padding:0}.sumt>div{padding:18px 20px;border-top:1px solid var(--line)}.sumt>div:nth-child(2){border-left:0}.sumt>div:first-child{grid-column:1/-1;border-top:0;padding:20px 28px}}
