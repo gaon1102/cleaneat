@@ -57,13 +57,22 @@ function slotRules(A,T,i,capIn,naIn){
  };
  return{w,isM,xOf,rel,over,fit,cuPen,goalPen};
 }
-/* n일치 메뉴 선택 (공통 엔진). 같은 입력과 seed면 항상 같은 결과(결정적). seed를 바꾸면 다른 조합 */
+/* n일치 메뉴 선택 (공통 엔진). 같은 입력과 seed면 항상 같은 결과(결정적). seed를 바꾸면 다른 조합
+   d일째는 앞날들의 결과로만 정해지므로, 같은 입력으로 이미 계산한 날은 기억해 두고 이어서 계산함
+   ('세 끼 모두 바꾸기'를 누를 때마다 1일차부터 다시 계산해 점점 느려지던 문제) */
+const planCache=new Map();
 function planDays(A,seed,n){
- const T=targetOf(A),ex=exList(A),pro=proBlocked(A.pro,ex)?'any':A.pro;
- const S=CONFIG.slots,w=splitOf(A),use={},cat={};
- let relaxed=0,none=0,capped=0,mj=0,prevIds=[];
- const days=[];
- for(let d=0;d<n;d++){
+ const key=JSON.stringify([A.basic,A.goal,A.act,A.excl,A.pro,A.cu,A.prep,A.budget,seed]);
+ let C=planCache.get(key);
+ if(!C){
+  if(planCache.size>=20)planCache.delete(planCache.keys().next().value);  // 오래된 입력부터 버림(답변 수정·준비 방식 대안 계산용으로 충분)
+  const T=targetOf(A),ex=exList(A);
+  C={T,ex,pro:proBlocked(A.pro,ex)?'any':A.pro,use:{},cat:{},relaxed:0,none:0,capped:0,mj:0,prevIds:[],days:[],snap:[]};
+  planCache.set(key,C);
+ }
+ const {T,ex,pro,use,cat}=C,S=CONFIG.slots,w=splitOf(A),days=C.days;
+ let {relaxed,none,capped,mj,prevIds}=C;
+ try{for(let d=days.length;d<n;d++){
   const meals=[],today=[];
   S.forEach((s,i)=>{
    const pool=MENUS.filter(m=>m.slot===s&&!hasEx(m,ex));
@@ -94,8 +103,11 @@ function planDays(A,seed,n){
   prevIds=today;
   const tot=meals.reduce((a,e)=>e?addV(a,e.v):a,V0);
   days.push({d:CONFIG.days[d%7],meals,tot});
- }
- return{T,ex,pro,days,use,relaxed,none,capped};
+  C.snap.push({use:{...use},relaxed,none,capped});  // n일째까지의 누적값 (더 긴 계산이 캐시에 있어도 n일치 값을 돌려주려고)
+ }}catch(e){planCache.delete(key);throw e}  // 계산 도중 오류가 나면 반쯤 바뀐 상태를 남기지 않음
+ Object.assign(C,{relaxed,none,capped,mj,prevIds});
+ const s=C.snap[n-1]||{use:{},relaxed:0,none:0,capped:0};
+ return{T,ex,pro,days:days.slice(0,n),use:{...s.use},relaxed:s.relaxed,none:s.none,capped:s.capped};
 }
 /* 공통 안내 문구. avg는 하루 기준 값 */
 function notesOf(P,avg,A,maxUse){
@@ -142,7 +154,7 @@ function buildDay(A,seed=0){
  const P=planDays(A,0,seed+1),D=P.days[seed];
  P.relaxed=D.meals.filter(e=>e&&e.m.lvl>A.prep).length;  // 보여 주는 날의 끼니만 셈
  if(A.budget<1e9&&D.tot.c>A.budget)P.alt=prepAlt(A,seed);
- return{blocked:false,T:P.T,ex:P.ex,pro:P.pro,meals:D.meals,tot:D.tot,notes:notesOf(P,D.tot,A,0),relaxed:P.relaxed,none:P.none,capped:P.capped};
+ return{blocked:false,seed,T:P.T,ex:P.ex,pro:P.pro,meals:D.meals,tot:D.tot,notes:notesOf(P,D.tot,A,0),relaxed:P.relaxed,none:P.none,capped:P.capped};
 }
 /* 끼니 하나만 바꾸기: 나머지 두 끼는 그대로 두고 i번째 끼니만 다른 메뉴로 바꾼 결과를 돌려줌.
    seen: 이 끼니에 이미 보여 준 메뉴 id (다 보여 주면 처음부터 다시). 같은 입력·seen이면 같은 결과 */
@@ -169,7 +181,7 @@ function swapMeal(A,R,i,seen=[]){
  const m=best[seen.length%best.length],x=xOf(m);
  const meals=R.meals.map((e,j)=>j===i?{m,x,v:mkv(m,x),slot:s}:e);
  const tot=meals.reduce((a,e)=>e?addV(a,e.v):a,V0);
- const relaxed=meals.filter(e=>e&&e.m.lvl>A.prep).length,alt=A.budget<1e9&&tot.c>A.budget?prepAlt(A,0):undefined;
+ const relaxed=meals.filter(e=>e&&e.m.lvl>A.prep).length,alt=A.budget<1e9&&tot.c>A.budget?prepAlt(A,R.seed||0):undefined;  // 지금 보이는 조합(seed) 기준으로 준비 방식 대안 계산
  return{...R,meals,tot,relaxed,notes:notesOf({T,none:R.none,relaxed,alt},tot,A,0)};
 }
 /* 7일 식단 (정적 페이지·향후 구독용으로 보존) */
