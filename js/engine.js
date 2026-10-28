@@ -1,6 +1,6 @@
 /* CleanEat — 계산 엔진과 결과 HTML 조각. 화면(DOM)에 의존하지 않음.
    sim.js 같은 시험 스크립트는 data.js + engine.js만 불러서 돌림. data.js 다음, main.js 전에 불러옴 */
-/* ============ 5. 로직 (계산 전용 — 화면·전역 상태에 의존하지 않음. 정적 페이지 생성에도 그대로 씁니다) ============ */
+/* ============ 5. 로직 (계산 전용 — 화면(DOM)에 의존하지 않으며 입력별 메모리 캐시 사용. 정적 페이지 생성에도 그대로 씁니다) ============ */
 const num=n=>Math.round(n).toLocaleString('ko-KR'),won=n=>Math.round(n/100)*100;
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 const mkv=(m,x=1)=>m.items.reduce((s,[i,g])=>({k:s.k+ING[i].k*g*x/100,p:s.p+ING[i].p*g*x/100,f:s.f+ING[i].f*g*x/100,cb:s.cb+ING[i].cb*g*x/100,c:s.c+ING[i].c*g*x/100,na:s.na+ING[i].na*g*x/100}),{k:0,p:0,f:0,cb:0,c:0,na:0});
@@ -125,13 +125,14 @@ function notesOf(P,avg,A,maxUse){
 }
 /* 예산 초과 안내: 이유(준비 방식·목표 열량)와 예상 식비를 알려 주고, 준비 방식을 한 단계씩 올려 다시 계산해 예산 안에 들어오는 단계가 있으면 함께 알려 줌 */
 const PREP_NAME={1:'조리 없이 차리는 식사',2:'전자레인지로 간단히 조리',3:'10~15분 간단한 요리',4:'30분 정도 일반적인 요리',5:'요리를 즐겨요'};
-function prepAlt(A,seed){
- for(let p=A.prep+1;p<=5;p++){const D=planDays({...A,prep:p},0,seed+1).days[seed];if(D.tot.c<=A.budget)return p}
+// 응답 수정 후에는 main.js가 첫 조합(seed 0)부터 다시 계산하므로 대안도 같은 결과를 확인함
+function prepAlt(A){
+ for(let p=A.prep+1;p<=5;p++){const D=planDays({...A,prep:p},0,1).days[0];if(D.tot.c<=A.budget)return{prep:p,cost:D.tot.c}}
  return 0;
 }
 function budgetNote(A,T,avg,alt){
  const head=A.prep<=2?`'${PREP_NAME[A.prep]}'로는 하루 ${num(A.budget)}원 안에 약 ${num(T.k)}kcal를 채우기 어려워`:`목표 열량(약 ${num(T.k)}kcal)이 높아 하루 ${num(A.budget)}원 안에 맞추기 어려워`;
- const tail=alt?` 준비 방식을 '${PREP_NAME[alt]}'로 바꾸면 예산 안에 맞출 수 있어요.`:'';
+ const tail=alt?` 응답 수정에서 준비 방식을 '${PREP_NAME[alt.prep]}'로 바꾸면 예상 식비는 약 ${num(won(alt.cost))}원으로 계산돼요.`:'';
  return`${head} 예상 식비가 약 ${num(won(avg.c))}원이에요.${tail}`;
 }
 /* 단백질 보충 안내: 하루 단백질이 목표보다 15% 넘게 모자랄 때만, 부족한 만큼을 채울 재료를 가격이 낮은 순으로 두 가지 알려 줌.
@@ -153,7 +154,7 @@ function buildDay(A,seed=0){
  // seed번째 '바꾸기'는 내부적으로 seed+1일치를 짜고 마지막 날을 보여 줌 → 직전 조합과 겹치지 않게 반복 벌점이 적용됨
  const P=planDays(A,0,seed+1),D=P.days[seed];
  P.relaxed=D.meals.filter(e=>e&&e.m.lvl>A.prep).length;  // 보여 주는 날의 끼니만 셈
- if(A.budget<1e9&&D.tot.c>A.budget)P.alt=prepAlt(A,seed);
+ if(A.budget<1e9&&D.tot.c>A.budget)P.alt=prepAlt(A);
  return{blocked:false,seed,T:P.T,ex:P.ex,pro:P.pro,meals:D.meals,tot:D.tot,notes:notesOf(P,D.tot,A,0),relaxed:P.relaxed,none:P.none,capped:P.capped};
 }
 /* 끼니 하나만 바꾸기: 나머지 두 끼는 그대로 두고 i번째 끼니만 다른 메뉴로 바꾼 결과를 돌려줌.
@@ -181,7 +182,7 @@ function swapMeal(A,R,i,seen=[]){
  const m=best[seen.length%best.length],x=xOf(m);
  const meals=R.meals.map((e,j)=>j===i?{m,x,v:mkv(m,x),slot:s}:e);
  const tot=meals.reduce((a,e)=>e?addV(a,e.v):a,V0);
- const relaxed=meals.filter(e=>e&&e.m.lvl>A.prep).length,alt=A.budget<1e9&&tot.c>A.budget?prepAlt(A,R.seed||0):undefined;  // 지금 보이는 조합(seed) 기준으로 준비 방식 대안 계산
+ const relaxed=meals.filter(e=>e&&e.m.lvl>A.prep).length,alt=A.budget<1e9&&tot.c>A.budget?prepAlt(A):undefined;  // 응답 수정 후 실제로 생성될 첫 조합 기준의 준비 방식·예상 식비
  return{...R,meals,tot,relaxed,notes:notesOf({T,none:R.none,relaxed,alt},tot,A,0)};
 }
 /* 7일 식단 (정적 페이지·향후 구독용으로 보존) */
