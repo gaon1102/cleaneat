@@ -3,19 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Clean Eat — 나를 위한 오늘의 식단</title>
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="16x16" href="images/brand/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="images/brand/favicon-32.png">
+<link rel="icon" type="image/svg+xml" sizes="any" href="images/brand/favicon-plate-c.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="images/brand/apple-touch-icon.png">
+<link rel="mask-icon" href="images/brand/safari-pinned-tab.svg" color="#416b4c">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#fbfaf6">
+<meta name="apple-mobile-web-app-title" content="CleanEat">
+<title>CleanEat — 나를 위한 오늘의 식단</title>
 <meta name="description" content="성별·나이·키·몸무게와 목표, 요리 수준, 예산을 입력하면 통곡물·신선식품 중심의 하루 세 끼 메뉴와 분량을 계산해 보여줍니다.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:site_name" content="Clean Eat">
-<meta property="og:title" content="Clean Eat — 나를 위한 오늘의 식단">
+<meta property="og:site_name" content="CleanEat">
+<meta property="og:title" content="CleanEat — 나를 위한 오늘의 식단">
 <meta property="og:description" content="여덟 가지 질문으로 통곡물·신선식품 중심의 하루 세 끼 메뉴와 분량을 계산해 드려요. 가입 없이 무료.">
 <meta property="og:url" content="https://gaon1102.github.io/cleaneat/">
-<meta property="og:image" content="https://gaon1102.github.io/cleaneat/images/og.jpg">
+<meta property="og:image" content="https://gaon1102.github.io/cleaneat/images/og-plate-c.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Clean Eat — 닭가슴살 현미볶음과 과일 요거트 볼 사진">
+<meta property="og:image:alt" content="CleanEat 플레이트 C 로고와 나를 위한 오늘의 식단">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gaon1102.github.io/cleaneat/images/og-plate-c.jpg">
+<meta name="twitter:image:alt" content="CleanEat 플레이트 C 로고와 나를 위한 오늘의 식단">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
@@ -23,7 +34,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header><div class="w"><button class="logo" id="logo" aria-label="처음 화면으로"><i class="mk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></i><span>clean<b>eat</b></span></button><nav class="nv" aria-label="주요 메뉴"><div class="why-nav"><button class="lk" type="button" id="why-button" aria-expanded="false" aria-controls="rules">Why CleanEat?<svg class="why-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div><button class="lk" type="button" data-to="example">식단 예시</button><button class="lk" type="button" data-to="faq">FAQs</button></nav></div>
+<header><div class="w"><button class="logo" id="logo" aria-label="처음 화면으로"><svg xmlns="http://www.w3.org/2000/svg" class="logo-symbol" width="52" height="52" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M48 15a24 24 0 1 0 0 34" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M41 22a15 15 0 1 0 0 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M32 38C29 26 39 18 50 20C50 33 42 42 32 38Z" fill="currentColor"/><path d="m34 36 10-10" fill="none" stroke="#fbfaf6" stroke-width="1.8" stroke-linecap="round"/></svg><span class="logo-wordmark">cleaneat</span></button><nav class="nv" aria-label="주요 메뉴"><div class="why-nav"><button class="lk" type="button" id="why-button" aria-expanded="false" aria-controls="rules">Why CleanEat?<svg class="why-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div><button class="lk" type="button" data-to="example">식단 예시</button><button class="lk" type="button" data-to="faq">FAQs</button></nav></div>
 <section class="rules-popover" id="rules" hidden tabindex="-1" aria-labelledby="rules-title">
   <div class="rules-heading"><h2 id="rules-title">덜어내고, <em>제대로</em> 채우기</h2><button class="rules-close" type="button" aria-label="원칙 닫기">닫기</button></div>
   <div class="rules-columns">
@@ -113,7 +124,7 @@
 <div class="w" id="res" hidden></div>
 <p id="meal-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
 </main>
-<footer><div class="w wide">© Clean Eat</div></footer>
+<footer><div class="w wide footer-inner"><button class="footer-logo" type="button" data-to="home" aria-label="CleanEat 처음 화면으로"><svg xmlns="http://www.w3.org/2000/svg" class="logo-symbol" width="36" height="36" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M48 15a24 24 0 1 0 0 34" fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/><path d="M41 22a15 15 0 1 0 0 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M32 38C29 26 39 18 50 20C50 33 42 42 32 38Z" fill="currentColor"/><path d="m34 36 10-10" fill="none" stroke="#fbfaf6" stroke-width="1.8" stroke-linecap="round"/></svg><span>cleaneat</span></button><span>© CleanEat</span></div></footer>
 
 <script src="js/data.js"></script>
 <script src="js/engine.js"></script>
