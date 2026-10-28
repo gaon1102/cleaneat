@@ -22,16 +22,17 @@ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ev('quiz-start'
 function goHome(id){show('home');const e=id&&document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})}
 $('#logo').onclick=()=>goHome();
 document.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>goHome(b.dataset.to));
-// 넓은 상단바가 스크롤 후 가운데의 작은 고정 메뉴로 모임
-(()=>{const header=$('header'),bar=header.querySelector('.w'),logo=$('#logo'),nav=header.querySelector('.nv');let queued=false;
- const positionPanel=()=>{const bottom=bar.getBoundingClientRect().bottom;document.documentElement.style.setProperty('--header-height',Math.ceil(bottom)+'px');document.documentElement.style.setProperty('--rules-top',Math.ceil(bottom+12)+'px')};
- const measure=()=>{const mobile=innerWidth<=560,width=logo.scrollWidth+nav.scrollWidth+(mobile?12:32)+(mobile?24:48)+2;header.style.setProperty('--compact-width',Math.ceil(width)+'px');positionPanel()};
- const update=()=>{queued=false;const compact=scrollY>64;if(header.dataset.condensed!==String(compact))header.dataset.condensed=String(compact);positionPanel()};
- addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(update)}},{passive:true});addEventListener('resize',measure);
+// 히어로 사진 위에서는 투명, 사진을 지나거나 질문/결과 화면이면 흰색
+(()=>{const header=$('header'),bar=header.querySelector('.w'),hero=$('.hero');let queued=false;
+ const positionPanel=()=>{const height=bar.offsetHeight;document.documentElement.style.setProperty('--header-height',height+'px');document.documentElement.style.setProperty('--rules-top',(height+12)+'px')};
+ const update=()=>{queued=false;const home=!['quiz','res'].includes(document.documentElement.dataset.v),solid=!home||hero.getBoundingClientRect().bottom<=0;header.dataset.surface=solid?'solid':'clear'};
+ addEventListener('scroll',()=>{if(!queued){queued=true;requestAnimationFrame(update)}},{passive:true});
+ addEventListener('resize',()=>{positionPanel();update()});
  if(window.ResizeObserver)new ResizeObserver(positionPanel).observe(bar);
- if(document.fonts)document.fonts.ready.then(measure);measure();update();
+ new MutationObserver(update).observe(document.documentElement,{attributes:true,attributeFilter:['data-v']});
+ if(document.fonts)document.fonts.ready.then(positionPanel);positionPanel();update();
 })();
-// 팝업은 고정 메뉴의 변형에 영향을 받지 않도록 상단바 바깥에서 표시
+// 원칙 팝업: 고정 헤더 아래에서 내용에 맞는 크기로 표시
 (()=>{const nav=$('.why-nav'),button=$('#why-button'),panel=$('#rules');if(!nav||!button||!panel)return;let timer;
  const within=e=>!!e&&(nav.contains(e)||panel.contains(e));
  const setOpen=open=>{clearTimeout(timer);panel.hidden=!open;button.setAttribute('aria-expanded',String(open))};
