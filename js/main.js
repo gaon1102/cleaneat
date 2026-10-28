@@ -37,9 +37,9 @@ document.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>goHome(b.dataset
  const within=e=>!!e&&(nav.contains(e)||panel.contains(e));
  const setOpen=open=>{clearTimeout(timer);panel.hidden=!open;button.setAttribute('aria-expanded',String(open))};
  const enter=e=>{if(e.pointerType==='mouse')setOpen(true)};
- const leave=e=>{if(e.pointerType==='mouse')timer=setTimeout(()=>{if(!within(document.activeElement))setOpen(false)},180)};
+ const leave=e=>{if(e.pointerType==='mouse')timer=setTimeout(()=>{const a=document.activeElement;if(!(within(a)&&a.matches(':focus-visible')))setOpen(false)},180)};
  [nav,panel].forEach(el=>{el.addEventListener('pointerenter',enter);el.addEventListener('pointerleave',leave);el.addEventListener('focusout',e=>{if(!within(e.relatedTarget))setOpen(false)})});
- button.addEventListener('click',()=>setOpen(panel.hidden));
+ button.addEventListener('click',e=>{if(e.pointerType!=='mouse')setOpen(panel.hidden)});  // 마우스는 올리기만으로 열려 있으므로 클릭이 다시 닫지 않게 함(터치·키보드만 토글)
  button.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();setOpen(true);panel.focus()}});
  panel.querySelector('.rules-close').addEventListener('click',()=>{setOpen(false);button.focus()});
  document.addEventListener('click',e=>{if(!within(e.target))setOpen(false)});
@@ -125,15 +125,3 @@ function renderRes(swapped){
   $('#meal-status').textContent=e&&e.m.id!==prev?`${CONFIG.slotName[i]} 메뉴를 바꿨어요. ${e.m.name}입니다.`:'조건에 맞는 다른 메뉴가 없습니다.'});
  if(swapped!=null){r.querySelectorAll('.card')[swapped].classList.add('sw');const b=r.querySelector(`[data-swap="${swapped}"]`);if(b)b.focus({preventScroll:true})}
 }
-
-// 히어로 사진: 넘기기 + 왼쪽 아래 홈(노치) 모양
-(()=>{const t=document.getElementById('hpt'),d=document.getElementById('hpd');if(!t||!d)return;const b=[...d.children];
- b.forEach((x,i)=>x.addEventListener('click',()=>t.scrollTo({left:i*t.clientWidth})));
- t.addEventListener('scroll',()=>{const i=Math.round(t.scrollLeft/t.clientWidth);b.forEach((x,k)=>x.setAttribute('aria-current',k===i?'true':'false'))},{passive:true});
- // 모양: 사용자 시안(1792×2240)의 왼쪽 아래 곡선 좌표. 가로 기준 같은 비율로 줄이고, 아래쪽 기준으로 맞춘다
- const P=[0,1264,5,1291,10,1312,19,1331,28,1347,48,1371,207,1533,232,1566,250,1602,256,1620,262,1645,268,1701,269,2123,272,2161,277,2176,283,2190,293,2205,303,2216,314,2224,332,2232,345,2236,366,2239],SW=1792,SH=2240,SR=98;
- const clip=()=>{const W=t.clientWidth,H=t.clientHeight;if(!W||!H)return;const s=W/SW,r=SR*s,n=P.length/2,f=v=>+v.toFixed(1);
-  let d=`M${f(r)} 0H${f(W-r)}A${f(r)} ${f(r)} 0 0 1 ${W} ${f(r)}V${f(H-r)}A${f(r)} ${f(r)} 0 0 1 ${f(W-r)} ${H}`;
-  for(let k=n-1;k>=0;k--)d+=`L${f(P[2*k]*s)} ${f(H-(SH-P[2*k+1])*s)}`;
-  t.style.clipPath=`path('${d}V${f(r)}A${f(r)} ${f(r)} 0 0 1 ${f(r)} 0Z')`};
- if(window.ResizeObserver)new ResizeObserver(clip).observe(t);clip()})();

@@ -1,8 +1,8 @@
 /* CleanEat — 스타일 (색상·글꼴·레이아웃·반응형). 색은 :root 변수에서 바꿈 */
-:root{--hero-gutter:clamp(24px,6vw,120px);--hero-divider:#a7aaa6;--ver:#e2492f;--dot:#dcdcd2;--hero-rgb:251,250,246;--bg:#fbfaf6;--fg:#26352d;--mut:#676d68;--lab:#636e5f;--g:#416b4c;--gd:#304e38;--gt:#fffdf6;--card:#fffefa;--soft:#eef0e8;--line:#e9e8df;--warn:#8a3b2a;
+:root{--hero-gutter:clamp(24px,6vw,120px);--hero-divider:#a7aaa6;--hero-rgb:251,250,246;--bg:#fbfaf6;--fg:#26352d;--mut:#676d68;--lab:#636e5f;--g:#416b4c;--gd:#304e38;--gt:#fffdf6;--card:#fffefa;--soft:#eef0e8;--line:#e9e8df;--warn:#8a3b2a;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--ver:#f26a52;--dot:#3c4842;--hero-divider:#7d8981;--hero-rgb:22,28,24;--bg:#161c18;--fg:#e8eee9;--mut:#a9b8ad;--lab:#8a9685;--gd:#b4d6b9;--g:#8fbf96;--gt:#10200f;--card:#1e2620;--soft:#232c25;--line:#34403a;--warn:#e8a08f}}
-:root[data-theme="dark"]{--ver:#f26a52;--dot:#3c4842;--hero-divider:#7d8981;--hero-rgb:22,28,24;--bg:#161c18;--fg:#e8eee9;--mut:#a9b8ad;--lab:#8a9685;--gd:#b4d6b9;--g:#8fbf96;--gt:#10200f;--card:#1e2620;--soft:#232c25;--line:#34403a;--warn:#e8a08f}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--hero-divider:#7d8981;--hero-rgb:22,28,24;--bg:#161c18;--fg:#e8eee9;--mut:#a9b8ad;--lab:#8a9685;--gd:#b4d6b9;--g:#8fbf96;--gt:#10200f;--card:#1e2620;--soft:#232c25;--line:#34403a;--warn:#e8a08f}}
+:root[data-theme="dark"]{--hero-divider:#7d8981;--hero-rgb:22,28,24;--bg:#161c18;--fg:#e8eee9;--mut:#a9b8ad;--lab:#8a9685;--gd:#b4d6b9;--g:#8fbf96;--gt:#10200f;--card:#1e2620;--soft:#232c25;--line:#34403a;--warn:#e8a08f}
 html{scroll-padding-top:calc(var(--header-height,80px) + 16px + env(safe-area-inset-top,0px));font-size:17px}
 *,*:before,*:after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:"Inter","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
@@ -53,7 +53,7 @@ p{margin:0}.mut{color:var(--mut)}
 }
 @media(max-width:480px){header .w{gap:20px}.logo{font-size:19px;gap:8px}.nv{gap:18px}.nv .lk{font-size:.76rem}}
 /* Why CleanEat? 원칙 팝업: 마우스·키보드·터치로 같은 내용을 표시 */
-.why-nav{position:relative}#why-button{display:inline-flex;align-items:center;gap:7px}.why-chevron{display:block;flex:none;width:16px;height:16px;transition:transform .15s}.why-nav [aria-expanded="true"] .why-chevron{transform:rotate(180deg)}
+.why-nav{position:relative}
 .rules-popover{position:fixed;pointer-events:auto;left:50%;top:var(--rules-top,108px);transform:translateX(-50%);width:min(1120px,calc(100% - 48px));max-height:calc(100svh - var(--rules-top,108px) - 24px);overflow-y:auto;overscroll-behavior:contain;background:var(--card);color:var(--fg);padding:32px 36px;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 48px rgba(24,42,30,.13);z-index:70}
 .rules-popover[hidden]{display:none}.rules-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:26px}.rules-popover h2{font-size:1.65rem;font-weight:500;line-height:1.35;letter-spacing:-.045em}
 .rules-close{flex:none;background:none;border:0;font:inherit;font-size:.78rem;color:var(--mut);padding:6px 2px;cursor:pointer}.rules-close:hover{color:var(--fg)}
@@ -69,7 +69,6 @@ p{margin:0}.mut{color:var(--mut)}
 @media(max-width:1000px){.how-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 32px}}
 @media(max-width:760px){.rules-columns{grid-template-columns:1fr;row-gap:26px}.rules-popover .ing{padding:24px 0 0;border-left:0;border-top:1px solid var(--line)}.rules-popover{padding:28px}.rules-heading{margin-bottom:24px}}
 @media(max-width:560px){header .w{height:auto;min-height:108px;flex-wrap:wrap;column-gap:16px;row-gap:12px;padding:16px var(--hero-gutter)}header .logo{font-size:24px}.logo-symbol{width:44px;height:44px}header .w .nv{gap:20px}header .nv .lk{font-size:.88rem}.hero{padding-top:168px}.rules-popover{width:calc(100% - 24px);padding:24px 22px;max-height:calc(100svh - var(--rules-top,120px) - 12px)}.rules-heading{gap:12px}.rules-popover h2{font-size:1.4rem}.rules-popover .ing{gap:24px 18px}.sec.how{padding-top:112px}.how-heading{margin-bottom:42px}.how-heading>p{font-size:.8rem;line-height:1.7}.how-steps{grid-template-columns:1fr;gap:48px}.how-visual{aspect-ratio:4/5}.how-steps h3{margin-top:22px}}
-@media(prefers-reduced-motion:reduce){.why-chevron{transition:none}}
 .eb{display:flex;align-items:center;gap:12px;font-size:.72rem;font-weight:700;letter-spacing:.12em;color:var(--lab);margin:0 0 34px}.eb:before{content:"";width:26px;height:1px;background:#93a287}
 [id]{scroll-margin-top:24px}
 .sec{padding:110px 0 0}
