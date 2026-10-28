@@ -22,6 +22,17 @@ document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ev('quiz-start'
 function goHome(id){show('home');const e=id&&document.getElementById(id);if(e)e.scrollIntoView({behavior:'smooth'})}
 $('#logo').onclick=()=>goHome();
 document.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>goHome(b.dataset.to));
+// 원칙 팝업: 호버·클릭으로 열고, 영역 밖 이동·클릭·Esc로 닫기
+(()=>{const nav=$('.why-nav'),button=$('#why-button'),panel=$('#rules');if(!nav||!button||!panel)return;let timer;
+ const setOpen=open=>{clearTimeout(timer);panel.hidden=!open;button.setAttribute('aria-expanded',String(open))};
+ nav.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')setOpen(true)});
+ nav.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')timer=setTimeout(()=>{if(!nav.contains(document.activeElement))setOpen(false)},180)});
+ button.addEventListener('click',()=>setOpen(panel.hidden));
+ button.addEventListener('keydown',e=>{if(e.key==='ArrowDown'){e.preventDefault();setOpen(true);panel.focus()}});
+ nav.addEventListener('focusout',e=>{if(!nav.contains(e.relatedTarget))setOpen(false)});
+ document.addEventListener('click',e=>{if(!nav.contains(e.target))setOpen(false)});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){const returnFocus=nav.contains(document.activeElement);setOpen(false);if(returnFocus)button.focus()}});
+})();
 ['leaf','spark','pie','loop'].forEach((k,i)=>$('#ri'+(i+1)).innerHTML=ICON[k]);
 (()=>{const E=EXAMPLE,b=E.basic,R=buildDay(E,0);if(R.blocked)return;
  $('#exwho').textContent=`예시: ${b.ag}세 ${b.sx==='m'?'남성':'여성'} · ${b.ht}cm · ${b.wt}kg · ${optLabel('act',E)} 운동`;

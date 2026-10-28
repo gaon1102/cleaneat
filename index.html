@@ -23,7 +23,22 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<header><div class="w"><button class="logo" id="logo" aria-label="처음 화면으로"><i class="mk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></i><span>clean<b>eat</b></span></button><nav class="nv" aria-label="주요 메뉴"><button class="lk" type="button" data-to="rules">Why CleanEat?</button><button class="lk" type="button" data-to="faq">FAQs</button></nav></div></header>
+<header><div class="w"><button class="logo" id="logo" aria-label="처음 화면으로"><i class="mk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg></i><span>clean<b>eat</b></span></button><nav class="nv" aria-label="주요 메뉴"><div class="why-nav"><button class="lk" type="button" id="why-button" aria-expanded="false" aria-controls="rules">Why CleanEat?<span class="why-chevron" aria-hidden="true">⌄</span></button> <section class="rules-popover" id="rules" hidden tabindex="-1" aria-labelledby="rules-title">
+  <p class="eb">OUR RULES</p>
+  <h2 id="rules-title">덜어내고, <em>제대로</em> 채우기</h2>
+  <div class="rows">
+   <div class="row"><span class="k">01</span><div><h3>재료에 가까운 식사</h3><p>신선한 채소와 과일, 통곡물, 자연 유래 단백질을 중심으로 골라요.</p></div><span class="ri" id="ri1"></span></div>
+   <div class="row"><span class="k">02</span><div><h3>가공은 최대한 덜하게</h3><p>인공 첨가물, 방부제, 과도한 나트륨과 정제된 설탕을 줄여요.</p></div><span class="ri" id="ri2"></span></div>
+   <div class="row"><span class="k">03</span><div><h3>영양소를 골고루</h3><p>탄수화물·단백질·지방을 무조건 제한하지 않고 적절히 먹어요.</p></div><span class="ri" id="ri3"></span></div>
+   <div class="row"><span class="k">04</span><div><h3>무리하지 않고 꾸준히</h3><p>무언가를 끊기보다, 일상에서 조금 더 나은 쪽을 골라요.</p></div><span class="ri" id="ri4"></span></div>
+  </div>
+  <div class="ing">
+   <div><p class="k">FRESH &amp; COLORFUL</p><h3>채소와 과일</h3><p>시금치, 브로콜리, 베리류</p><small>신선하거나 첨가물 없는 냉동 제품</small></div>
+   <div><p class="k">WHOLE GRAINS</p><h3>통곡물</h3><p>퀴노아, 오트밀, 통밀빵</p><small>가능하면 덜 정제된 곡물로</small></div>
+   <div><p class="k">NATURAL PROTEIN</p><h3>건강한 단백질</h3><p>닭가슴살, 연어, 달걀</p><small>자연 그대로의 재료를 골라요</small></div>
+   <div><p class="k">GOOD FATS</p><h3>건강한 지방</h3><p>아보카도, 올리브 오일, 아몬드</p><small>식사에 적당히 더해 보세요</small></div>
+  </div>
+ </section></div><button class="lk" type="button" data-to="example">식단 예시</button><button class="lk" type="button" data-to="faq">FAQs</button></nav></div></header>
 
 <main>
 <div id="home">
@@ -44,21 +59,26 @@
 <div class="w wide">
 
 
- <section class="sec" id="rules">
-  <p class="eb">OUR RULES</p>
-  <h2>덜어내고, <em>제대로</em> 채우기</h2>
-  <div class="rows">
-   <div class="row"><span class="k">01</span><div><h3>재료에 가까운 식사</h3><p>신선한 채소와 과일, 통곡물, 자연 유래 단백질을 중심으로 골라요.</p></div><span class="ri" id="ri1"></span></div>
-   <div class="row"><span class="k">02</span><div><h3>가공은 최대한 덜하게</h3><p>인공 첨가물, 방부제, 과도한 나트륨과 정제된 설탕을 줄여요.</p></div><span class="ri" id="ri2"></span></div>
-   <div class="row"><span class="k">03</span><div><h3>영양소를 골고루</h3><p>탄수화물·단백질·지방을 무조건 제한하지 않고 적절히 먹어요.</p></div><span class="ri" id="ri3"></span></div>
-   <div class="row"><span class="k">04</span><div><h3>무리하지 않고 꾸준히</h3><p>무언가를 끊기보다, 일상에서 조금 더 나은 쪽을 골라요.</p></div><span class="ri" id="ri4"></span></div>
-  </div>
-  <div class="ing">
-   <div><p class="k">FRESH &amp; COLORFUL</p><h3>채소와 과일</h3><p>시금치, 브로콜리, 베리류</p><small>신선하거나 첨가물 없는 냉동 제품</small></div>
-   <div><p class="k">WHOLE GRAINS</p><h3>통곡물</h3><p>퀴노아, 오트밀, 통밀빵</p><small>가능하면 덜 정제된 곡물로</small></div>
-   <div><p class="k">NATURAL PROTEIN</p><h3>건강한 단백질</h3><p>닭가슴살, 연어, 달걀</p><small>자연 그대로의 재료를 골라요</small></div>
-   <div><p class="k">GOOD FATS</p><h3>건강한 지방</h3><p>아보카도, 올리브 오일, 아몬드</p><small>식사에 적당히 더해 보세요</small></div>
-  </div>
+ <section class="sec how" id="how" aria-labelledby="how-title">
+  <div class="how-heading"><h2 id="how-title">How it works</h2><p>여덟 가지 질문에서 오늘의 식단과 장보기까지</p></div>
+  <ol class="how-steps">
+   <li>
+    <div class="how-visual" aria-hidden="true"><img src="images/home-hero.webp" alt="" width="1738" height="905" loading="lazy"><span class="how-number">01</span><div class="how-mini how-basic"><b>먼저 지금의 나부터</b><span>나이 · 키 · 몸무게</span><div><i>29세</i><i>163cm</i><i>58kg</i></div></div></div>
+    <h3>지금의 나를 알려주세요</h3><p>성별·나이·키·몸무게를 바탕으로 하루에 필요한 에너지를 가늠해요.</p>
+   </li>
+   <li>
+    <div class="how-visual" aria-hidden="true"><img src="images/menus/L3.webp" alt="" width="800" height="600" loading="lazy"><span class="how-number">02</span><div class="how-mini how-choices"><b>내 생활에 맞는 선택</b><span>목표 · 활동량 · 제한 식품</span><span>취향 · 요리 수준 · 예산</span></div></div>
+    <h3>내 생활에 맞춰 골라요</h3><p>목표와 활동량, 제한 식품부터 음식 취향·요리 수준·예산까지 선택해요.</p>
+   </li>
+   <li>
+    <div class="how-visual" aria-hidden="true"><img src="images/menus/c2.webp" alt="" width="800" height="600" loading="lazy"><span class="how-number">03</span><div class="how-mini how-plan"><b>오늘의 식단</b><span>아침<i></i></span><span>점심<i></i></span><span>저녁<i></i></span></div></div>
+    <h3>하루 세 끼를 제안해요</h3><p>답변을 바탕으로 아침·점심·저녁 메뉴와 재료별 분량을 함께 보여드려요.</p>
+   </li>
+   <li>
+    <div class="how-visual" aria-hidden="true"><img src="images/menus/m10.webp" alt="" width="800" height="600" loading="lazy"><span class="how-number">04</span><div class="how-mini how-shopping"><b>장보기 목록</b><span>✓ 집에 있는 재료</span><span>□ 더 필요한 재료</span></div></div>
+    <h3>바꾸고 장보면 준비 끝</h3><p>다른 메뉴로 바꿔보고 집에 있는 재료를 체크해 필요한 것만 챙겨요.</p>
+   </li>
+  </ol>
  </section>
 
  <section class="sec" id="example">
