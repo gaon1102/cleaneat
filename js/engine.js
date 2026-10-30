@@ -7,6 +7,11 @@ const mkv=(m,x=1)=>m.items.reduce((s,[i,g])=>({k:s.k+ING[i].k*g*x/100,p:s.p+ING[
 const addV=(a,v)=>({k:a.k+v.k,p:a.p+v.p,f:a.f+v.f,cb:a.cb+v.cb,c:a.c+v.c,na:a.na+v.na}),V0={k:0,p:0,f:0,cb:0,c:0,na:0};
 const exList=A=>A.excl.filter(x=>x!=='none');
 const hasEx=(m,ex)=>m.items.some(([id])=>ING[id].ex.some(t=>ex.includes(t)));
+/* 메뉴 형태(샌드위치·랩·볼 등): 같은 날 같은 형태가 두 번 나오지 않게 벌점을 줌. 메뉴 이름의 끝말로 판단하므로 새 메뉴 이름이 규칙에 안 맞으면 여기에 추가 */
+const KINDS=[['sand',/(샌드위치|토스트|베이글|버거)$/],['wrap',/(랩|타코|부리토)$/],['ybowl',/요거트( 볼)?$/],['bowl',/(볼|포케)$/],['rbowl',/(덮밥|비빔밥)$/],['salad',/샐러드$/],['oat',/오트밀$/]];
+const KIND={};MENUS.forEach(m=>{KIND[m.id]=/(미트|에너지)볼$/.test(m.name)?null:(KINDS.find(([,r])=>r.test(m.name))||[null])[0]});
+const KIND_PEN=10;  // 같은 형태 벌점: 요리 수준 1단계 초과(30)보다 작게, 아예 막지는 않음 (sim 3000: 중복 24.2%→1.0%)
+const sameKind=(m,ids)=>!!KIND[m.id]&&ids.some(id=>KIND[id]===KIND[m.id]);
 /* 선호 단백질과 메뉴가 맞는지. '육류'(meat)는 닭고기(chicken)·소·돼지(red) 메뉴를 모두 포함 */
 const proMatch=(m,pro)=>m.pro===pro||(pro==='meat'&&(m.pro==='chicken'||m.pro==='red'));
 /* 기본 정보 검증: 오류 문구를 돌려주고, 통과하면 '' */
@@ -84,7 +89,7 @@ function planDays(A,seed,n){
    const naSpent=meals.reduce((a,e)=>e?a+e.v.na:a,0);
    const {rel,over,fit,cuPen,goalPen}=slotRules(A,T,i,(A.budget-spent)*w[i]/remW,(naMax(A)-naSpent)*w[i]/remW);
    const sc=m=>{
-    let v=rel(m)*20+(use[m.id]||0)*2+(today.includes(m.id)?50:0)+(prevIds.includes(m.id)?2:0);
+    let v=rel(m)*20+(use[m.id]||0)*2+(today.includes(m.id)?50:0)+(sameKind(m,today)?KIND_PEN:0)+(prevIds.includes(m.id)?2:0);
     v+=cuPen(m);
     v+=fit(m)+over(m)+goalPen(m);
     if(pro==='any'){if(isM)v+=1.5*(cat[m.pro]||0)}
@@ -172,7 +177,7 @@ function swapMeal(A,R,i,seen=[]){
  // 선호 단백질 끼니였으면 계속 선호 단백질로, 아니었으면 지금 비율을 유지
  const keepPref=isM&&pro!=='any'&&cur&&proMatch(cur,pro);
  const sc=m=>{
-  let v=rel(m)*20+cuPen(m)+fit(m)+over(m)+goalPen(m);
+  let v=rel(m)*20+cuPen(m)+fit(m)+over(m)+goalPen(m)+(sameKind(m,others.map(o=>o.id))?KIND_PEN:0);
   if(pro==='any'){if(isM)v+=1.5*others.filter(o=>o.slot==='m'&&o.pro===m.pro).length}
   else if(isM)v+=keepPref?(proMatch(m,pro)?0:6):(proMatch(m,pro)?2:0);
   else if(proMatch(m,pro))v-=1;
