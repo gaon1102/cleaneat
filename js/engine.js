@@ -231,7 +231,7 @@ const ICON={
 function mealCardHTML(e,i,swap){
  const slot=CONFIG.slotName[i];
  if(!e)return`<article class="card em"><p>${slot}: 조건에 맞는 메뉴가 없습니다.</p></article>`;
- const m=e.m,img=`<div class="im">${m.img?`<img src="${m.img}" alt="" loading="lazy"><span class="bd">CLEAN PLATE</span>`:''}</div>`;  // 사진이 없어도 자리는 남김
+ const m=e.m,img=`<div class="im">${m.img?`<img src="${m.img}" alt="" loading="lazy">`:''}</div>`;  // 사진이 없어도 자리는 남김
  return`<article class="card">${img}<div class="cb"><div class="ct"><span>${slot}</span>${swap?`<button class="swp" data-swap="${i}" aria-label="${slot} 메뉴만 바꾸기">${SWP}바꾸기</button>`:''}</div><h3>${m.name}</h3><p class="ds">${(m.desc||'').replace(/\.$/,'')}</p>
  <div class="ft"><div class="tags">${m.items.map(([id])=>`<span>${short(id)}</span>`).join('')}</div>
  <div class="dt"><details><summary>분량 보기</summary><ul>${m.items.map(([id,g])=>`<li>${gtxt(id,Math.round(g*e.x/5)*5)}</li>`).join('')}${m.sea&&m.sea.length?`<li>양념: ${m.sea.join(', ')} (적당량)</li>`:''}</ul></details><details class="nu"><summary>영양성분 보기</summary><dl><dt>열량</dt><dd>${num(e.v.k)} kcal</dd><dt>단백질</dt><dd>${num(e.v.p)}g</dd><dt>탄수화물</dt><dd>${num(e.v.cb)}g</dd><dt>지방</dt><dd>${num(e.v.f)}g</dd></dl></details></div></div></div></article>`;
@@ -253,3 +253,4 @@ function dayResultHTML(R,A){
  <div class="foot"><div class="bs"><button class="tl" id="sh"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/></svg> 세 끼 모두 바꾸기</button></div></div>
  <p class="disc">이 식단은 일반적인 식사 아이디어이며 의료·영양 상담을 대신하지 않아요. 알레르기, 질환, 임신·수유 등 특별한 고려가 필요하다면 전문가와 상담하고 식품 표시를 확인해 주세요. 시험 버전: 재료 가격은 2026년 10월 전국 평균 소매가 기준이며 일부는 추정치입니다.</p>`;
 }
+
